@@ -333,7 +333,7 @@ extension SignUpViewController {
         let padding: CGFloat = 20
         let textPadding:CGFloat = 8
         let textWidth: CGFloat = view.frame.width / 2.5
-        let customHeight: CGFloat = 38
+        let customHeight: CGFloat = 45
         let topHalf: CGFloat = view.frame.height / 6.7
         //  MARK: -TOP BACKGROUND IMAGE
         NSLayoutConstraint.activate([
