@@ -98,7 +98,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             field.translatesAutoresizingMaskIntoConstraints = false
             field.layer.borderWidth = 0
             field.backgroundColor = .clear
-            field.textColor = .label
+            
+            field.textColor = .secondaryLabel
             field.returnKeyType = .go
             field.clearButtonMode = .whileEditing
             field.addTarget(self, action: #selector(textFieldAction), for: .primaryActionTriggered)
@@ -170,7 +171,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         bubbleImageView.image = Images.bubbleImage
         bubbleImageView.translatesAutoresizingMaskIntoConstraints = false
         bubbleImageView.backgroundColor = UIColor.clear
-        bubbleImageView.tintColor = UIColor.systemGreen.withAlphaComponent(0.6)
+        bubbleImageView.tintColor = CustomColors.CustomGreenLightBright.withAlphaComponent(0.8)
         bubbleImageView.applyCustomShadow()
         view.addSubview(bubbleImageView)
         
@@ -313,6 +314,7 @@ extension LoginViewController {
         let textWidth: CGFloat = view.frame.width / 1.7
         let customHeight: CGFloat = 45
         let topHalf: CGFloat = view.frame.height / 6.7
+        let awayFromBorders: CGFloat = 100
         //  MARK: -TOP BACKGROUND IMAGE
         NSLayoutConstraint.activate([
             topBackgroundImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
@@ -325,7 +327,7 @@ extension LoginViewController {
         NSLayoutConstraint.activate([
             bubbleImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             bubbleImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant:  topHalf),
-            bubbleImageView.widthAnchor.constraint(equalToConstant: 85),
+            bubbleImageView.widthAnchor.constraint(equalToConstant: 95),
             bubbleImageView.heightAnchor.constraint(equalToConstant: 75)
         ])
         
@@ -349,7 +351,7 @@ extension LoginViewController {
         
         //        MARK:- MAIN TITLE
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: bubbleImageView.bottomAnchor, constant: 50),
+            titleLabel.topAnchor.constraint(equalTo: bubbleImageView.bottomAnchor, constant: 40),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
         ])
         
@@ -399,7 +401,7 @@ extension LoginViewController {
             firstTimeLabel.widthAnchor.constraint(equalToConstant: textWidth)
         ])
         NSLayoutConstraint.activate([
-            inputErrorLabel.topAnchor.constraint(equalTo: firstTimeLabel.bottomAnchor, constant: padding),
+            inputErrorLabel.topAnchor.constraint(equalTo: firstTimeLabel.bottomAnchor, constant: textPadding + 2),
             inputErrorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         
@@ -420,9 +422,10 @@ extension LoginViewController {
         
         //SIGNWITH EMAIL
         NSLayoutConstraint.activate([
-            signInWEmailBtn.topAnchor.constraint(equalTo: inputErrorLabel.bottomAnchor, constant: padding),
+            signInWEmailBtn.bottomAnchor.constraint(equalTo: appleIDBtn.topAnchor, constant: -textPadding),
             signInWEmailBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            signInWEmailBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            signInWEmailBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            signInWEmailBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             signInWEmailBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
         
@@ -430,21 +433,24 @@ extension LoginViewController {
         NSLayoutConstraint.activate([
             appleIDBtn.bottomAnchor.constraint(equalTo: facebookBtn.topAnchor, constant: -textPadding),
             appleIDBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            appleIDBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            appleIDBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            appleIDBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             appleIDBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
         //SIGNWITH FACEBOOK
         NSLayoutConstraint.activate([
             facebookBtn.bottomAnchor.constraint(equalTo: googleBtn.topAnchor, constant: -textPadding),
             facebookBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            facebookBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            facebookBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            facebookBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             facebookBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
         //SIGNWITH GOOGLE
         NSLayoutConstraint.activate([
             googleBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding * 1.5),
             googleBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            googleBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            googleBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            googleBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             googleBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
     }

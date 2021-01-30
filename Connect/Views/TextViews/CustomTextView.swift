@@ -27,6 +27,7 @@ class CustomTextView: UITextView {
     
     private func configure(){
         textColor                   = .label
+        
         isSelectable                = true
         translatesAutoresizingMaskIntoConstraints = false
     }

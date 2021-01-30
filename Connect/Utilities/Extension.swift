@@ -80,7 +80,7 @@ extension UIViewController {
 //MARK:- CUSTOM SHADOW EXTENSION WITH BORDER&ROUNDCORNERS
 extension UIView {
     func applyCustomShadow() {
-        self.backgroundColor = UIColor.systemBackground // Use anycolor that give you a 2d look.
+        self.backgroundColor = UIColor.clear // Use anycolor that give you a 2d look.
         //To apply corner radius
         self.layer.cornerRadius = 5
 

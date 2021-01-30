@@ -190,8 +190,8 @@
 		E8D6D09425C4E8B400778209 /* Connect */ = {
 			isa = PBXGroup;
 			children = (
-				E8D6D0B625C4E95800778209 /* Views */,
 				E8D6D0AA25C4E94300778209 /* Utilities */,
+				E8D6D0B625C4E95800778209 /* Views */,
 				E8D6D11F25C4E96200778209 /* Controllers */,
 				E8D6D09525C4E8B400778209 /* AppDelegate.swift */,
 				E8D6D09725C4E8B400778209 /* SceneDelegate.swift */,

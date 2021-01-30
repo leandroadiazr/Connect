@@ -72,13 +72,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         wrongPassLabel.isHidden = true
-//        showLoadingView()
+        //        showLoadingView()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
-//        dismissLoadingView()
-//        isUserLoggedIn()
+        //        dismissLoadingView()
+        //        isUserLoggedIn()
     }
     
     //MARK:- LABELS & TEXT FIELDS
@@ -126,7 +126,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             button.clipsToBounds = true
             view.addSubview(button)
         }
-     
+        
         
         //BACK TO SIGNIN BTN
         backToSignInBtn.addTarget(self, action: #selector(backTosignInAction), for: .touchUpInside)
@@ -159,7 +159,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         bubbleImageView.image = Images.bubbleImage
         bubbleImageView.translatesAutoresizingMaskIntoConstraints = false
         bubbleImageView.backgroundColor = UIColor.clear
-        bubbleImageView.tintColor = UIColor.systemGreen.withAlphaComponent(0.6)
+        bubbleImageView.tintColor = CustomColors.CustomGreenLightBright.withAlphaComponent(0.8)
         bubbleImageView.applyCustomShadow()
         view.addSubview(bubbleImageView)
         
@@ -196,7 +196,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- BUTTON ACTIONS
     @objc private func backTosignInAction() {
-
+        
         print("going back")
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .custom
@@ -234,7 +234,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             print("pass are not equal & needs to be at least 8 chars")
             return
         }
-     
+        
         if let name = nameTextField.text,
            let email = emailTextField.text,
            let passOne = passwordTextField.text {
@@ -261,7 +261,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                         self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
                         self.thereIsAnError()
                         print(unwrappedError.localizedDescription)
-            
+                        
                         return
                     }
                     print("Saved suscessfully into firebase database need an alert")
@@ -269,7 +269,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     let customTabVC = CustomTabBarController()
                     customTabVC.modalPresentationStyle = .custom
                     self.present(customTabVC, animated: true, completion: nil)
-//                    self.showLoadingView()
+                    //                    self.showLoadingView()
                 }
             }
         }
@@ -335,6 +335,7 @@ extension SignUpViewController {
         let textWidth: CGFloat = view.frame.width / 2.5
         let customHeight: CGFloat = 45
         let topHalf: CGFloat = view.frame.height / 6.7
+        let awayFromBorders: CGFloat = 100
         //  MARK: -TOP BACKGROUND IMAGE
         NSLayoutConstraint.activate([
             topBackgroundImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
@@ -347,7 +348,7 @@ extension SignUpViewController {
         NSLayoutConstraint.activate([
             bubbleImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             bubbleImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant:  topHalf),
-            bubbleImageView.widthAnchor.constraint(equalToConstant: 85),
+            bubbleImageView.widthAnchor.constraint(equalToConstant: 95),
             bubbleImageView.heightAnchor.constraint(equalToConstant: 75)
         ])
         
@@ -371,7 +372,7 @@ extension SignUpViewController {
         
         //        MARK:- MAIN TITLE
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: bubbleImageView.bottomAnchor, constant: 50),
+            titleLabel.topAnchor.constraint(equalTo: bubbleImageView.bottomAnchor, constant: 40),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
         ])
         
@@ -454,13 +455,13 @@ extension SignUpViewController {
             firstTimeLabel.widthAnchor.constraint(equalToConstant: textWidth * 1.2)
         ])
         NSLayoutConstraint.activate([
-            wrongPassLabel.topAnchor.constraint(equalTo: firstTimeLabel.bottomAnchor, constant: padding),
+            wrongPassLabel.topAnchor.constraint(equalTo: firstTimeLabel.bottomAnchor, constant: textPadding + 2),
             wrongPassLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         
         //        MARK:- BUTTONS
         //        MARK:- BUTTONS
-  
+        
         NSLayoutConstraint.activate([
             backToSignInBtn.topAnchor.constraint(equalTo: passwordLine.bottomAnchor, constant: textPadding),
             backToSignInBtn.leadingAnchor.constraint(equalTo: firstTimeLabel.trailingAnchor, constant: padding),
@@ -471,31 +472,31 @@ extension SignUpViewController {
         
         //SIGNWITH EMAIL
         NSLayoutConstraint.activate([
-            signUpWEmailBtn.topAnchor.constraint(equalTo: wrongPassLabel.bottomAnchor, constant: padding),
-            signUpWEmailBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            signUpWEmailBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            signUpWEmailBtn.bottomAnchor.constraint(equalTo: appleIDBtn.topAnchor, constant: -textPadding),
+            signUpWEmailBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            signUpWEmailBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             signUpWEmailBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
         
         //SIGNWITH APPLE ID
         NSLayoutConstraint.activate([
             appleIDBtn.bottomAnchor.constraint(equalTo: facebookBtn.topAnchor, constant: -textPadding),
-            appleIDBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            appleIDBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            appleIDBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            appleIDBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             appleIDBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
         //SIGNWITH FACEBOOK
         NSLayoutConstraint.activate([
             facebookBtn.bottomAnchor.constraint(equalTo: googleBtn.topAnchor, constant: -textPadding),
-            facebookBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            facebookBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            facebookBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            facebookBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             facebookBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
         //SIGNWITH GOOGLE
         NSLayoutConstraint.activate([
             googleBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding * 1.5),
-            googleBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            googleBtn.widthAnchor.constraint(equalToConstant: textWidth),
+            googleBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            googleBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
             googleBtn.heightAnchor.constraint(equalToConstant: customHeight)
         ])
     }

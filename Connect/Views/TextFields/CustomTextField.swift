@@ -38,6 +38,7 @@ class CustomTextField: UITextField {
         minimumFontSize                           = 10
         
         placeholder                               = "Search for position"
+        
         backgroundColor                           = .tertiarySystemBackground
         autocorrectionType                        = .no
         
