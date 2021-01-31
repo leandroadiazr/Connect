@@ -17,7 +17,8 @@ class UserProfileViewController: UIViewController {
     let logoutButton = CustomGenericButton(backgroundColor: .systemRed, title: "Logout")
     let firestore = FireStoreManager.shared
     var ref: DatabaseReference!
-    var updateTitle = ""
+    var userManager = UserManager.shared
+    var updateTitle     = UserManager.shared.updatedTitle
     
     let sections = Section.self
     var collectionView: UICollectionView!
@@ -39,34 +40,74 @@ class UserProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        isUserLoggedIn()
+//        isUserLoggedIn()
+        fetcUserOnLoad()
+       
     }
     
-    private func isUserLoggedIn() {
-        if Auth.auth().currentUser?.uid == nil {
-            perform(#selector(handleLogout), with: nil, afterDelay: 0)
-            
-        } else {
-            self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
-            let uid = Auth.auth().currentUser?.uid
-            self.ref.child("users").child(uid!).observeSingleEvent(of: .value) { [weak self ](snapShot) in
-                guard let self = self else { return }
-                if let values = snapShot.value as? [String: Any]{
-                    self.updateTitle = values["name"] as! String
-                    print(self.updateTitle)
-                    self.title = self.updateTitle
-                }
-            } withCancel: { (error) in}
+    private func fetcUserOnLoad() {
+        userManager.fetchUser { (result) in
+            print(result)
+            print("updateTitle on load :", self.updateTitle)
         }
     }
+    
+    
+//    private func isUserLoggedIn() {
+//        if Auth.auth().currentUser?.uid == nil {
+//            print("No user found")
+//            userManager.handleLogout()
+//            showLoadingView()
+//            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
+//
+//        } else {
+//            userManager.fetchUser { (result) in
+//                print("user loaded :", result)
+//
+//                self.showLoadingView()
+//                self.createTabBar()
+//            }
+//        }
+//    }
+    
+//    private func isUserLoggedIn() {
+//        if Auth.auth().currentUser?.uid == nil {
+//            perform(#selector(handleLogout), with: nil, afterDelay: 0)
+//
+//        } else {
+//            self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
+//            let uid = Auth.auth().currentUser?.uid
+//            self.ref.child("users").child(uid!).observeSingleEvent(of: .value) { [weak self ](snapShot) in
+//                guard let self = self else { return }
+//                if let values = snapShot.value as? [String: Any]{
+//                    self.updateTitle = values["name"] as! String
+//                    print(self.updateTitle)
+//                    self.title = self.updateTitle
+//                }
+//            } withCancel: { (error) in}
+//        }
+//    }
+    
+//    private func isUserLoggedIn() {
+//        if Auth.auth().currentUser?.uid == nil {
+//            print("No user found")
+//            userManager.handleLogout()
+//            showLoadingView()
+//            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
+//
+//        } else {
+//            userManager.fetchUser { (result) in
+//                print("user loaded :", result)
+//
+//                self.showLoadingView()
+//                self.createTabBar()
+//            }
+//        }
+//    }
     
     @objc private func handleLogout() {
         print("Logut")
-        do {
-            try Auth.auth().signOut()
-        } catch let logoutError {
-            print(logoutError.localizedDescription)
-        }
+        userManager.handleLogout()
         
         showLoadingView()
         let loginVC = LoginViewController()
@@ -94,6 +135,8 @@ class UserProfileViewController: UIViewController {
     
     
     private func configureNavigationBar() {
+        
+        
                 let titleImageView = UIImageView(image: Images.like)
                 titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
                 titleImageView.contentMode = .scaleAspectFit

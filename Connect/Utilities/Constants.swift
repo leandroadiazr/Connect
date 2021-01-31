@@ -64,7 +64,7 @@ enum CustomColors {
     static let CustomBlue = #colorLiteral(red: 0.01568627451, green: 0.4196078431, blue: 0.6, alpha: 1)
     static let CustomGreenLightBright = #colorLiteral(red: 0, green: 1, blue: 0, alpha: 1)
     static let CustomRed            = #colorLiteral(red: 0.8856633306, green: 0.3753367662, blue: 0.2555282116, alpha: 1)   //UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 0.2)
-    static let CustomGreen = #colorLiteral(red: 0.3098039216, green: 0.4392156863, blue: 0.1607843137, alpha: 0.77)
+    static let CustomGreen = #colorLiteral(red: 0.3098039216, green: 0.4392156863, blue: 0.1607843137, alpha: 1)
     static let CustomGreenGradient = #colorLiteral(red: 0.2666666667, green: 0.3882352941, blue: 0.03921568627, alpha: 1)
     static let CustomGreenBright = #colorLiteral(red: 0.4901960784, green: 0.8745098039, blue: 0.04705882353, alpha: 1)
     static let SeparatorColor = #colorLiteral(red: 0.5098039216, green: 0.05098039216, blue: 0.007843137255, alpha: 0.8966716609)

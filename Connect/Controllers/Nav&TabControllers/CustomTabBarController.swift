@@ -12,7 +12,9 @@ import FirebaseAuth
 
 class CustomTabBarController: UITabBarController {
     var ref: DatabaseReference!
-    var updateTitle     = ""
+    var userManager = UserManager.shared
+    var updateTitle     = UserManager.shared.updatedTitle
+    var userProfile: UserProfile?
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,52 +22,36 @@ class CustomTabBarController: UITabBarController {
     
     private func isUserLoggedIn() {
         if Auth.auth().currentUser?.uid == nil {
-            perform(#selector(handleLogout), with: nil, afterDelay: 0)
+            print("No user found")
+            userManager.handleLogout()
+            showLoadingView()
+            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
             
         } else {
-            self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
-            let uid = Auth.auth().currentUser?.uid
-            self.ref.child("users").child(uid!).observeSingleEvent(of: .value) { [weak self ](snapShot) in
-                guard let self = self else { return }
-                if let values = snapShot.value as? [String: Any]{
-                    self.updateTitle = values["name"] as! String
-                    print(self.updateTitle)
-                }
-            } withCancel: { (error) in
-               
+            userManager.fetchUser { (result) in
+                print("user loaded :", result)
+                
+                self.showLoadingView()
+                self.createTabBar()
             }
-            self.showLoadingView()
-            createTabBar()
         }
     }
     
-
-    
-    @objc private func handleLogout() {
-        print("Logut")
-        do {
-            try Auth.auth().signOut()
-        } catch let logoutError {
-            print(logoutError.localizedDescription)
-        }
-        showLoadingView()
-        let loginVC = LoginViewController()
-        loginVC.modalPresentationStyle = .custom
-        loginVC.transitioningDelegate = self
-        present(loginVC, animated: true)
-        
+    @objc private func showLoginVC() {
+        showLoginViewController()
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        self.showLoadingView()
+        //        self.showLoadingView()
         isUserLoggedIn()
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        self.dismissLoadingView()
+        //        self.dismissLoadingView()
         self.title = updateTitle
     }
     
@@ -137,5 +123,19 @@ extension CustomTabBarController: UIViewControllerTransitioningDelegate {
         customTransition.isPresenting = false
         return customTransition
     }
-
+    
 }
+
+//belongs to login functionality
+//            self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
+//            let uid = Auth.auth().currentUser?.uid
+//            self.ref.child("users").child(uid!).observeSingleEvent(of: .value) { [weak self ](snapShot) in
+//                guard let self = self else { return }
+//                if let values = snapShot.value as? [String: Any]{
+//                    self.updateTitle = values["name"] as! String
+//                    print(self.updateTitle)
+//                }
+//            } withCancel: { (error) in
+//
+//            }
+//            guard let userID = userProfile?.userID else { return }

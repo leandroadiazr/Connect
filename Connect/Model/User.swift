@@ -18,7 +18,7 @@ struct User: Codable, Hashable {
     var name: String
     let handler: String
     let email: String
-    //    let password: String
+//    let password: String
     let bio: String
     let location: String
     var feedID = UUID().uuidString
@@ -72,7 +72,7 @@ extension User: UserSerializable {
               let name                  = dictionary["name"        ] as? String,
               let handler               = dictionary["handler"     ] as? String,
               let email                 = dictionary["email"       ] as? String,
-              //                              let password = dictionary[//  "password"] as? Stringpassword,
+              
               let bio                   = dictionary["bio"         ] as? String,
               let location              = dictionary["location"    ] as? String,
               let feedID                = dictionary["feedID"      ] as? String,

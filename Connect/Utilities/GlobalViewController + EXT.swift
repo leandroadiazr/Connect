@@ -14,9 +14,20 @@ fileprivate var containerView: UIView!
 
 extension UIViewController {
     
+   
+    
+    
     //TitleAttributes
     func preferedTitleAppearance() {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 26)]
+    }
+    
+    //Present Login View Controller
+    func showLoginViewController(){
+        let loginVC = LoginViewController()
+        loginVC.modalPresentationStyle = .custom
+//        loginVC.transitioningDelegate = self
+        present(loginVC, animated: true)
     }
     
     //Present Alert View Controller
@@ -96,4 +107,14 @@ extension UIViewController {
     //CustomNavigationBar
     
     
+}
+
+
+extension UINavigationController {
+    func removeThisViewController(_ controller: UIViewController.Type) {
+        if let vc = viewControllers.first(where: {$0.isKind(of: controller.self) }) {
+            vc.removeFromParent()
+            print("removed")
+        }
+    }
 }

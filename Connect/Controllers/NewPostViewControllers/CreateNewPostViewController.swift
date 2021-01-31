@@ -112,6 +112,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
            let profileImage     = self.userProfileImageView.image,
            let location         = self.locationLabel.text,
            let title            = titleField.text,
+           
            let mainImage        = mainImageViewArea.currentImage,
            let imageOne         = imageBtnOne.currentImage,
            let imageTwo         = imageBtnTwo.currentImage,

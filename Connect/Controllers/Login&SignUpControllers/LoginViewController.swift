@@ -44,6 +44,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var isEmailEntered: Bool { return !emailTextField.text!.isEmpty }
     var isPassEntered: Bool { return !passwordTextField.text!.isEmpty }
     var ref: DatabaseReference!
+    var userManager = UserManager.shared
+    var localUser: UserProfile?
+    let userProfile = [UserProfile]()
     
     //MARK:- LIFECYCLE EVENTS
     override func viewDidLoad() {
@@ -57,7 +60,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         inputErrorLabel.isHidden = true
         forgotPasswordBtn.isHidden = true
-//        showLoadingView()
+        //        showLoadingView()
         
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -88,7 +91,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK:- UI ELEMENTS
-  
+    
     
     //MARK:- LABELS & TEXT FIELDS
     private func configureLabels() {
@@ -236,14 +239,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         present(signupVC, animated: true)
     }
     
-
+    
     
     private func transitionToHomeVC() {
         let mainVC = CustomTabBarController()
         mainVC.modalPresentationStyle = .custom
         mainVC.transitioningDelegate = self
         present(mainVC, animated: true, completion: nil)
-//        self.showLoadingView()
+        //        self.showLoadingView()
     }
     
     //MARK:- SIGNIN WITH EMAIL
@@ -256,6 +259,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         if let email = emailTextField.text,
            let passOne = passwordTextField.text {
+
             Auth.auth().signIn(withEmail: email, password: passOne) { [weak self] (user, error) in
                 guard let self = self else { return }
                 if let unwrappedError = error {
@@ -264,12 +268,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print(unwrappedError.localizedDescription)
                     return
                 }
+               
                 let mainVC = CustomTabBarController()
                 mainVC.modalPresentationStyle = .overFullScreen
-                self.present(mainVC, animated: true, completion: nil)
-//                self.showLoadingView()
+                self.present(mainVC, animated: true, completion: nil) 
             }
         }
+        
     }
     
     //MARK:- SIGN IN WITH APPLE ID

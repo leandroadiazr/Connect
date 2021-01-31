@@ -25,7 +25,7 @@ class FireStoreManager {
     
     func saveFeeds(_ feeds: User, completion: @escaping (Result<Bool, NSError>) -> Void) {
 //        refId = self.database.collection("feeds").addDocument(data: feeds.feedsDectionary)
-        refId = self.database.collection("user").addDocument(data: feeds.userDictionary)
+        refId = self.database.collection("users").addDocument(data: feeds.userDictionary)
         { (error) in
             if let unwrappedError = error  {
                 completion(.failure(unwrappedError as NSError))
@@ -72,7 +72,7 @@ class FireStoreManager {
     
     
     func getFeeds(completion: @escaping ([User]?) -> Void) {
-        database.collection("user").getDocuments { (querySnapshot, error) in
+        database.collection("users").getDocuments { (querySnapshot, error) in
 //            guard let self = self else { return }
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
@@ -90,7 +90,7 @@ class FireStoreManager {
                             let name                  = dictionary["name"        ] as? String,
                             let handler               = dictionary["handler"     ] as? String,
                             let email                 = dictionary["email"       ] as? String,
-                            //                              let password = dictionary[//  "password"] as? Stringpassword,
+                            let password              = dictionary["password"    ] as? String,
                             let bio                   = dictionary["bio"         ] as? String,
                             let location              = dictionary["location"    ] as? String,
 //                            let feedID                = dictionary["feedID"      ] as? String,
