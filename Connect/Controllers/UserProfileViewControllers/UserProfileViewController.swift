@@ -124,6 +124,7 @@ class UserProfileViewController: UIViewController {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.sizeToFit()
         collectionView.backgroundColor = .systemBackground
+        collectionView.isScrollEnabled = false
         view.addSubview(collectionView)
     }
     

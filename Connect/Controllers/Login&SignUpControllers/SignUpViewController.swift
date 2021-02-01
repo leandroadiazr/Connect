@@ -14,10 +14,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- UI ELELMENTS
     //MARK:- IMAGES
-    let topBackgroundImage = UIImageView()
-    let bottomBackgroundImage = UIImageView()
-    let bubbleImageView = UIImageView()
-    let starsImage      = UIImageView()
+    let topBackgroundImage      = UIImageView()
+    let bottomBackgroundImage   = UIImageView()
+    let bubbleImageView         = UIImageView()
+    let starsImage              = UIImageView()
+    let addProfileImage         = CustomMainButton(backgroundColor: .clear, title: "", textColor: .white, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.greenPlus)
+    let imagePicker = UIImagePickerController()
+    private var currentButton: UIButton?
 
     
     //MARK:- TextFields and Labels
@@ -124,7 +127,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     //MARK:- BUTTONS
     private func configureButtons() {
         //FORGOT BTN
-        let buttons = [signUpWEmailBtn, backToSignInBtn, appleIDBtn, facebookBtn, googleBtn ]
+        let buttons = [addProfileImage, signUpWEmailBtn, backToSignInBtn, appleIDBtn, facebookBtn, googleBtn ]
         for button in buttons {
             button.translatesAutoresizingMaskIntoConstraints = false
             button.layer.cornerRadius = 5
@@ -132,6 +135,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             view.addSubview(button)
         }
         
+        addProfileImage.addTarget(self, action: #selector(addProfileImageAction), for: .touchUpInside)
         
         //BACK TO SIGNIN BTN
         backToSignInBtn.addTarget(self, action: #selector(backTosignInAction), for: .touchUpInside)
@@ -162,10 +166,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         
         //Bubble BG Image
         bubbleImageView.image = Images.bubbleImage
+//        bubbleImageView.setImage(Images.bubbleImage, for: .normal)
         bubbleImageView.translatesAutoresizingMaskIntoConstraints = false
         bubbleImageView.backgroundColor = UIColor.clear
+        bubbleImageView.clipsToBounds = true
         bubbleImageView.tintColor = CustomColors.CustomGreenLightBright.withAlphaComponent(0.8)
+//        bubbleImageView.addTarget(self, action: #selector(addProfileImageAction), for: .touchUpInside)
+        imagePicker.delegate = self
         bubbleImageView.applyCustomShadow()
+        
         view.addSubview(bubbleImageView)
         
         //Stars
@@ -200,6 +209,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK:- BUTTON ACTIONS
+    
+    //MARK:- ADD PROFILE IMAGE
+    @objc private func addProfileImageAction()  {
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    //MARK:- BACK TO SIGN IN
     @objc private func backTosignInAction() {
         
         print("going back")
@@ -340,6 +358,24 @@ extension SignUpViewController: UIViewControllerTransitioningDelegate {
 }
 
 
+//MARK:- IMAGE PICKER DELEGATES
+extension SignUpViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[.editedImage] as? UIImage else { return }
+        print(image)
+        picker.dismiss(animated: true) {
+            self.bubbleImageView.image = image
+//            self.currentButton!.setImage(image, for: .normal)
+
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+}
+
 extension SignUpViewController {
     //move this to an extenxion
     private func setupConstraints() {
@@ -363,6 +399,14 @@ extension SignUpViewController {
             bubbleImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant:  topHalf),
             bubbleImageView.widthAnchor.constraint(equalToConstant: 95),
             bubbleImageView.heightAnchor.constraint(equalToConstant: 75)
+        ])
+        
+        //MARK:- PROFILE IMAGE
+        NSLayoutConstraint.activate([
+            addProfileImage.bottomAnchor.constraint(equalTo: bubbleImageView.bottomAnchor, constant: 5),
+            addProfileImage.centerXAnchor.constraint(equalTo: bubbleImageView.trailingAnchor, constant:  -10),
+            addProfileImage.widthAnchor.constraint(equalToConstant: 35),
+            addProfileImage.heightAnchor.constraint(equalToConstant: 35)
         ])
         
         
