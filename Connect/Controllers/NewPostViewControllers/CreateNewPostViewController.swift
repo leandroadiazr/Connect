@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+
 
 class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
 
@@ -132,10 +134,10 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
                 print("urlPath :", urlPath)
                 
                 
-                newUser = User( profileImage: profImg, name: name, handler: "", email: "", bio: "", location: location, feedID: UUID().uuidString, mainImage: imgOne, otherImages: otherImagesPaths, status: status, postedOn: Date(), postTitle: title, messageDescription: descriptionField, likes: "1", comments: "1", views: "1")
-         
+                newUser = User( profileImage: profImg, name: name, handler: "", email: "", password: nil, bio: "", location: location, feedID: UUID().uuidString, mainImage: imgOne, otherImages: otherImagesPaths, status: status, postedOn: Date(), postTitle: title, messageDescription: descriptionField, likes: "1", comments: "1", views: "1")
+                guard let userID = Auth.auth().currentUser?.uid else { return }
                 guard let newUserPost = newUser else { return }
-                self.firestore.saveFeeds(newUserPost) { (result) in
+                self.firestore.saveFeeds(userID: userID, feeds: newUserPost ) { (result) in
                     print("Saved Sucessfully")
                 }
             }

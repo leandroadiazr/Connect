@@ -23,88 +23,42 @@ class UserProfileViewController: UIViewController {
     let sections = Section.self
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, User>!
-    var feedReference = [User]()
     var feeds = testingData
+    var loggedUser = [User]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchUserProfile()
         configureNavigationBar()
         configureCollectionView()
         registerCell()
         configureDataSource()
-        
-        reloadData(with: feedReference)
-        getUserDataFromServer()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        isUserLoggedIn()
-        fetcUserOnLoad()
-       
+
     }
     
-    private func fetcUserOnLoad() {
-        userManager.fetchUser { (result) in
-            print(result)
-            print("updateTitle on load :", self.updateTitle)
+    private func fetchUserProfile() {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        print(userID)
+        firestore.getCurrentUser(userID: userID) { (user) in
+            print(user)
+            if let user = user {
+                print(user)
+                
+                self.loggedUser.append(contentsOf: user)
+                print(self.loggedUser)
+                DispatchQueue.main.async {
+                    self.reloadData(with: self.loggedUser)
+                }
+            }
         }
     }
     
-    
-//    private func isUserLoggedIn() {
-//        if Auth.auth().currentUser?.uid == nil {
-//            print("No user found")
-//            userManager.handleLogout()
-//            showLoadingView()
-//            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
-//
-//        } else {
-//            userManager.fetchUser { (result) in
-//                print("user loaded :", result)
-//
-//                self.showLoadingView()
-//                self.createTabBar()
-//            }
-//        }
-//    }
-    
-//    private func isUserLoggedIn() {
-//        if Auth.auth().currentUser?.uid == nil {
-//            perform(#selector(handleLogout), with: nil, afterDelay: 0)
-//
-//        } else {
-//            self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
-//            let uid = Auth.auth().currentUser?.uid
-//            self.ref.child("users").child(uid!).observeSingleEvent(of: .value) { [weak self ](snapShot) in
-//                guard let self = self else { return }
-//                if let values = snapShot.value as? [String: Any]{
-//                    self.updateTitle = values["name"] as! String
-//                    print(self.updateTitle)
-//                    self.title = self.updateTitle
-//                }
-//            } withCancel: { (error) in}
-//        }
-//    }
-    
-//    private func isUserLoggedIn() {
-//        if Auth.auth().currentUser?.uid == nil {
-//            print("No user found")
-//            userManager.handleLogout()
-//            showLoadingView()
-//            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
-//
-//        } else {
-//            userManager.fetchUser { (result) in
-//                print("user loaded :", result)
-//
-//                self.showLoadingView()
-//                self.createTabBar()
-//            }
-//        }
-//    }
-    
+
     @objc private func handleLogout() {
         print("Logut")
         userManager.handleLogout()
@@ -117,26 +71,29 @@ class UserProfileViewController: UIViewController {
     }
     
     func getUserDataFromServer() {
-        firestore.getFeeds { (receivedFeeds) in
-            print("receivedFeeds :", receivedFeeds)
-            guard let dataReceived = receivedFeeds else { return }
-            print("received feeds on postVC: ", dataReceived)
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        
+        
+        firestore.getUser(userID: userID){ (receivedUser) in
+            print("receivedUser :", receivedUser)
+            guard let dataReceived = receivedUser else { return }
+            print("received user on postVC: ", dataReceived)
             
             dataReceived.forEach{
                 let receivedFeed = $0
-                self.feedReference.append(receivedFeed)
+                print(receivedFeed)
+                self.loggedUser.append(receivedFeed)
             }
             
             DispatchQueue.main.async {
-                self.reloadData(with: self.feedReference)
+                self.reloadData(with: self.loggedUser)
             }
         }
     }
     
     
     private func configureNavigationBar() {
-        
-        
+ 
                 let titleImageView = UIImageView(image: Images.like)
                 titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
                 titleImageView.contentMode = .scaleAspectFit

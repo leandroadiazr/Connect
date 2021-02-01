@@ -15,6 +15,10 @@ class CustomTabBarController: UITabBarController {
     var userManager = UserManager.shared
     var updateTitle     = UserManager.shared.updatedTitle
     var userProfile: UserProfile?
+    let firestore = FireStoreManager.shared
+    let storage = FireStorageManager.shared
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,12 +32,20 @@ class CustomTabBarController: UITabBarController {
             perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
             
         } else {
-            userManager.fetchUser { (result) in
-                print("user loaded :", result)
-                
+            guard let uuid = Auth.auth().currentUser?.uid else { return }
+            
+            firestore.getUser(userID: uuid) { (user) in
+                print("user :******", user)
                 self.showLoadingView()
                 self.createTabBar()
+                
             }
+//            userManager.fetchUser { (result) in
+//                print("user loaded :", result)
+//
+//                self.showLoadingView()
+//                self.createTabBar()
+//            }
         }
     }
     

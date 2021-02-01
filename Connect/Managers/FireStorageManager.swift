@@ -7,15 +7,38 @@
 
 import UIKit
 import FirebaseStorage
+import FirebaseAuth
 
 class FireStorageManager {
     private init() {}
     static let shared = FireStorageManager()
     private let storage = Storage.storage()
+    private let firestore = FireStoreManager.shared
     private lazy var imagesReferences = storage.reference().child("images")
     
     
-    func uploadData(_ image: UIImage, completion: @escaping (String) -> Void) {
+    
+    func uploadProfileImage(user: User, completion: @escaping (Result<String, ErrorMessages>) -> Void) {
+        let changeProfile = Auth.auth().currentUser?.createProfileChangeRequest()
+        changeProfile?.displayName = user.name
+        let imageURL = URL(fileURLWithPath: user.profileImage)
+        changeProfile?.photoURL = imageURL
+        changeProfile?.commitChanges(completion: { (error) in
+            if let unwrappedError = error {
+                completion(.failure(.unableToSaveProfile))
+            } else {
+                guard let userID = Auth.auth().currentUser?.uid else { return }
+                self.firestore.saveUser(user: user, userID: userID) { (error) in
+                    completion(.success("Profile Saved"))
+                }
+                
+                completion(.success("Profile Saved"))
+            }
+        })
+    }
+    
+    
+    func uploadSingleImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         let imageRef = imagesReferences.child("images/\(UUID().uuidString).jpg")
         
         //convert image to data
@@ -45,7 +68,7 @@ class FireStorageManager {
         var counter = 0
         for image in images {
             semaphore.wait()
-            uploadData(image) { (urlPath) in
+            uploadSingleImage(image) { (urlPath) in
                     
                 imagesPaths.append(urlPath)
                 counter += 1

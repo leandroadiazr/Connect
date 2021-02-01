@@ -17,8 +17,8 @@ struct User: Codable, Hashable {
     let profileImage: String
     var name: String
     let handler: String
-    let email: String
-//    let password: String
+    var email: String
+    let password: String?
     let bio: String
     let location: String
     var feedID = UUID().uuidString
@@ -48,7 +48,7 @@ struct User: Codable, Hashable {
             "name"          : name,
             "handler"       : handler,
             "email"         : email,
-            //  "password"      : password,
+            "password"      : password,
             "bio"           : bio,
             "location"      : location,
             "feedID"        : feedID,
@@ -72,7 +72,7 @@ extension User: UserSerializable {
               let name                  = dictionary["name"        ] as? String,
               let handler               = dictionary["handler"     ] as? String,
               let email                 = dictionary["email"       ] as? String,
-              
+              let password              = dictionary["password"    ] as? String?,
               let bio                   = dictionary["bio"         ] as? String,
               let location              = dictionary["location"    ] as? String,
               let feedID                = dictionary["feedID"      ] as? String,
@@ -87,14 +87,14 @@ extension User: UserSerializable {
               let views                 = dictionary[ "views"      ] as? String
         else { return nil}
         
-        self.init(profileImage: profileImage, name: name, handler: handler, email: email, bio: bio, location: location, feedID: feedID, mainImage: mainImage, otherImages: otherImages, status: status, postedOn: postedOn, postTitle: postTitle, messageDescription: messageDescription, likes: likes, comments: comments, views: views)
+        self.init(profileImage: profileImage, name: name, handler: handler, email: email, password: nil, bio: bio, location: location, feedID: feedID, mainImage: mainImage, otherImages: otherImages, status: status, postedOn: postedOn, postTitle: postTitle, messageDescription: messageDescription, likes: likes, comments: comments, views: views)
     }
 }
 
 
 
 //Testing Data
-let testingData: [User] = [User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: "100", comments: "no Comments", views: "300")]
+let testingData: [User] = [User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: "100", comments: "no Comments", views: "300")]
 
 
 

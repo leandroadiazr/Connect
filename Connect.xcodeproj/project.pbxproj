@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5119710C2AC63B250DF6E247 /* Pods_Connect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEAC96232049A3D01586BEDA /* Pods_Connect.framework */; };
 		E841657225C6DFEA0011A237 /* UsersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E841657125C6DFEA0011A237 /* UsersManager.swift */; };
+		E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */; };
 		E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09525C4E8B400778209 /* AppDelegate.swift */; };
 		E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09725C4E8B400778209 /* SceneDelegate.swift */; };
 		E8D6D09A25C4E8B400778209 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09925C4E8B400778209 /* ViewController.swift */; };
@@ -76,6 +77,7 @@
 		27D9C9F57778EC948D543BD4 /* Pods-Connect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Connect.debug.xcconfig"; path = "Target Support Files/Pods-Connect/Pods-Connect.debug.xcconfig"; sourceTree = "<group>"; };
 		6269AAD5F904C6818B27195A /* Pods-Connect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Connect.release.xcconfig"; path = "Target Support Files/Pods-Connect/Pods-Connect.release.xcconfig"; sourceTree = "<group>"; };
 		E841657125C6DFEA0011A237 /* UsersManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersManager.swift; sourceTree = "<group>"; };
+		E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
 		E8D6D09225C4E8B400778209 /* Connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Connect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D6D09525C4E8B400778209 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8D6D09725C4E8B400778209 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 				E8D6D0AD25C4E94300778209 /* BackupCells.swift */,
 				E8D6D0AE25C4E94300778209 /* CustomTransition.swift */,
 				E8D6D0AF25C4E94300778209 /* Extension.swift */,
+				E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -669,6 +672,7 @@
 				E8D6D0B425C4E94300778209 /* Extension.swift in Sources */,
 				E8D6D14F25C4E96200778209 /* MenuViewController.swift in Sources */,
 				E8D6D17125C4E96B00778209 /* Story.swift in Sources */,
+				E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */,
 				E8D6D0FB25C4E95800778209 /* MenuViewCell.swift in Sources */,
 				E8D6D17925C4E97400778209 /* FireStoreManager.swift in Sources */,
 				E8D6D0FE25C4E95800778209 /* HomeCollectionViewCell.swift in Sources */,

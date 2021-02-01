@@ -18,6 +18,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     let bottomBackgroundImage = UIImageView()
     let bubbleImageView = UIImageView()
     let starsImage      = UIImageView()
+
     
     //MARK:- TextFields and Labels
     let titleLabel = CustomTitleLabel(title: "Join Connect, It's Easy...!", textAlignment: .center, fontSize: 28)
@@ -54,6 +55,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     var isPassTowEntered: Bool { return !passwordTextFieldTwo.text!.isEmpty }
     
     var ref: DatabaseReference!
+    var userManager = UserManager.shared
+    let firestore = FireStoreManager.shared
+    let storage = FireStorageManager.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
@@ -234,8 +239,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             print("pass are not equal & needs to be at least 8 chars")
             return
         }
+        var newUser: User?
         
-        if let name = nameTextField.text,
+        if let userProfile = bubbleImageView.image,
+            let name = nameTextField.text,
            let email = emailTextField.text,
            let passOne = passwordTextField.text {
             Auth.auth().createUser(withEmail: email, password: passOne) { [weak self] authResult, error in
@@ -252,18 +259,24 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 
-                //Suscess auth
-                self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
-                let usersReferences = self.ref.child("users").child(uuid)
-                let values = ["name": name, "email": email]
-                usersReferences.updateChildValues(values) { (error, ref) in
-                    if let unwrappedError = error {
-                        self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
-                        self.thereIsAnError()
-                        print(unwrappedError.localizedDescription)
-                        
-                        return
-                    }
+                
+                
+                self.storage.uploadSingleImage(userProfile) { (imageURL) in
+                    let profileImage = imageURL
+
+                    newUser = User(profileImage: profileImage, name: name, handler: "", email: email, password: passOne, bio: "", location: "", feedID: "", mainImage: "", otherImages: [""], status: "", postedOn: Date(), postTitle: "", messageDescription: "", likes: "", comments: "", views: "")
+                    
+                    
+                   
+                    
+                guard let saveThisUser = newUser else { return}
+                    
+//                    self.storage.uploadProfileImage(user: saveThisUser) { (string) in
+//                        print("Saved")
+////                    }
+                    self.firestore.saveUser(user: saveThisUser, userID: uuid) { (result) in
+                    print("saved user")
+
                     print("Saved suscessfully into firebase database need an alert")
                     self.navigationController?.popViewController(animated: true)
                     let customTabVC = CustomTabBarController()
@@ -274,7 +287,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             }
         }
         
-        
+        }
     }
     
     //MARK:- SIGN IN WITH APPLE ID
@@ -501,3 +514,28 @@ extension SignUpViewController {
         ])
     }
 }
+
+
+/*                }
+ 
+ ORIGINAL WAY OF SAVING
+ //Suscess auth
+//                self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
+//                let usersReferences = self.ref.child("users").child(uuid)
+//
+//                let userReference = self.userManager.database.collection("users").document(uuid)
+//                let values = ["name": name, "email": email]
+//                userReference.updateData(values) { (error) in
+//    //            userReference.updateChildValues(values) { (error, reference) in
+//                    if let _ = error {
+//                        print(error?.localizedDescription)
+//                    }
+//
+//                usersReferences.updateChildValues(values) { (error, ref) in
+//                    if let unwrappedError = error {
+//                        self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
+//                        self.thereIsAnError()
+//                        print(unwrappedError.localizedDescription)
+//
+//                        return
+//                    }*/
