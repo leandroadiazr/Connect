@@ -48,7 +48,7 @@ class FireStoreManager {
                 print(unwrappedError.localizedDescription)
             } else {
                 guard let data = querySnapshot?.documents else {
-                    print(error?.localizedDescription)
+                    print(error!.localizedDescription)
                     return
                 }
                 for documents in data {
@@ -110,7 +110,7 @@ class FireStoreManager {
                 print(unwrappedError.localizedDescription)
             } else {
                 guard let document = querySnapshot else {
-                    print(error?.localizedDescription)
+                    print(error!.localizedDescription)
                     return
                 }
 //                for documents in data {
@@ -159,7 +159,7 @@ class FireStoreManager {
                 print(unwrappedError.localizedDescription)
             } else {
                 guard let data = querySnapshot?.documents else {
-                    print(error?.localizedDescription)
+                    print(error!.localizedDescription)
                     return
                 }
                 for documents in data {

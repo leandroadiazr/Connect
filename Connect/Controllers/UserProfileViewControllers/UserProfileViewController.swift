@@ -45,7 +45,7 @@ class UserProfileViewController: UIViewController {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         print(userID)
         firestore.getCurrentUser(userID: userID) { (user) in
-            print(user)
+            print(user!)
             if let user = user {
                 print(user)
                 
@@ -75,7 +75,7 @@ class UserProfileViewController: UIViewController {
         
         
         firestore.getUser(userID: userID){ (receivedUser) in
-            print("receivedUser :", receivedUser)
+            print("receivedUser :", receivedUser!)
             guard let dataReceived = receivedUser else { return }
             print("received user on postVC: ", dataReceived)
             

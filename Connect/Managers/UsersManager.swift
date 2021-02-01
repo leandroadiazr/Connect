@@ -27,7 +27,7 @@ class UserManager {
         auth.createUser(withEmail: user.email, password: user.password!) { (authResult, error) in
             if let _ = error {
                 completion(.failure(.unableToSave))
-                print(error?.localizedDescription)
+                print(error!.localizedDescription)
                 return
             }
             
@@ -44,7 +44,7 @@ class UserManager {
 //            userReference.updateChildValues(values) { (error, reference) in
                 if let _ = error {
                     completion(.failure(.unableToCreate))
-                    print(error?.localizedDescription)
+                    print(error!.localizedDescription)
                 }
             }
         }

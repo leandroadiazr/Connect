@@ -10,6 +10,8 @@
 		5119710C2AC63B250DF6E247 /* Pods_Connect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEAC96232049A3D01586BEDA /* Pods_Connect.framework */; };
 		E841657225C6DFEA0011A237 /* UsersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E841657125C6DFEA0011A237 /* UsersManager.swift */; };
 		E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */; };
+		E8967E5725C89B4D00AB571B /* LoginConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */; };
+		E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */; };
 		E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09525C4E8B400778209 /* AppDelegate.swift */; };
 		E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09725C4E8B400778209 /* SceneDelegate.swift */; };
 		E8D6D09A25C4E8B400778209 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09925C4E8B400778209 /* ViewController.swift */; };
@@ -78,6 +80,8 @@
 		6269AAD5F904C6818B27195A /* Pods-Connect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Connect.release.xcconfig"; path = "Target Support Files/Pods-Connect/Pods-Connect.release.xcconfig"; sourceTree = "<group>"; };
 		E841657125C6DFEA0011A237 /* UsersManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersManager.swift; sourceTree = "<group>"; };
 		E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
+		E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConstraintExtension.swift; sourceTree = "<group>"; };
+		E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpConstraintExtension.swift; sourceTree = "<group>"; };
 		E8D6D09225C4E8B400778209 /* Connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Connect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D6D09525C4E8B400778209 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8D6D09725C4E8B400778209 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -171,6 +175,15 @@
 				6269AAD5F904C6818B27195A /* Pods-Connect.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E8967E5525C89B1800AB571B /* Login Signup Constraints */ = {
+			isa = PBXGroup;
+			children = (
+				E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */,
+				E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */,
+			);
+			path = "Login Signup Constraints";
 			sourceTree = "<group>";
 		};
 		E8D6D08925C4E8B400778209 = {
@@ -472,6 +485,7 @@
 		E8D6D13B25C4E96200778209 /* Login&SignUpControllers */ = {
 			isa = PBXGroup;
 			children = (
+				E8967E5525C89B1800AB571B /* Login Signup Constraints */,
 				E8D6D13C25C4E96200778209 /* SignUpViewController.swift */,
 				E8D6D13F25C4E96200778209 /* LoginViewController.swift */,
 			);
@@ -634,9 +648,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8D6D14D25C4E96200778209 /* StoryViewController.swift in Sources */,
+				E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */,
 				E8D6D17825C4E97400778209 /* FireStorageManager.swift in Sources */,
 				E8D6D15B25C4E96200778209 /* DiscussionViewController.swift in Sources */,
 				E8D6D09A25C4E8B400778209 /* ViewController.swift in Sources */,
+				E8967E5725C89B4D00AB571B /* LoginConstraintExtension.swift in Sources */,
 				E8D6D0F325C4E95800778209 /* MainFeedViewCell.swift in Sources */,
 				E8D6D10925C4E95800778209 /* CustomMenuButton.swift in Sources */,
 				E8D6D10D25C4E95800778209 /* CustomMainButton.swift in Sources */,
