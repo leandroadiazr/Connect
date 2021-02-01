@@ -142,8 +142,8 @@ class UserProfileViewCell: UICollectionViewCell {
     private func setupConstraints() {
         let padding: CGFloat = 10
         let bottomPadding: CGFloat = 20
-        let mediaHeight: CGFloat = contentView.frame.height / 3
-        let mediaWidth: CGFloat = contentView.frame.width / 2.05
+//        let mediaHeight: CGFloat = contentView.frame.height / 3
+//        let mediaWidth: CGFloat = contentView.frame.width / 2.05
         
         //ProfileImage
         NSLayoutConstraint.activate([

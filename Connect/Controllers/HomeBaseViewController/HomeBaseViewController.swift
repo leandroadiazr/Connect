@@ -126,7 +126,7 @@ class HomeBaseViewController: UIViewController {
 extension HomeBaseViewController {
     
     func setupConstraints() {
-        let padding: CGFloat = 10
+//        let padding: CGFloat = 10
         NSLayoutConstraint.activate([
             storyView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3),
             storyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

@@ -26,6 +26,7 @@ class FireStorageManager {
         changeProfile?.commitChanges(completion: { (error) in
             if let unwrappedError = error {
                 completion(.failure(.unableToSaveProfile))
+                print(unwrappedError.localizedDescription)
             } else {
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.firestore.saveUser(user: user, userID: userID) { (error) in

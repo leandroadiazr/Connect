@@ -107,7 +107,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         print("Clicked Save Btn 'Done'")
         //        self.navigationController?.dismiss(animated: true, completion: nil)
         self.dismisVC()
-        var newPost: [User]?
+//        var newPost: [User]?
         var newUser: User?
         
         if let name             = self.userNameLabel.text,
@@ -207,7 +207,7 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         picker.dismiss(animated: true) {
             self.currentButton!.setImage(image, for: .normal)
 //            self.mainImageViewArea.setImage(image, for: .normal)
-            print(self.currentButton)
+            print(self.currentButton!)
         }
     }
     

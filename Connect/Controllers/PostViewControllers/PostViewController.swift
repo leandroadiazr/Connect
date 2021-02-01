@@ -43,7 +43,7 @@ class PostViewController: UIViewController, UITextFieldDelegate {
     func getFeedsFromServer() {
         
         firestore.getFeeds { (receivedFeeds) in
-            print("receivedFeeds :", receivedFeeds)
+            print("receivedFeeds :", "\(String(describing: receivedFeeds))")
             guard let dataReceived = receivedFeeds else { return }
             print("received feeds on postVC: ", dataReceived)
 
