@@ -12,10 +12,11 @@ class UserProfileViewCell: UICollectionViewCell {
     
     let userProfileImage        = CustomAvatarImage(frame: .zero)
     let userProfileImgTwo       = CustomAvatarImage(frame: .zero)
-    let userProfileImgThree        = CustomAvatarImage(frame: .zero)
+    let userProfileImgThree     = CustomAvatarImage(frame: .zero)
     let userProfileImgFour      = CustomAvatarImage(frame: .zero)
     let menuButton              = CustomMenuButton()
     let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
+    let bio                     = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
     let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
     let postedLabel             = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 12)
     let titleLabel              = CustomSecondaryTitleLabel(title: "", fontSize: 15, textColor: .label)
@@ -51,56 +52,24 @@ class UserProfileViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setCell(with data: User) {
-        if data.profileImage.isEmpty {
-            userProfileImage.image = UIImage(named: Images.Avatar)
-        }
-//        guard let url = URL(string: data.profileImage) else { return }
-//        do {
-//            let data = try Data(contentsOf: url)
-//            userProfileImage.image = UIImage(data: data)
-//        } catch {
-//            print(error)
-//        }
-        userProfileImage.downloadImage(from: data.profileImage)
-        userNameLabel.text = data.name
-        locationLabel.text = data.location
-        
-        
-        //FEEDS
-//        for feed in data.feed! {
-//            mainImageViewArea.downloadImage(from: feed.mainImage) //= UIImage(named: with.media)
-            
-       
-            
-//            for _ in feed.otherImages{
-//                guard let url = URL(string: feed.mainImage) else { return }
-//                do {
-//                    let data = try Data(contentsOf: url)
-//                    mainImageViewArea.image = UIImage(data: data)
-//                } catch {
-//                    print(error)
-//                }
-//                imageViewAreaTwo.downloadImage(from: imageViewAreaTwo)
-//            }
-            statusLabel.text = data.status
-            postedLabel.text = String(data.postedOn.timeIntervalSinceNow)
-            titleLabel.text = data.postTitle
-            messageDescriptionLabel.text = data.messageDescription
-         
-//        }
+    
+    func setCell(with user: UserProfile){
+        userProfileImage.downloadImage(from: user.profileImage.absoluteString)
+        userNameLabel.text = user.name
+        statusLabel.text = user.status
+        postedLabel.text = user.status
+        titleLabel.text = user.userBio
     }
+    
     
     private func configure() {
         self.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
         //PROFILE PICTURE
         userProfileImage.applyCustomShadow()
-        userProfileImage.layer.cornerRadius = 30
+        userProfileImage.layer.cornerRadius = 40
         addSubview(userProfileImage)
-        //        profileView.translatesAutoresizingMaskIntoConstraints = false
         
         //MENU BUTTON
-        //        menuButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(menuButton)
         
         //MEDIA VIEW AREA
@@ -152,13 +121,13 @@ class UserProfileViewCell: UICollectionViewCell {
             
             userProfileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
             userProfileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-            userProfileImage.widthAnchor.constraint(equalToConstant: 60),
-            userProfileImage.heightAnchor.constraint(equalToConstant: 60)
+            userProfileImage.widthAnchor.constraint(equalToConstant: 80),
+            userProfileImage.heightAnchor.constraint(equalToConstant: 80)
         ])
         
         //User name Label
         NSLayoutConstraint.activate([
-            userNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            userNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bottomPadding),
             userNameLabel.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
         ])
         

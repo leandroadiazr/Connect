@@ -93,7 +93,8 @@ extension User: UserSerializable {
 
 
 //Testing Data
-let testingData: [User] = [User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: "100", comments: "no Comments", views: "300")]
+let testingData: [User] = [User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: "100", comments: "no Comments", views: "300"),
+                           User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: "100", comments: "no Comments", views: "300"),]
 
 
 

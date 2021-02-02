@@ -16,12 +16,8 @@ struct UserProfile: Codable, Hashable {
     var name: String
     var handler: String
     var email: String
-    var password: String
     var profileImage: URL
-    var backUpImageOne: URL
-    var backUpImageTwo: URL
-    var backUpImageThree: URL
-    var location: String
+    var userLocation: String
     var userBio: String
     var status: String
     
@@ -34,7 +30,6 @@ struct UserProfile: Codable, Hashable {
     }
 }
 
-
 extension UserProfile: UserProfileSerializable {
     init?(dictionary: [String : Any]) {
       
@@ -42,15 +37,11 @@ guard   let userID              = dictionary["userID"]           as? String,
         let name                = dictionary["name"]             as? String,
         let handler             = dictionary["handler"]          as? String,
         let email               = dictionary["email"]            as? String,
-        let password            = dictionary["password"]         as? String,
         let profileImage        = dictionary["profileImage    "] as? URL,
-        let backUpImageOne      = dictionary["backUpImageOne  "] as? URL,
-        let backUpImageTwo      = dictionary["backUpImageTwo  "] as? URL,
-        let backUpImageThree    = dictionary["backUpImageThree"] as? URL,
-        let location            = dictionary["location        "] as? String,
+        let userLocation        = dictionary["location        "] as? String,
         let userBio             = dictionary["userBio         "] as? String,
         let status              = dictionary["status          "] as? String else {return nil}
         
-        self.init(userID: userID, name: name, handler: handler, email: email, password: password, profileImage: profileImage, backUpImageOne: backUpImageOne, backUpImageTwo: backUpImageTwo, backUpImageThree: backUpImageThree, location: location, userBio: userBio, status: status)
+        self.init(userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, status: status)
     }
 }

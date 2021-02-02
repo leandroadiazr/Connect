@@ -15,7 +15,6 @@ class FireStoreManager {
     private init() {}
     static let shared = FireStoreManager()
     private var database = Firestore.firestore()
-    //    private lazy var feedsReference = database.collection("mainFeed")
     private var refId: DocumentReference? = nil
     var currentUserProfile: UserProfile?
     
@@ -23,11 +22,13 @@ class FireStoreManager {
     private var userObject = [User]()
     private var singleUser = [User]()
     private var feedObject = [User]()
+    private var currentUser = [UserProfile]()
     private var postObject = [Feed]()
     func configure() {
         
     }
     
+//    MARK:- SAVING CURRENT USER POST
     //without the userid for now
     func savePost(post: [String: Any], completion: @escaping (Result<Bool, ErrorMessages>) -> Void) {
         self.refId = self.database.collection("userPost").addDocument(data: post, completion: { (error) in
@@ -41,6 +42,7 @@ class FireStoreManager {
         })
     }
     
+    //MARK:- GET CURRENT USER POSTS
     //observePost the one using now
     func observePost(completion: @escaping (Result<[Feed], ErrorMessages>)-> Void) {
         let postRef = database.collection("userPost")
@@ -62,7 +64,6 @@ class FireStoreManager {
                 let name                  = author["name"        ] as? String,
                 let profileImage          = author["profileImage"] as? String,
                 let imgProURL             = URL(string: profileImage),
-                
                 let mainImage       = dictionary["mainImage      "] as? String,
                 let otherImages     = dictionary["otherImages    "] as? [String],
                 let status          = dictionary["status         "] as? String,
@@ -73,8 +74,8 @@ class FireStoreManager {
                 let likes           = dictionary["likes          "] as? Int,
                 let comments        = dictionary["comments       "] as? Int,
                 let views           = dictionary["views          "] as? Int else { continue }
-//                let otherImagesDic  = dictionary["otherImages"] as? [String: An
-                    let userProfile = UserProfile(userID: userID, name: name, handler: name, email: name, password: "", profileImage: imgProURL, backUpImageOne: imgProURL, backUpImageTwo: imgProURL, backUpImageThree: imgProURL, location: location, userBio: "", status: status)
+
+                    let userProfile = UserProfile(userID: userID, name: name, handler: name, email: name, profileImage: imgProURL, userLocation: location, userBio: "", status: status)
                     let retreivedPost = Feed(author: userProfile, mainImage: mainImage, otherImages: otherImages, status: status, postedOn: postedOn, location: location, postTitle: postTitle, postDescription: postDescription, likes: likes, comments: comments, views: views)
                     post.append(retreivedPost)
                     print("retreivedPost :", retreivedPost)
@@ -105,7 +106,7 @@ class FireStoreManager {
     }
     
     func getFeeds(completion: @escaping ([User]?) -> Void) {
-        database.collection("usersFeeds").getDocuments { (querySnapshot, error) in
+        database.collection("mainFeeds").getDocuments { (querySnapshot, error) in
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
             } else {
@@ -189,15 +190,15 @@ class FireStoreManager {
                       let profImgURL = URL(string: profileImage),
                       let uuid = snapshot?.documentID
                 else { return }
-                userProfile = UserProfile(userID: uuid, name: username, handler: "", email: "", password: "", profileImage: profImgURL, backUpImageOne: profImgURL, backUpImageTwo: profImgURL, backUpImageThree: profImgURL, location: "", userBio: "", status: "")
+                userProfile = UserProfile(userID: uuid, name: username, handler: "", email: "", profileImage: profImgURL, userLocation: "", userBio: "", status: "")
             }
             completion(.success(userProfile))
         }
     }
     
-    
+    //MARK:- GET CURRENT USER IN THE DATABASE
     //THIS IS THE CURRENT WORKING ONE
-    func getCurrentUser(userID: String, completion: @escaping ([User]?) -> Void) {
+    func getCurrentUser(userID: String, completion: @escaping ([UserProfile]?) -> Void) {
         database.collection("users").document(userID).getDocument  { (querySnapshot, error) in
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
@@ -209,36 +210,33 @@ class FireStoreManager {
                 //                for documents in data {
                 guard let dictionary = document.data() else { return }
                 guard
+                    
                     let profileImage          = dictionary["profileImage"] as? String,
+                    let profImgURL = URL(string: profileImage),
                     let name                  = dictionary["name"        ] as? String,
                     let handler               = dictionary["handler"     ] as? String,
                     let email                 = dictionary["email"       ] as? String,
-                    //                            let password              = dictionary["password"    ] as? String,
                     let bio                   = dictionary["bio"         ] as? String,
                     let location              = dictionary["location"    ] as? String,
-                    //                            let feedID                = dictionary["feedID"      ] as? String,
-                    //                            let mainImage             = dictionary["mainImage"   ] as? String,
-                    //                            let otherImages           = dictionary["otherImages" ] as? [String],
-                    let status                = dictionary["status"      ] as? String,
-                    //                            let postedOn              = dictionary["postedOn"    ] as? Date,
-                    let postTitle             = dictionary["postTitle"   ] as? String,
-                    let messageDescription    = dictionary["messageDescription"] as? String,
-                    let likes                 = dictionary["likes"       ] as? String,
-                    let comments              = dictionary["comments"    ] as? String,
-                    let views                 = dictionary[ "views"      ] as? String
-                //                            let otherImagesDic  = dictionary["otherImages"] as? [String: String]
+                    let status                = dictionary["status"      ] as? String
+                    
+                   
                 else {
                     return //continue //in case should be a continue and the for each changed to a for loop
                 }
                 //                               let receivedOtherImages = otherImagesDic.map{ $0.value}
-                let object = User(profileImage: profileImage, name: name, handler: handler, email: email, password: nil, bio: bio, location: location, mainImage: profileImage, otherImages: [profileImage], status: status, postedOn: Date(), postTitle: postTitle, messageDescription: messageDescription, likes: likes, comments: comments, views: views)
                 
-                print(object)
+                guard let uid = Auth.auth().currentUser?.uid else { return }
+                let currentUser = UserProfile(userID: uid, name: name, handler: handler, email: email, profileImage: profImgURL, userLocation: location, userBio: bio, status: status)
                 
-                self.singleUser.append(object)
-                print(self.singleUser)
+//                let object = User(profileImage: profileImage, name: name, handler: handler, email: email, password: nil, bio: bio, location: location, mainImage: profileImage, otherImages: [profileImage], status: status, postedOn: Date(), postTitle: postTitle, messageDescription: messageDescription, likes: likes, comments: comments, views: views)
+//
+//                print(object)
+//
+                self.currentUser.append(currentUser)
+                print(self.currentUser)
             }
-            completion(self.singleUser)
+            completion(self.currentUser)
             //            }
         }
         
@@ -246,7 +244,6 @@ class FireStoreManager {
     
     
     func getUser(userID: String, completion: @escaping ([User]?) -> Void) {
-        
         database.collection("users").getDocuments { (querySnapshot, error) in
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
@@ -292,66 +289,4 @@ class FireStoreManager {
     }
 }
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        //    func getFeeds(completion: @escaping ([Feed]?) -> Void) {
-        //        feedsReference.addSnapshotListener { [weak self] (snapShot, error) in
-        //            guard let self = self else { return }
-        //            guard let snapShotData = snapShot else { return }
-        //            let data = snapShotData.documents
-        //            print(data)
-        //            data.forEach {
-        //                print("Data received in the forEach: ", $0)
-        //        }
-        //
-        //            var feedsObject = [Feed]()
-        //            for documents in data {
-        ////                let receivedData = $0.data()
-        //                let receivedData = documents.data()
-        //                guard
-        //                        let userName        = receivedData["userName"] as? String,
-        //                        let profile         = receivedData["profile"] as? String,
-        //                        let media           = receivedData["media"] as? String,
-        //                        let status          = receivedData["status"] as? String,
-        //                        let postedOn        = receivedData["postedOn"] as? String,
-        //                        let location        = receivedData["location"] as? String,
-        //                        let postTitle       = receivedData["postTitle"] as? String,
-        //                        let description     = receivedData["description"] as? String,
-        //                        let likes           = receivedData["likes"] as? String,
-        //                        let comments        = receivedData["comments"] as? String,
-        //                        let views        = receivedData["views"] as? String,
-        //                        let otherImagesDic  = receivedData["otherImages"] as? [String: String]
-//                                    let otherImages = otherImagesDic.map{ $0.value}
-        //                else {
-        //                    continue //in case should be a continue and the for each changed to a for loop
-        //                }
-        //
-        //                    let object = Feed(userName: User(profileImage: profile, name: userName, handler: userName, bio: ""), profile: profile, media: media, otherImages: otherImages, status: status, postedOn: postedOn, location: location, postTitle: postTitle, description: description, likes: likes , comments: comments, views: views)
-        //                feedsObject.append( object)
-        //                print("feedsObjedt :", feedsObject)
-        //            }
-        //            completion(feedsObject)
-        //        }
-        //    }
-        //        }
-//    }
-//}
+  

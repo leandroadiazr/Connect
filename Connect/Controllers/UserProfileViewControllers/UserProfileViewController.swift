@@ -14,17 +14,18 @@ class UserProfileViewController: UIViewController {
     enum Section {
         case main
     }
-    let logoutButton = CustomGenericButton(backgroundColor: .systemRed, title: "Logout")
-    let firestore = FireStoreManager.shared
-    var ref: DatabaseReference!
-    var userManager = UserManager.shared
+    let logoutButton    = CustomGenericButton(backgroundColor: .systemRed, title: "Logout")
+    let firestore       = FireStoreManager.shared
+    var ref             : DatabaseReference!
+    var userManager     = UserManager.shared
     var updateTitle     = UserManager.shared.updatedTitle
     
-    let sections = Section.self
-    var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, User>!
-    var feeds = testingData
-    var loggedUser = [User]()
+    let sections        = Section.self
+    var collectionView  : UICollectionView!
+    var dataSource      : UICollectionViewDiffableDataSource<Section, UserProfile>!
+    var feeds           = testingData
+    var loggedUser      = [User]()
+    var currentLoggedUser = [UserProfile]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +39,6 @@ class UserProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        isUserLoggedIn()
-
     }
     
     private func fetchUserProfile() {
@@ -49,10 +49,10 @@ class UserProfileViewController: UIViewController {
             if let user = user {
                 print(user)
                 
-                self.loggedUser.append(contentsOf: user)
-                print(self.loggedUser)
+                self.currentLoggedUser.append(contentsOf: user)
+                print(self.currentLoggedUser)
                 DispatchQueue.main.async {
-                    self.reloadData(with: self.loggedUser)
+                    self.reloadData(with: self.currentLoggedUser)
                 }
             }
         }
@@ -72,8 +72,6 @@ class UserProfileViewController: UIViewController {
     
     func getUserDataFromServer() {
         guard let userID = Auth.auth().currentUser?.uid else { return }
-        
-        
         firestore.getUser(userID: userID){ (receivedUser) in
             print("receivedUser :", receivedUser!)
             guard let dataReceived = receivedUser else { return }
@@ -86,7 +84,7 @@ class UserProfileViewController: UIViewController {
             }
             
             DispatchQueue.main.async {
-                self.reloadData(with: self.loggedUser)
+                self.reloadData(with: self.currentLoggedUser)
             }
         }
     }
@@ -133,18 +131,18 @@ class UserProfileViewController: UIViewController {
     }
     
     private func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, User>(collectionView: collectionView) { (collectionView, indexPath, feed) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, UserProfile>(collectionView: collectionView) { (collectionView, indexPath, user) -> UICollectionViewCell? in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserProfileViewCell.reuseID, for: indexPath) as? UserProfileViewCell else {
                 fatalError("can't deque cell")
             }
             
-            cell.setCell(with: feed)
+            cell.setCell(with: user)
             return cell
         }
     }
     
-    fileprivate func reloadData(with feed: [User]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, User>()
+    fileprivate func reloadData(with feed: [UserProfile]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, UserProfile>()
 
             snapshot.appendSections([.main])
             snapshot.appendItems(feed)

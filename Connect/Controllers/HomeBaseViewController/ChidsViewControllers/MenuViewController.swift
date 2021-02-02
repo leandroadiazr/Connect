@@ -9,7 +9,6 @@ import UIKit
 
 class MenuViewController: UIViewController {
 
-    
     var menuCollectionView: UICollectionView?
     let menu = menuTesting
     

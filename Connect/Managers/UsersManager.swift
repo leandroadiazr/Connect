@@ -54,7 +54,7 @@ class UserManager {
 //        let reference = database.child(childCollection)
         database.collection(self.childCollection).getDocuments { (data, error) in
   
-            let uid = self.auth.currentUser?.uid
+//            let uid = self.auth.currentUser?.uid
             guard let singleUser = data?.documents else { return }
         //get SingleUser
 //        reference.child(uid!).observeSingleEvent(of: .childAdded) { (singleUser) in

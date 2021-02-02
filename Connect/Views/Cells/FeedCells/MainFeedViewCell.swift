@@ -60,16 +60,16 @@ class MainFeedViewCell: UICollectionViewCell {
         locationLabel.text = data.location
         
         //FEEDS
-//        for feed in data.feed! {
-            mainImageViewArea.image = UIImage(named: data.mainImage)
-            statusLabel.text = data.status
-            postedLabel.text = String(data.postedOn.timeIntervalSinceNow)
-            titleLabel.text = data.postTitle
-            messageDescriptionLabel.text = data.messageDescription
-            likesLabel.text = data.likes
-            commentsLabel.text = data.comments
-            viewsLabel.text = data.views
-//        }
+        //        for feed in data.feed! {
+        mainImageViewArea.image = UIImage(named: data.mainImage)
+        statusLabel.text = data.status
+        postedLabel.text = String(data.postedOn.timeIntervalSinceNow)
+        titleLabel.text = data.postTitle
+        messageDescriptionLabel.text = data.messageDescription
+        likesLabel.text = data.likes
+        commentsLabel.text = data.comments
+        viewsLabel.text = data.views
+        //        }
         
     }
     

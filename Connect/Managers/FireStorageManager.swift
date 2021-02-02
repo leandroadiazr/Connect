@@ -44,7 +44,7 @@ class FireStorageManager {
         let imageRef = imagesReferences.child("images/\(UUID().uuidString).jpg")
         
         //convert image to data
-        guard let imageData = image.jpegData(compressionQuality: 0.5) else { return }
+        guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
         
         imageRef.putData(imageData, metadata: nil) { (_, error) in
             if let unwrappedError = error {

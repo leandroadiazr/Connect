@@ -54,15 +54,15 @@ class SavedPostViewCell: UICollectionViewCell {
     }
     
     func setCell(with feed: Feed) {
-        if feed.author.profileImage == nil {
-            userProfileImage.image = UIImage(named: Images.Avatar)
-        }
-        
+//        if feed.author.profileImage == nil {
+//            userProfileImage.image = UIImage(named: Images.Avatar)
+//        }
+//        
         
         guard let url = URL(string: feed.author.profileImage.absoluteString) else { return }
-            userProfileImage.downloadImage(from: url.absoluteString)
+        userProfileImage.downloadImage(from: url.absoluteString)
         userNameLabel.text = feed.author.name
-        locationLabel.text = feed.author.location
+        locationLabel.text = feed.author.userLocation
         mainImageViewArea.downloadImage(from: feed.mainImage)
         imageViewAreaTwo.downloadImage(from: feed.otherImages[0])
         imageViewAreaThree.downloadImage(from: feed.otherImages[1])

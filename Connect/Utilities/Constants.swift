@@ -59,6 +59,13 @@ enum Images {
 }
 
 
+enum Status {
+    static let Active   = "Active"
+    static let Away     = "Away"
+    static let Offline  = "Offline"
+}
+
+
 //MARK:- CUSTOM COLORS
 enum CustomColors {
     static let CustomBlue = #colorLiteral(red: 0.01568627451, green: 0.4196078431, blue: 0.6, alpha: 1)
