@@ -43,7 +43,6 @@ struct User: Codable, Hashable {
     
     var userDictionary : [String: Any] {
         return [
-            
             "profileImage"  : profileImage,
             "name"          : name,
             "handler"       : handler,

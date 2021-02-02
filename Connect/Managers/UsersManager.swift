@@ -66,24 +66,7 @@ class UserManager {
                 print("userDictionary.name :", userDictionary.name)
                 
             }
-//            if let dictionary =
-//
-//                singleUser.value as? [String: Any] {
-//                let user = User(dictionary: dictionary)
-//                guard var values = user else { return }
-//                values.name = dictionary["name"] as! String
-//                print("singleuser :", values.name)
-//            }
         }
-        
-//            reference.child(uid!).observeSingleEvent(of: .value) { (snapShot) in
-//               print(snapShot)
-//                if let values = snapShot.value as? [String: Any] {
-//                    self.updatedTitle = values["name"] as! String
-//
-//                    print("user retreived : ", self.updatedTitle)
-//                }
-//            } withCancel: { (error) in}
         completion(.success(true))
     }
     

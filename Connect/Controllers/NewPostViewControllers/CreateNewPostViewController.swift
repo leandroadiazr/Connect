@@ -107,87 +107,107 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         print("Clicked Save Btn 'Done'")
         //        self.navigationController?.dismiss(animated: true, completion: nil)
         self.dismisVC()
-//        var newPost: [User]?
-        var newUser: User?
         
-        if let name             = self.userNameLabel.text,
-           let profileImage     = self.userProfileImageView.image,
-           let location         = self.locationLabel.text,
-           let title            = titleField.text,
-           
+        createNewPost()
+        
+//        var newPost: [User]?
+//        var newUser: User?
+//
+//        if let name             = self.userNameLabel.text,
+//           let profileImage     = self.userProfileImageView.image,
+//           let location         = self.locationLabel.text,
+//           let title            = titleField.text,
+//
+//           let mainImage        = mainImageViewArea.currentImage,
+//           let imageOne         = imageBtnOne.currentImage,
+//           let imageTwo         = imageBtnTwo.currentImage,
+//           let imageThree       = imageBtnThree.currentImage,
+//           let status           = statusLabel.text,
+//           let descriptionField = descriptionField.text {
+//
+//            storage.bulkUpload([profileImage, mainImage, imageOne, imageTwo, imageThree]) {  (urlPath) in
+//                //            guard let self = self else { return }
+//                let profImg     = urlPath[0]
+//                let imgOne      = urlPath[1]
+//                let imgTwo      = urlPath[2]
+//                let imgThree    = urlPath[3]
+//                let imgFour     = urlPath[4]
+//                let otherImagesPaths = [imgTwo, imgThree, imgFour]
+//                print("urlPath :", urlPath)
+//
+//
+//                newUser = User( profileImage: profImg, name: name, handler: "", email: "", password: nil, bio: "", location: location, feedID: UUID().uuidString, mainImage: imgOne, otherImages: otherImagesPaths, status: status, postedOn: Date(), postTitle: title, messageDescription: descriptionField, likes: "1", comments: "1", views: "1")
+//                guard let userID = Auth.auth().currentUser?.uid else { return }
+//                guard let newUserPost = newUser else { return }
+//                self.firestore.saveFeeds(userID: userID, feeds: newUserPost ) { (result) in
+//                    print("Saved Sucessfully")
+//                }
+//            }
+//
+//        }
+    }
+    
+    
+    private func createNewPost() {
+//        var newPost: Feed?
+        if 
            let mainImage        = mainImageViewArea.currentImage,
            let imageOne         = imageBtnOne.currentImage,
            let imageTwo         = imageBtnTwo.currentImage,
            let imageThree       = imageBtnThree.currentImage,
            let status           = statusLabel.text,
-           let descriptionField = descriptionField.text {
-            
-            
-            storage.bulkUpload([profileImage, mainImage, imageOne, imageTwo, imageThree]) {  (urlPath) in
-                //            guard let self = self else { return }
-                let profImg     = urlPath[0]
-                let imgOne      = urlPath[1]
-                let imgTwo      = urlPath[2]
-                let imgThree    = urlPath[3]
-                let imgFour     = urlPath[4]
-                let otherImagesPaths = [imgTwo, imgThree, imgFour]
-                print("urlPath :", urlPath)
-                
-                
-                newUser = User( profileImage: profImg, name: name, handler: "", email: "", password: nil, bio: "", location: location, feedID: UUID().uuidString, mainImage: imgOne, otherImages: otherImagesPaths, status: status, postedOn: Date(), postTitle: title, messageDescription: descriptionField, likes: "1", comments: "1", views: "1")
-                guard let userID = Auth.auth().currentUser?.uid else { return }
-                guard let newUserPost = newUser else { return }
-                self.firestore.saveFeeds(userID: userID, feeds: newUserPost ) { (result) in
-                    print("Saved Sucessfully")
-                }
-            }
-            
-        } 
-    }
-    
-
-    
-//    @objc func savePost() {
-//        print("Clicked Save Btn 'Done'")
-//        self.navigationController?.dismiss(animated: true, completion: nil)
-//        print(mediaViewArea)
-//        guard
-//              let title = titleField.text,
-//              let curStatus = statusLabel.text,
-//              let curLocation = locationLabel.text,
-//              let mainImage = mediaViewArea.currentImage
-//              let imageOne = imageBtnOne.currentImage,
-//              let imageTwo = imageBtnTwo.currentImage,
-//              let imageThree = imageBtnThree.currentImage,
-//              let description = descriptionField.text
+           let location         = self.locationLabel.text,
+           let postTitle        = titleField.text,
+           let postDescription  = descriptionField.text {
         
-//        else {
-//            print(self.mediaViewArea)
-//            return }
-//        print(mainImage)
-//
-//        storage.bulkUpload([mainImage /*, imageOne, imageTwo, imageThree*/]) { [weak self] (urlPath) in
-////            guard let self = self else { return }
-//            let imgOne = urlPath[0]
-//            let imgTwo = urlPath[1]
-//            let imgThree = urlPath[2]
-//            let imgFour = urlPath[3]
-//      print("urlPath :", urlPath)
-            
-//            let postObj = Feed(userName: User(profileImage: self?.user?.profileImage ?? Images.Avatar, name: self?.user?.name ?? "", handler: self?.user?.handler ?? "", bio: ""), profile: "", media: imgOne, otherImages: Array(urlPath.suffix(from: 0)), status: "curStatus", postedOn: String(Date().timeIntervalSinceNow), location: "curLocation", postTitle: "title", description: "description", likes: "0", comments: "", views: "")
-//            print(postObj)
-            
+
+            storage.bulkUpload([mainImage, imageOne, imageTwo, imageThree]) {  (urlPath) in
+                //            guard let self = self else { return }
+                let mainImg         = urlPath[0]
+                let imgOne          = urlPath[1]
+                let imgTwo           = urlPath[2]
+                let imgThree         = urlPath[3]
+                let otherImagesPaths = [imgOne, imgTwo, imgThree]
+                print("urlPath :", urlPath)
+                let postedOn        = "timestamp"
+                let likes           = 0
+                let comments        = 0
+                let views           = 0
+                    
+                guard let userProfile = self.firestore.currentUserProfile else { return }
            
-//            self?.firestore.saveFeeds(postObj) { (result) in
+                let newPost: [String: Any] = [
+                    
+                    "author": [
+                        "userID": userProfile.userID,
+                        "name"  : userProfile.name,
+                        "profileImage": userProfile.profileImage.absoluteString
+                    ],
+                    "mainImage      " : mainImg,
+                    "otherImages    " : otherImagesPaths,
+                    "status         " : status,
+                    "postedOn       " : postedOn,
+                    "location       " : location,
+                    "postTitle      " : postTitle,
+                    "postDescription" : postDescription,
+                    "likes          " : likes,
+                    "comments       " : comments,
+                    "views          " : views
+                ]
+                
+                self.firestore.savePost(post: newPost) { (result) in
+                    print(result)
+                }
+                    
+//                    Feed(author: author, mainImage: mainImg, otherImages: otherImagesPaths, status: status, postedOn: postedOn, location: location, postTitle: postTitle, postDescription: postDescription, likes: likes, comments: comments, views: views)
 //
-//                print("result :", result)
-//                self?.navigationController?.popViewController(animated: true)
-////            }
-//        }
-//        }
-//
-//      print(mainImage)
-//    }
+        }
+        
+        
+        
+        }
+        
+    }
 
     
     @objc private func getImage(_ sender: UIButton) {

@@ -15,6 +15,7 @@ class FireStorageManager {
     private let storage = Storage.storage()
     private let firestore = FireStoreManager.shared
     private lazy var imagesReferences = storage.reference().child("images")
+    let cache                = NSCache<NSString, UIImage>()
     
     
     

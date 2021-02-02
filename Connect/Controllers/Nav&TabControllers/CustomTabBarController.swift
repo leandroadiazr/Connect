@@ -34,6 +34,17 @@ class CustomTabBarController: UITabBarController {
         } else {
             guard let uuid = Auth.auth().currentUser?.uid else { return }
             
+            firestore.observeUserProfile(uuid) { (result) in
+                switch result {
+                case .success(let user):
+                    print(user?.email)
+                    self.firestore.currentUserProfile = user
+                case .failure(let error):
+                        print(error.localizedDescription)
+                }
+            }
+            
+            
             firestore.getUser(userID: uuid) { (user) in
                 print("user :******", user ?? "")
                 self.showLoadingView()

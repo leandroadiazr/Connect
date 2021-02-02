@@ -53,47 +53,30 @@ class SavedPostViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setCell(with data: User) {
-        if data.profileImage.isEmpty {
+    func setCell(with feed: Feed) {
+        if feed.author.profileImage == nil {
             userProfileImage.image = UIImage(named: Images.Avatar)
         }
-//        guard let url = URL(string: data.profileImage) else { return }
-//        do {
-//            let data = try Data(contentsOf: url)
-//            userProfileImage.image = UIImage(data: data)
-//        } catch {
-//            print(error)
-//        }
-        userProfileImage.downloadImage(from: data.profileImage)
-        userNameLabel.text = data.name
-        locationLabel.text = data.location
         
         
-        //FEEDS
-//        for feed in data.feed! {
-//            mainImageViewArea.downloadImage(from: feed.mainImage) //= UIImage(named: with.media)
-            
-       
-            
-//            for _ in feed.otherImages{
-//                guard let url = URL(string: feed.mainImage) else { return }
-//                do {
-//                    let data = try Data(contentsOf: url)
-//                    mainImageViewArea.image = UIImage(data: data)
-//                } catch {
-//                    print(error)
-//                }
-//                imageViewAreaTwo.downloadImage(from: imageViewAreaTwo)
-//            }
-            statusLabel.text = data.status
-            postedLabel.text = String(data.postedOn.timeIntervalSinceNow)
-            titleLabel.text = data.postTitle
-            messageDescriptionLabel.text = data.messageDescription
-            likesLabel.text = data.likes
-            commentsLabel.text = data.comments
-            viewsLabel.text = data.views
-//        }
+        guard let url = URL(string: feed.author.profileImage.absoluteString) else { return }
+            userProfileImage.downloadImage(from: url.absoluteString)
+        userNameLabel.text = feed.author.name
+        locationLabel.text = feed.author.location
+        mainImageViewArea.downloadImage(from: feed.mainImage)
+        imageViewAreaTwo.downloadImage(from: feed.otherImages[0])
+        imageViewAreaThree.downloadImage(from: feed.otherImages[1])
+        //falta una imagen
+        
+        statusLabel.text    = feed.status
+        postedLabel.text    = feed.status
+        titleLabel.text     = feed.postTitle
+        messageDescriptionLabel.text = feed.postDescription
+        likesLabel.text = String(feed.likes)
+        commentsLabel.text = String(feed.comments)
+        viewsLabel.text = String(feed.views)
     }
+
     
     private func configure() {
         self.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)

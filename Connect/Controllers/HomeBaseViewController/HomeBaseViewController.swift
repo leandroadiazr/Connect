@@ -143,7 +143,5 @@ extension HomeBaseViewController {
             mainFeedView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mainFeedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
-        //
-        
     }
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 class CustomAvatarImage: UIImageView {
-
+    let cache = FireStorageManager.shared.cache
     let placeHolderImage = Images.Avatar
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,11 +29,11 @@ class CustomAvatarImage: UIImageView {
     }
     
     func downloadImage(from urlString: String) {
-//        let cacheKey = NSString(string: urlString)
+        let cacheKey = NSString(string: urlString)
         
-//        if let image = cache.object(forKey: cacheKey) {
-//            self.image = image
-//        }
+        if let image = cache.object(forKey: cacheKey) {
+            self.image = image
+        }
         
         guard let url = URL(string: urlString) else { return }
         
@@ -43,9 +43,7 @@ class CustomAvatarImage: UIImageView {
             guard let result = response as? HTTPURLResponse, result.statusCode == 200 else { return }
             guard let data = data else { return }
             guard let image = UIImage(data: data) else { return }
-            
-//            self.cache.setObject(image, forKey: cacheKey)
-            
+            self.cache.setObject(image, forKey: cacheKey)
             DispatchQueue.main.async {
                 self.image = image
             }
