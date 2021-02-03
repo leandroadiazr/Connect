@@ -78,6 +78,8 @@
 		E8D6D17925C4E97400778209 /* FireStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D17725C4E97400778209 /* FireStoreManager.swift */; };
 		E8D6D17C25C4EAB900778209 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E8D6D17B25C4EAB900778209 /* GoogleService-Info.plist */; };
 		E8E55CA225C901EB0029D7BC /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E55CA125C901EB0029D7BC /* ImageCacheManager.swift */; };
+		E8FBC08B25CB4C6500AB9F90 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FBC08A25CB4C6500AB9F90 /* DetailsViewController.swift */; };
+		E8FBC09025CB4C9000AB9F90 /* DetailsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FBC08F25CB4C9000AB9F90 /* DetailsViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +157,8 @@
 		E8D6D17725C4E97400778209 /* FireStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireStoreManager.swift; sourceTree = "<group>"; };
 		E8D6D17B25C4EAB900778209 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E8E55CA125C901EB0029D7BC /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
+		E8FBC08A25CB4C6500AB9F90 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		E8FBC08F25CB4C9000AB9F90 /* DetailsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewCell.swift; sourceTree = "<group>"; };
 		EEAC96232049A3D01586BEDA /* Pods_Connect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Connect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -265,6 +269,7 @@
 		E8D6D0B725C4E95800778209 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				E8FBC08E25CB4C7100AB9F90 /* DetailsCells */,
 				E8D6D0B825C4E95800778209 /* FeedCells */,
 				E8D6D0BB25C4E95800778209 /* PostCells */,
 				E8D6D0C025C4E95800778209 /* StoryCells */,
@@ -418,6 +423,7 @@
 		E8D6D11F25C4E96200778209 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E8FBC08925CB4C3100AB9F90 /* DetailsViewController */,
 				E8D6D12025C4E96200778209 /* HomeBaseViewController */,
 				E8D6D12C25C4E96200778209 /* UserProfileViewControllers */,
 				E8D6D12E25C4E96200778209 /* PostViewControllers */,
@@ -545,6 +551,22 @@
 				E8E55CA125C901EB0029D7BC /* ImageCacheManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		E8FBC08925CB4C3100AB9F90 /* DetailsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E8FBC08A25CB4C6500AB9F90 /* DetailsViewController.swift */,
+			);
+			path = DetailsViewController;
+			sourceTree = "<group>";
+		};
+		E8FBC08E25CB4C7100AB9F90 /* DetailsCells */ = {
+			isa = PBXGroup;
+			children = (
+				E8FBC08F25CB4C9000AB9F90 /* DetailsViewCell.swift */,
+			);
+			path = DetailsCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -696,6 +718,7 @@
 				E8D6D11D25C4E95800778209 /* CustomAvatarImage.swift in Sources */,
 				E8D6D10625C4E95800778209 /* HeaderViewCell.swift in Sources */,
 				E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */,
+				E8FBC08B25CB4C6500AB9F90 /* DetailsViewController.swift in Sources */,
 				E8D6D10025C4E95800778209 /* UserProfileViewCell.swift in Sources */,
 				E8D6D15025C4E96200778209 /* HomeBaseViewController.swift in Sources */,
 				E8D6D0B025C4E94300778209 /* Constants.swift in Sources */,
@@ -726,6 +749,7 @@
 				E8D6D15625C4E96200778209 /* AlertContainerView.swift in Sources */,
 				E8D6D14B25C4E96200778209 /* FlowViewController.swift in Sources */,
 				E8D6D15925C4E96200778209 /* TweetsViewController.swift in Sources */,
+				E8FBC09025CB4C9000AB9F90 /* DetailsViewCell.swift in Sources */,
 				E8D6D11525C4E95800778209 /* CustomSecondaryTitleLabel.swift in Sources */,
 				E8D6D0FD25C4E95800778209 /* TweetsViewCell.swift in Sources */,
 			);

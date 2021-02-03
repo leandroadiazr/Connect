@@ -115,8 +115,6 @@ class PostsFeedCell: UICollectionViewCell {
             
         ])
         
-
-        
         //MediaViewArea
         NSLayoutConstraint.activate([
             mainImageViewArea.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: padding),

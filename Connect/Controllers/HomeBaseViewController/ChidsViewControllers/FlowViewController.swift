@@ -139,6 +139,12 @@ class FlowViewController: UIViewController, PresentCommentVC {
 extension FlowViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.item)
+        let items = feeds[indexPath.item]
+        
+        let detailsVC = DetailsViewController()
+        detailsVC.feedReference.append(items)
+        let navVC = UINavigationController(rootViewController: detailsVC)
+        self.present(navVC, animated: true, completion: nil)
     }
 }
 

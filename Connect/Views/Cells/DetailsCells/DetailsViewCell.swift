@@ -1,24 +1,23 @@
 //
-//  MainFeedViewCell.swift
-//  Content
+//  DetailsViewCell.swift
+//  Connect
 //
-//  Created by Leandro Diaz on 1/17/21.
+//  Created by Leandro Diaz on 2/3/21.
 //
 
 import UIKit
-protocol PresentCommentVC: class {
-    func presentViewComments()
-    func showMenu(_ sender: UIButton)
+
+protocol DetailsAction: class {
+    func detailsAction()
 }
 
-class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
-    static let reuseID            = "MainFeedViewCell"
-    let userProfileImage        = CustomAvatarImage(frame: .zero)
-    let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
-    let mainImageViewArea       = UIImageView()
-    let menuButton              = CustomMenuButton()
-    let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
-    let postedLabel             = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 12)
+class DetailsViewCell: UICollectionViewCell {
+    static let reuseID          = "DetailsViewCell"
+    
+    let mainImageViewArea       = CustomAvatarImage(frame: .zero)
+    let imageViewAreaTwo        = CustomAvatarImage(frame: .zero)
+    let imageViewAreaThree      = CustomAvatarImage(frame: .zero)
+    let imageViewAreaFour       = CustomAvatarImage(frame: .zero)
     let titleLabel              = CustomSecondaryTitleLabel(title: "", fontSize: 15, textColor: .label)
     let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 12, textColor: .systemGray)
     let messageDescriptionLabel = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 11)
@@ -28,11 +27,12 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
     var commentsCounter         = CustomBodyLabel(textAlignment: .center, backgroundColor: .clear, fontSize: 12)
     let viewsLabel              = CustomBodyLabel(textAlignment: .right, backgroundColor: .clear, fontSize: 10)
     var viewsCounter            = CustomBodyLabel(textAlignment: .center, backgroundColor: .clear, fontSize: 12)
+    let labelsStackView         = UIStackView()
     let buttonStackView         = UIStackView()
     private var like = 0
     private var view = 0
     private var comment = 0
-    weak var commentDelegate: PresentCommentVC?
+    weak var detailsDelegate: DetailsAction?
     
     let replyBtn        : UIButton = {
         let btn = UIButton(type: .system)
@@ -62,57 +62,47 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
     }
     
     func setCell(with data: User) {
-        if data.profileImage.isEmpty {
-            userProfileImage.image = UIImage(named: Images.Avatar)
-        }
-        
-        userProfileImage.image = UIImage(named: data.profileImage)
-        userNameLabel.text = data.name
         locationLabel.text = data.location
         
-        //FEEDS
-        //        for feed in data.feed! {
         mainImageViewArea.image = UIImage(named: data.mainImage)
-        statusLabel.text = data.status
-        postedLabel.text = String(data.postedOn.timeIntervalSinceNow)
+        imageViewAreaTwo.image = UIImage(named: data.otherImages[0])
+        imageViewAreaThree.image = UIImage(named: data.otherImages[1])
+        imageViewAreaFour.image = UIImage(named: data.mainImage)
         titleLabel.text = data.postTitle
         messageDescriptionLabel.text = data.messageDescription
         likesCounter.text = "\(data.likes)"
         commentsCounter.text = "\(data.comments)"
         viewsCounter.text = "\(data.views)"
+        
     }
     
-    
-    
-    
     private func configure() {
-        
         likesLabel.text = "Likes: "
         commentsLabel.text = "Comments: "
         viewsLabel.text = "Views: "
         self.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
-        //PROFILE PICTURE
-        addSubview(userProfileImage)
-        //MENU BUTTON
-        addSubview(menuButton)
-        bringSubviewToFront(menuButton)
-        menuButton.addTarget(self, action: #selector(showMenuOptions), for: .touchUpInside)
         
         //MEDIA VIEW AREA
-        mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(mainImageViewArea)
+        let mediaViews = [mainImageViewArea, imageViewAreaTwo, imageViewAreaThree, imageViewAreaFour]
+        for imageView in mediaViews {
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.backgroundColor = .lightGray
+            imageView.applyCustomShadow()
+            imageView.clipsToBounds = true
+            addSubview(imageView)
+        }
+        
         
         //LABELS
-        let labels = [userNameLabel, statusLabel, locationLabel, postedLabel, titleLabel, viewsLabel, viewsCounter, messageDescriptionLabel, likesLabel, likesCounter, commentsLabel, commentsCounter]
+        let labels = [titleLabel, locationLabel, viewsLabel, viewsCounter, messageDescriptionLabel, likesLabel, likesCounter, commentsLabel, commentsCounter]
         for label in labels {
             addSubview(label)
         }
         viewsCounter.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
         commentsCounter.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
         likesCounter.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
-        messageDescriptionLabel.numberOfLines = 2
+        messageDescriptionLabel.numberOfLines = 5
         messageDescriptionLabel.lineBreakMode = .byTruncatingTail
-        
         setupActionButtons()
         setupConstraints()
         contentView.isUserInteractionEnabled = false
@@ -123,7 +113,7 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
         for button in actionButtons {
             button.tintColor = CustomColors.CustomGreen
             buttonStackView.addArrangedSubview(button)
-            buttonStackView.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
+            button.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
         }
         likeBtn.addTarget(self, action: #selector(liked), for: .touchUpInside)
         replyBtn.addTarget(self, action: #selector(commented), for: .touchUpInside)
@@ -134,11 +124,6 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
         buttonStackView.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
         
         addSubview(buttonStackView)
-    }
-    
-    @objc private func showMenuOptions(_ sender: UIButton) {
-        self.commentDelegate?.showMenu(sender)
-        
     }
     
     @objc private func shared(){
@@ -180,75 +165,77 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
         if replyBtn.currentTitleColor != UIColor.systemRed {
             comment += 1
             replyBtn.tintColor = .systemRed
-            self.commentDelegate?.presentViewComments()
+            self.detailsDelegate?.detailsAction()
             replyBtn.setImage(Images.commented, for: .normal)
         } else {
-            self.commentDelegate?.presentViewComments()
+            self.detailsDelegate?.detailsAction()
             comment += 1
         }
         commentsCounter.text = "\(comment)"
     }
-   
- 
+    
     
     private func setupConstraints() {
         let padding: CGFloat = 10
+        let bottomPadding: CGFloat = 20
         let textHeight: CGFloat = 15
         let textWidth: CGFloat = 30
-        let mediaHeight: CGFloat = contentView.frame.height / 2
+        let mediaHeight: CGFloat = contentView.frame.height / 3
+        let mediaWidth: CGFloat = contentView.frame.width / 3.1
         
         //ProfileImage
         NSLayoutConstraint.activate([
             contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            
-            userProfileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
-            userProfileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-            userProfileImage.widthAnchor.constraint(equalToConstant: 40),
-            userProfileImage.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-        //User name Label
-        NSLayoutConstraint.activate([
-            userNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
-            userNameLabel.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
-        ])
-        
-        //status Label
-        NSLayoutConstraint.activate([
-            postedLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 5),
-            postedLabel.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
-        ])
-        
-        //status Label
-        NSLayoutConstraint.activate([
-            statusLabel.centerYAnchor.constraint(equalTo: userNameLabel.centerYAnchor),
-            statusLabel.leadingAnchor.constraint(equalTo: userNameLabel.trailingAnchor, constant: padding),
-        ])
-        
-        //Menu Button
-        NSLayoutConstraint.activate([
-            menuButton.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
-            menuButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
         ])
         
         //MediaViewArea
         NSLayoutConstraint.activate([
-            mainImageViewArea.topAnchor.constraint(equalTo: userProfileImage.bottomAnchor, constant: padding),
+            mainImageViewArea.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: padding),
             mainImageViewArea.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
             mainImageViewArea.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
             mainImageViewArea.heightAnchor.constraint(equalToConstant: mediaHeight)
         ])
+        //MediaViewArea 2
+        NSLayoutConstraint.activate([
+            imageViewAreaTwo.topAnchor.constraint(equalTo: mainImageViewArea.bottomAnchor, constant: padding),
+            imageViewAreaTwo.trailingAnchor.constraint(equalTo: imageViewAreaThree.leadingAnchor, constant: -5),
+            imageViewAreaTwo.widthAnchor.constraint(equalToConstant: mediaWidth),
+            imageViewAreaTwo.heightAnchor.constraint(equalToConstant: mediaHeight * 0.5)
+        ])
+        //MediaViewArea 3
+        
+        NSLayoutConstraint.activate([
+            imageViewAreaThree.topAnchor.constraint(equalTo: mainImageViewArea.bottomAnchor, constant: padding),
+            imageViewAreaThree.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            imageViewAreaThree.widthAnchor.constraint(equalToConstant: mediaWidth),
+            imageViewAreaThree.heightAnchor.constraint(equalToConstant: mediaHeight * 0.5)
+        ])
+        
+        NSLayoutConstraint.activate([
+            imageViewAreaFour.topAnchor.constraint(equalTo: mainImageViewArea.bottomAnchor, constant: padding),
+            imageViewAreaFour.leadingAnchor.constraint(equalTo: imageViewAreaThree.trailingAnchor, constant: 5),
+            imageViewAreaFour.widthAnchor.constraint(equalToConstant: mediaWidth),
+            imageViewAreaFour.heightAnchor.constraint(equalToConstant: mediaHeight * 0.5)
+        ])
+        
+        //ActionButtons
+        NSLayoutConstraint.activate([
+            buttonStackView.topAnchor.constraint(equalTo: imageViewAreaFour.bottomAnchor, constant: padding * 2),
+            buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
+            buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
+            buttonStackView.heightAnchor.constraint(equalToConstant: 30),
+        ])
         
         //Title Label
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: mainImageViewArea.bottomAnchor, constant: padding),
+            titleLabel.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: padding * 2),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
         ])
         
         //User name Label
         NSLayoutConstraint.activate([
-            locationLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            locationLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding),
             locationLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
         ])
         
@@ -259,18 +246,18 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
             messageDescriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
         ])
         
-        //Views Label
+        //likes Label
         NSLayoutConstraint.activate([
-            viewsLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
-            viewsLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: textWidth),
+            likesLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            likesLabel.trailingAnchor.constraint(equalTo: likesCounter.leadingAnchor, constant: -2),
         ])
         
-        //Views Counter
+        //Likes Counter
         NSLayoutConstraint.activate([
-            viewsCounter.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
-            viewsCounter.leadingAnchor.constraint(equalTo: viewsLabel.trailingAnchor, constant: 2),
-            viewsCounter.widthAnchor.constraint(equalToConstant: textWidth),
-            viewsCounter.heightAnchor.constraint(equalToConstant: textHeight)
+            likesCounter.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            likesCounter.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -textWidth),
+            likesCounter.widthAnchor.constraint(equalToConstant: textWidth),
+            likesCounter.heightAnchor.constraint(equalToConstant: textHeight)
         ])
         
         //comments Label
@@ -286,27 +273,19 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
             commentsCounter.widthAnchor.constraint(equalToConstant: textWidth),
             commentsCounter.heightAnchor.constraint(equalToConstant: textHeight)
         ])
-
-        //likes Label
+        
+        //Views Label
         NSLayoutConstraint.activate([
-            likesLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
-            likesLabel.trailingAnchor.constraint(equalTo: likesCounter.leadingAnchor, constant: -2),
+            viewsLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            viewsLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: textWidth),
         ])
         
-        //Likes Counter
+        //Views Counter
         NSLayoutConstraint.activate([
-            likesCounter.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
-            likesCounter.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -textWidth),
-            likesCounter.widthAnchor.constraint(equalToConstant: textWidth),
-            likesCounter.heightAnchor.constraint(equalToConstant: textHeight)
-        ])
-        
-        //ActionButtons
-        NSLayoutConstraint.activate([
-            buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-            buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
-            buttonStackView.heightAnchor.constraint(equalToConstant: textWidth),
-            buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
+            viewsCounter.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            viewsCounter.leadingAnchor.constraint(equalTo: viewsLabel.trailingAnchor, constant: 2),
+            viewsCounter.widthAnchor.constraint(equalToConstant: textWidth),
+            viewsCounter.heightAnchor.constraint(equalToConstant: textHeight)
         ])
     }
 }
