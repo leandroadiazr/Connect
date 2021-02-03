@@ -19,9 +19,13 @@ class MainFeedViewCell: UICollectionViewCell {
     let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 12, textColor: .systemGray)
     let messageDescriptionLabel = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 11)
     let likesLabel              = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 10)
+    var likesCounter            = CustomBodyLabel(textAlignment: .center, backgroundColor: .clear, fontSize: 12)
     let commentsLabel           = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 10)
+    var commentsCounter         = CustomBodyLabel(textAlignment: .center, backgroundColor: .clear, fontSize: 12)
     let viewsLabel              = CustomBodyLabel(textAlignment: .right, backgroundColor: .clear, fontSize: 10)
+    var viewsCounter            = CustomBodyLabel(textAlignment: .center, backgroundColor: .clear, fontSize: 12)
     let buttonStackView         = UIStackView()
+    
     
     let replyBtn        : UIButton = {
         let btn = UIButton(type: .system)
@@ -66,34 +70,45 @@ class MainFeedViewCell: UICollectionViewCell {
         postedLabel.text = String(data.postedOn.timeIntervalSinceNow)
         titleLabel.text = data.postTitle
         messageDescriptionLabel.text = data.messageDescription
-        likesLabel.text = data.likes
-        commentsLabel.text = data.comments
-        viewsLabel.text = data.views
-        //        }
-        
+        likesCounter.text = "\(data.likes)"
+        commentsCounter.text = "\(data.comments)"
+        viewsCounter.text = "\(data.views)"
     }
     
+    
+    
+    
     private func configure() {
+        
+        likesLabel.text = "Likes: "
+        commentsLabel.text = "Comments: "
+        viewsLabel.text = "Views: "
         self.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
         //PROFILE PICTURE
         addSubview(userProfileImage)
         //MENU BUTTON
         addSubview(menuButton)
+        bringSubviewToFront(menuButton)
+        menuButton.addTarget(self, action: #selector(liked), for: .touchUpInside)
         
         //MEDIA VIEW AREA
         mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainImageViewArea)
         
         //LABELS
-        let labels = [userNameLabel, statusLabel, locationLabel, postedLabel, titleLabel, viewsLabel, messageDescriptionLabel, likesLabel, commentsLabel]
+        let labels = [userNameLabel, statusLabel, locationLabel, postedLabel, titleLabel, viewsLabel, viewsCounter, messageDescriptionLabel, likesLabel, likesCounter, commentsLabel, commentsCounter]
         for label in labels {
             addSubview(label)
         }
+        viewsCounter.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
+        commentsCounter.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
+        likesCounter.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
         messageDescriptionLabel.numberOfLines = 2
         messageDescriptionLabel.lineBreakMode = .byTruncatingTail
         
         setupActionButtons()
         setupConstraints()
+        contentView.isUserInteractionEnabled = false
     }
     
     fileprivate func setupActionButtons() {
@@ -103,15 +118,55 @@ class MainFeedViewCell: UICollectionViewCell {
             buttonStackView.addArrangedSubview(button)
             button.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
         }
+        likeBtn.addTarget(self, action: #selector(liked), for: .touchUpInside)
+        
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.distribution = .fillEqually
         buttonStackView.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
         
         addSubview(buttonStackView)
     }
+    var like = 0
+    @objc private func liked(addLikes: Bool){
+        
+        
+        if addLikes {
+          
+            print("tapped: ", addLikes)
+           
+        } else {
+            
+            print("tapped 2: ", addLikes)
+          
+        }
+        
+        
+        
+        
+        
+//        if let val = likesCounter.text {
+//            like = Int(val) ?? 0
+//            print(like)
+//        }
+//            if value {
+//                value.toggle()
+//                like += 1
+//            } else {
+//                value.toggle()
+//                like -= 1
+////                if like == 0 {
+////                    like = 0
+////                }
+//            }
+//        likesCounter.text = "\(like)"
+    }
+    private var view = 0
+    private var comment = 0
     
     private func setupConstraints() {
         let padding: CGFloat = 10
+        let textHeight: CGFloat = 15
+        let textWidth: CGFloat = 30
         let mediaHeight: CGFloat = contentView.frame.height / 2
         
         //ProfileImage
@@ -176,29 +231,53 @@ class MainFeedViewCell: UICollectionViewCell {
             messageDescriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
         ])
         
-        //likes Label
+        //Views Label
         NSLayoutConstraint.activate([
-            likesLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
-            likesLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
+            viewsLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            viewsLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: textWidth),
+        ])
+        
+        //Views Counter
+        NSLayoutConstraint.activate([
+            viewsCounter.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            viewsCounter.leadingAnchor.constraint(equalTo: viewsLabel.trailingAnchor, constant: 2),
+            viewsCounter.widthAnchor.constraint(equalToConstant: textWidth),
+            viewsCounter.heightAnchor.constraint(equalToConstant: textHeight)
         ])
         
         //comments Label
         NSLayoutConstraint.activate([
             commentsLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
-            commentsLabel.leadingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: padding),
+            commentsLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -padding),
         ])
         
-        //Views Label
+        //Comments Counter
         NSLayoutConstraint.activate([
-            viewsLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
-            viewsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
+            commentsCounter.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            commentsCounter.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 2),
+            commentsCounter.widthAnchor.constraint(equalToConstant: textWidth),
+            commentsCounter.heightAnchor.constraint(equalToConstant: textHeight)
+        ])
+
+        //likes Label
+        NSLayoutConstraint.activate([
+            likesLabel.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            likesLabel.trailingAnchor.constraint(equalTo: likesCounter.leadingAnchor, constant: -2),
+        ])
+        
+        //Likes Counter
+        NSLayoutConstraint.activate([
+            likesCounter.topAnchor.constraint(equalTo: messageDescriptionLabel.bottomAnchor, constant: padding),
+            likesCounter.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -textWidth),
+            likesCounter.widthAnchor.constraint(equalToConstant: textWidth),
+            likesCounter.heightAnchor.constraint(equalToConstant: textHeight)
         ])
         
         //ActionButtons
         NSLayoutConstraint.activate([
             buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
             buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
-            buttonStackView.heightAnchor.constraint(equalToConstant: 30),
+            buttonStackView.heightAnchor.constraint(equalToConstant: textWidth),
             buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
         ])
     }

@@ -11,13 +11,11 @@ import FirebaseAuth
 
 class FireStorageManager {
     private init() {}
-    static let shared = FireStorageManager()
-    private let storage = Storage.storage()
-    private let firestore = FireStoreManager.shared
+    static let shared       = FireStorageManager()
+    private let storage     = Storage.storage()
+    private let firestore   = FireStoreManager.shared
     private lazy var imagesReferences = storage.reference().child("images")
-    let cache                = NSCache<NSString, UIImage>()
-    
-    
+    let cache               = NSCache<NSString, UIImage>()
     
     func uploadProfileImage(user: User, completion: @escaping (Result<String, ErrorMessages>) -> Void) {
         let changeProfile = Auth.auth().currentUser?.createProfileChangeRequest()
@@ -33,7 +31,6 @@ class FireStorageManager {
                 self.firestore.saveUser(user: user, userID: userID) { (error) in
                     completion(.success("Profile Saved"))
                 }
-                
                 completion(.success("Profile Saved"))
             }
         })
@@ -57,7 +54,6 @@ class FireStorageManager {
                     } else if let unwrappedUrl = url {
                         completion(unwrappedUrl.absoluteString)
                     }
-                
                 }
             }
         }
@@ -71,7 +67,7 @@ class FireStorageManager {
         for image in images {
             semaphore.wait()
             uploadSingleImage(image) { (urlPath) in
-                    
+                
                 imagesPaths.append(urlPath)
                 counter += 1
                 if counter == images.count {
@@ -80,7 +76,5 @@ class FireStorageManager {
                 semaphore.signal()
             }
         }
-        
-       
     }
 }

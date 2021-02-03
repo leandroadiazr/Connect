@@ -28,9 +28,9 @@ struct User: Codable, Hashable {
     var postedOn: Date
     var postTitle: String
     var messageDescription: String
-    var likes: String  //Int
-    var comments: String //Int
-    var views: String //Int
+    var likes: Int
+    var comments: Int
+    var views: Int
     var allImages: [String] { return [mainImage] + otherImages}
     
     static func == (lhs: User, rhs: User) -> Bool {
@@ -81,9 +81,9 @@ extension User: UserSerializable {
               let postedOn              = dictionary["postedOn"    ] as? Date,
               let postTitle             = dictionary["postTitle"   ] as? String,
               let messageDescription    = dictionary["messageDescription"] as? String,
-              let likes                 = dictionary["likes"       ] as? String,
-              let comments              = dictionary["comments"    ] as? String,
-              let views                 = dictionary[ "views"      ] as? String
+              let likes                 = dictionary["likes"       ] as? Int,
+              let comments              = dictionary["comments"    ] as? Int,
+              let views                 = dictionary[ "views"      ] as? Int
         else { return nil}
         
         self.init(profileImage: profileImage, name: name, handler: handler, email: email, password: nil, bio: bio, location: location, feedID: feedID, mainImage: mainImage, otherImages: otherImages, status: status, postedOn: postedOn, postTitle: postTitle, messageDescription: messageDescription, likes: likes, comments: comments, views: views)
@@ -93,8 +93,8 @@ extension User: UserSerializable {
 
 
 //Testing Data
-let testingData: [User] = [User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: "100", comments: "no Comments", views: "300"),
-                           User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: "100", comments: "no Comments", views: "300"),]
+let testingData: [User] = [User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: 100, comments: 20, views: 500),
+                           User(userID: UUID(), profileImage: Images.profilePic, name: "Leandro Diaz", handler: "@leandroadiazr", email: "leandroadiazr@gmai.com", password: nil, bio: "just a bio so i can test the whole thing.....", location: "Orlando FL", feedID: UUID().uuidString, mainImage: Images.backMedia, otherImages: [Images.backMedia, Images.backMedia], status: "Active", postedOn: Date(), postTitle: "Post Title", messageDescription: "message description,message description message description message description message description message description", likes: 100, comments: 20, views: 300),]
 
 
 

@@ -282,7 +282,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 self.storage.uploadSingleImage(userProfile) { (imageURL) in
                     let profileImage = imageURL
 
-                    newUser = User(profileImage: profileImage, name: name, handler: "", email: email, password: passOne, bio: "", location: "", feedID: "", mainImage: "", otherImages: [""], status: "", postedOn: Date(), postTitle: "", messageDescription: "", likes: "", comments: "", views: "")
+                    newUser = User(profileImage: profileImage, name: name, handler: "", email: email, password: passOne, bio: "", location: "", feedID: "", mainImage: "", otherImages: [""], status: "", postedOn: Date(), postTitle: "", messageDescription: "", likes: 0, comments: 0, views: 0)
                     
                     
                    

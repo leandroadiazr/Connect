@@ -131,9 +131,9 @@ class FireStoreManager {
                         //                            let postedOn              = dictionary["postedOn"    ] as? Date,
                         let postTitle             = dictionary["postTitle"   ] as? String,
                         let messageDescription    = dictionary["messageDescription"] as? String,
-                        let likes                 = dictionary["likes"       ] as? String,
-                        let comments              = dictionary["comments"    ] as? String,
-                        let views                 = dictionary[ "views"      ] as? String
+                        let likes                 = dictionary["likes"       ] as? Int,
+                        let comments              = dictionary["comments"    ] as? Int,
+                        let views                 = dictionary[ "views"      ] as? Int
                     //                            let otherImagesDic  = dictionary["otherImages"] as? [String: String]
                     else {
                         continue //in case should be a continue and the for each changed to a for loop
@@ -269,9 +269,9 @@ class FireStoreManager {
                         //                            let postedOn              = dictionary["postedOn"    ] as? Date,
                         let postTitle             = dictionary["postTitle"   ] as? String,
                         let messageDescription    = dictionary["messageDescription"] as? String,
-                        let likes                 = dictionary["likes"       ] as? String,
-                        let comments              = dictionary["comments"    ] as? String,
-                        let views                 = dictionary[ "views"      ] as? String
+                        let likes                 = dictionary["likes"       ] as? Int,
+                        let comments              = dictionary["comments"    ] as? Int,
+                        let views                 = dictionary[ "views"      ] as? Int
                     //                            let otherImagesDic  = dictionary["otherImages"] as? [String: String]
                     else {
                         continue //in case should be a continue and the for each changed to a for loop
