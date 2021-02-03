@@ -14,8 +14,6 @@ class HeaderViewCell: UICollectionViewCell {
     let detailsLabel = UILabel()
     let viewImage   = UIImageView()
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()

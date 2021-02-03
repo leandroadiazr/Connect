@@ -9,6 +9,7 @@ import UIKit
 
 struct Options {
     var titleLabel: String
+    var detailsLabel: String
     var viewImage: UIImage?
 }
 

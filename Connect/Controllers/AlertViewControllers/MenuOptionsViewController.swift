@@ -9,37 +9,31 @@ import UIKit
 
 class MenuOptionsViewController: UIViewController {
 
-    
     var tableView: UITableView?
     var optionMenu = [Options]()
     var endOfSettings = [ResetSettings]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor =  UIColor(red: 0.2, green: 0.2, blue: 1, alpha: 0.2)
+//        view.backgroundColor =  UIColor(red: 0.2, green: 0.2, blue: 1, alpha: 0.2)
         
         configureTableView()
         
-        let setting = Options(titleLabel: "Settings", viewImage: UIImage(systemName: "gearshape.2.fill"))
-        let navigation = Options(titleLabel: "Navigation",viewImage: UIImage(systemName: "location.fill"))
-        let DistanceUnits = Options(titleLabel: "Distance Units", viewImage: UIImage(systemName: "figure.walk"))
-        let notifications = Options(titleLabel: "Notifications", viewImage: UIImage(systemName: "ear.trianglebadge.exclamationmark"))
+        let setting = Options(titleLabel: "Save", detailsLabel: "Save for later...", viewImage: UIImage(systemName: "bookmark.circle.fill"))
+        let navigation = Options(titleLabel: "Hide", detailsLabel: "I don't want to see this post",viewImage: UIImage(systemName: "eye.slash.fill"))
+        let DistanceUnits = Options(titleLabel: "Report", detailsLabel: "This post is offensive", viewImage: UIImage(systemName: "flag.slash.fill"))
+        let notifications = Options(titleLabel: "Embed", detailsLabel: "Copy and paste this post in you Feeds...", viewImage: UIImage(systemName: "link.badge.plus"))
         let settingsArr = [setting, navigation, DistanceUnits,notifications]
         optionMenu.append(contentsOf: settingsArr)
-        
 
-      
         let reset = ResetSettings(titleLabel: "Delete Post", viewImage: UIImage(systemName: "xmark.circle.fill"))
         let resetArr = [ reset]
         endOfSettings.append(contentsOf: resetArr)
-  
     }
     
     private func configureTableView() {
-        
         tableView = UITableView(frame: .zero, style: .plain)
         tableView?.frame = view.bounds
-        
         tableView?.register(OptionsViewCell.self, forCellReuseIdentifier: OptionsViewCell.reuseID)
         tableView?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView?.delegate = self
@@ -48,14 +42,9 @@ class MenuOptionsViewController: UIViewController {
         tableView?.clipsToBounds = true
         tableView?.backgroundColor = .clear
         tableView?.layer.cornerRadius = 10
-//        tableView?.clipsToBounds = true
-        
         guard let tableView = tableView else { return}
         view.addSubview(tableView)
     }
-    
-    
-    
 }
 
 extension MenuOptionsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -72,7 +61,6 @@ extension MenuOptionsViewController: UITableViewDelegate, UITableViewDataSource 
         default:
             return 0
         }
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -93,7 +81,6 @@ extension MenuOptionsViewController: UITableViewDelegate, UITableViewDataSource 
             cell.imageView?.tintColor = .red
             cell.textLabel?.textColor = .red
             cell.textLabel?.font = UIFont.systemFont(ofSize: 24, weight: .light)
-            cell.layer.cornerRadius = 10
             cell.textLabel?.text = item.titleLabel
             
             return cell
@@ -106,5 +93,4 @@ extension MenuOptionsViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath.row)
     }
-    
 }

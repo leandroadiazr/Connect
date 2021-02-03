@@ -10,8 +10,9 @@ import UIKit
 class OptionsViewCell: UITableViewCell {
 
     static let reuseID = "OptionsViewCell"
-     let titleLabel  = CustomTitleLabel()
-     let viewImage   = UIImageView()
+    let titleLabel  = CustomTitleLabel()
+    let detailsLabel = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 11)
+    let viewImage   = UIImageView()
      
     var settings: Options?
      override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -26,18 +27,23 @@ class OptionsViewCell: UITableViewCell {
     
     func configureCell(with: Options) {
         titleLabel.text = with.titleLabel
+        detailsLabel.text = with.detailsLabel
         viewImage.image = with.viewImage
     }
     
     private func configure() {
         backgroundColor = randomColor()
-        layer.cornerRadius = 10
-        viewImage.tintColor = .white
-        titleLabel.textColor = .white
         sizeToFit()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(titleLabel)
-
+        let labels = [titleLabel, detailsLabel]
+        for label in labels {
+            label.textColor = .white
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
+            addSubview(label)
+        }
+        
+        
+        viewImage.tintColor = .white
         viewImage.translatesAutoresizingMaskIntoConstraints = false
         addSubview(viewImage)
         
@@ -45,19 +51,23 @@ class OptionsViewCell: UITableViewCell {
     }
     
     private func setupConstraints() {
-        let padding: CGFloat = 10
+        let padding: CGFloat = 5
         
         NSLayoutConstraint.activate([
             contentView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 
-            viewImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            viewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            viewImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            viewImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
             viewImage.widthAnchor.constraint(equalToConstant: 30),
             viewImage.heightAnchor.constraint(equalToConstant: 30),
             
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding + 10),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding)
+            titleLabel.topAnchor.constraint(equalTo: self.topAnchor,constant: padding * 2),
+            titleLabel.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding),
+            titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
+            
+            detailsLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
+            detailsLabel.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding ),
+            detailsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding)
         ])
                
     }
