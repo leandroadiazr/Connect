@@ -21,7 +21,8 @@ class CustomTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        UITabBar.setTransparency()
+        UITabBar.appearance().tintColor = CustomColors.CustomGreenBright
     }
     
     private func isUserLoggedIn() {
@@ -81,13 +82,14 @@ class CustomTabBarController: UITabBarController {
     
     
     fileprivate func createTabBar() {
-        UITabBar.appearance().tintColor = CustomColors.CustomGreenBright
-        UITabBar.setTransparency()
+//        UITabBar.appearance().tintColor = CustomColors.CustomGreenBright
+//        UITabBar.setTransparency()
         self.viewControllers = [createHomeBaseViewController(), createTweetsViewController(), createPostViewController(), createDiscussionViewController(), createProfileViewController()]
     }
     
     func createHomeBaseViewController() -> UINavigationController {
         let baseCon             = HomeBaseViewController()
+
         baseCon.tabBarItem = UITabBarItem(title: "", image: Images.home, selectedImage: Images.homeFill)
         tabBarItem.tag = 0
         let navCon = CustomNavCon(rootViewController: baseCon, tintColor: .systemBackground, translucent: false,

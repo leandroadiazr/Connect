@@ -10,39 +10,51 @@ import UIKit
 
 extension UIView {
     func addTopBorderWithColor(color: UIColor, width: CGFloat, alpha: CGFloat) {
-       let border = CALayer()
+        let border = CALayer()
         border.backgroundColor = color.cgColor
         border.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: width)
-       self.layer.addSublayer(border)
-     }
-
-     func addRightBorderWithColor(color: UIColor, width: CGFloat, alpha: CGFloat) {
-       let border = CALayer()
+        self.layer.addSublayer(border)
+    }
+    
+    func addRightBorderWithColor(color: UIColor, width: CGFloat, alpha: CGFloat) {
+        let border = CALayer()
         border.backgroundColor = color.cgColor
         border.frame = CGRect(x: self.frame.size.width - width, y: 0, width: width, height: self.frame.size.height)
-       self.layer.addSublayer(border)
-     }
-
-     func addBottomBorderWithColor(color: UIColor, width: CGFloat, alpha: CGFloat) {
-       let border = CALayer()
+        self.layer.addSublayer(border)
+    }
+    
+    func addBottomBorderWithColor(color: UIColor, width: CGFloat, alpha: CGFloat) {
+        let border = CALayer()
         border.backgroundColor = color.cgColor
         border.frame = CGRect(x: 0, y: self.frame.size.height + width, width: self.frame.size.width, height: width)
-       self.layer.addSublayer(border)
-     }
-
-     func addLeftBorderWithColor(color: UIColor, width: CGFloat, alpha: CGFloat) {
-       let border = CALayer()
+        self.layer.addSublayer(border)
+    }
+    
+    func addLeftBorderWithColor(color: UIColor, width: CGFloat, alpha: CGFloat) {
+        let border = CALayer()
         border.backgroundColor = color.cgColor
         border.frame = CGRect(x: 0, y: 0, width: width, height: self.frame.size.height)
-       self.layer.addSublayer(border)
-     }
+        self.layer.addSublayer(border)
+    }
     
-//    func activateBorders(color: UIColor, width: CGFloat, alpha: CGFloat) {
-//        let border = CALayer()
-//        border.frame = CGRect(x: 0, y: 0, width: width, height: width)
-//        border.backgroundColor = color.cgColor.copy(alpha: alpha)
-//        self.layer.addSublayer(border)
-//    }
+    //    func activateBorders(color: UIColor, width: CGFloat, alpha: CGFloat) {
+    //        let border = CALayer()
+    //        border.frame = CGRect(x: 0, y: 0, width: width, height: width)
+    //        border.backgroundColor = color.cgColor.copy(alpha: alpha)
+    //        self.layer.addSublayer(border)
+    //    }
+}
+
+
+//MARK:- EXTENSION TABLEVIEW
+extension UITableViewCell {
+    //generate random Color
+    func randomColor() -> UIColor{
+        let red = CGFloat(drand48())
+        let green = CGFloat(drand48())
+        let blue = CGFloat(drand48())
+        return UIColor(red: red, green: green, blue: blue, alpha: 0.6)
+    }
 }
 
 //MARK:- TAB BAR APPEARANCE & TRANSPARENCY
@@ -72,7 +84,7 @@ extension UIViewController {
         gradientLayer.endPoint = CGPoint(x: 0.3, y: 0.0)
         gradientLayer.locations = [NSNumber(floatLiteral: 0.0), NSNumber(floatLiteral: 1.0)]
         gradientLayer.frame = view.bounds
-
+        
         self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
 }
@@ -83,17 +95,17 @@ extension UIView {
         self.backgroundColor = UIColor.clear // Use anycolor that give you a 2d look.
         //To apply corner radius
         self.layer.cornerRadius = 5
-
+        
         //To apply border
         self.layer.borderWidth = 0.15
         self.layer.borderColor = UIColor.label.cgColor
-
+        
         //To apply Shadow
         self.layer.shadowOpacity = 0.4
         self.layer.shadowRadius = 10
         self.layer.shadowOffset = CGSize(width: -7, height: 5) // Use any CGSize
         self.layer.shadowColor = UIColor.systemGray.cgColor
-
+        
         self.layer.sublayerTransform = CATransform3DMakeTranslation(20, 0, 0)
     }
 }
@@ -102,20 +114,20 @@ extension UIView {
     func applyCustomRoundShadow() {
         self.backgroundColor = UIColor.systemBackground // Use anycolor that give you a 2d look.
         //To apply corner radius
-       
+        
         self.layer.cornerRadius = 5
-       
-
+        
+        
         //To apply border
         self.layer.borderWidth = 0.15
         self.layer.borderColor = UIColor.label.cgColor
-
+        
         //To apply Shadow
         self.layer.shadowOpacity = 0.4
         self.layer.shadowRadius = 10
         self.layer.shadowOffset = CGSize(width: -7, height: 5) // Use any CGSize
         self.layer.shadowColor = UIColor.systemGray.cgColor
-
+        
         self.layer.sublayerTransform = CATransform3DMakeTranslation(20, 0, 0)
     }
 }

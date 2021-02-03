@@ -13,9 +13,7 @@ import SafariServices
 fileprivate var containerView: UIView!
 
 extension UIViewController {
-    
-   
-    
+
     
     //TitleAttributes
     func preferedTitleAppearance() {
@@ -49,6 +47,36 @@ extension UIViewController {
             self.present(alertVC, animated: true)
         }
     }
+    
+    //Present Comments View Controller
+//    needs the image
+    func showComments(message: String, buttonTitle: String){
+        DispatchQueue.main.async {
+            let commentsVC = CommentsViewController(message: message, buttonTitle: "Post")
+            commentsVC.modalPresentationStyle   = .overFullScreen
+            commentsVC.modalTransitionStyle     = .crossDissolve
+            self.present(commentsVC, animated: true)
+        }
+    }
+    
+    //present delete coments
+    func deleteComments(_ sender: UIButton?){
+        DispatchQueue.main.async {
+            let commentsVC = UIAlertController(title: "Remove Coment", message: "Do you want to remove your comment?", preferredStyle: .alert)
+            commentsVC.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (cancel) in
+                self.dismiss(animated: true, completion: nil)
+                sender?.tag = 1
+                sender?.tintColor = .systemRed
+            }))
+            commentsVC.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { (remove) in
+                sender?.tag = 0
+                self.dismiss(animated: true, completion: nil)
+                
+            }))
+            self.present(commentsVC, animated: true, completion: nil)
+        }
+    }
+    
 
     //present safari inside windows
     func presentSafariVC(with url: URL){

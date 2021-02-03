@@ -27,7 +27,9 @@ class CustomTextView: UITextView {
     
     private func configure(){
         textColor                   = .label
-        
+        layer.borderWidth           = 0.2
+        layer.cornerRadius          = 10
+        backgroundColor             = .tertiarySystemBackground
         isSelectable                = true
         translatesAutoresizingMaskIntoConstraints = false
     }

@@ -6,8 +6,12 @@
 //
 
 import UIKit
+protocol PresentCommentVC: class {
+    func presentViewComments()
+    func showMenu(_ sender: UIButton)
+}
 
-class MainFeedViewCell: UICollectionViewCell {
+class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
     static let reuseID            = "MainFeedViewCell"
     let userProfileImage        = CustomAvatarImage(frame: .zero)
     let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
@@ -25,7 +29,10 @@ class MainFeedViewCell: UICollectionViewCell {
     let viewsLabel              = CustomBodyLabel(textAlignment: .right, backgroundColor: .clear, fontSize: 10)
     var viewsCounter            = CustomBodyLabel(textAlignment: .center, backgroundColor: .clear, fontSize: 12)
     let buttonStackView         = UIStackView()
-    
+    var like = 0
+    private var view = 0
+    var comment = 0
+    weak var commentDelegate: PresentCommentVC?
     
     let replyBtn        : UIButton = {
         let btn = UIButton(type: .system)
@@ -89,7 +96,7 @@ class MainFeedViewCell: UICollectionViewCell {
         //MENU BUTTON
         addSubview(menuButton)
         bringSubviewToFront(menuButton)
-        menuButton.addTarget(self, action: #selector(liked), for: .touchUpInside)
+        menuButton.addTarget(self, action: #selector(showMenuOptions), for: .touchUpInside)
         
         //MEDIA VIEW AREA
         mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
@@ -112,13 +119,15 @@ class MainFeedViewCell: UICollectionViewCell {
     }
     
     fileprivate func setupActionButtons() {
-        let actionButtons = [replyBtn, retweetBtn, likeBtn]
+        let actionButtons = [retweetBtn, replyBtn, likeBtn]
         for button in actionButtons {
             button.tintColor = CustomColors.CustomGreen
             buttonStackView.addArrangedSubview(button)
-            button.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
+            buttonStackView.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
         }
         likeBtn.addTarget(self, action: #selector(liked), for: .touchUpInside)
+        replyBtn.addTarget(self, action: #selector(commented), for: .touchUpInside)
+        retweetBtn.addTarget(self, action: #selector(shared), for: .touchUpInside)
         
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.distribution = .fillEqually
@@ -126,42 +135,61 @@ class MainFeedViewCell: UICollectionViewCell {
         
         addSubview(buttonStackView)
     }
-    var like = 0
-    @objc private func liked(addLikes: Bool){
+    
+    @objc private func showMenuOptions(_ sender: UIButton) {
+        self.commentDelegate?.showMenu(sender)
         
-        
-        if addLikes {
-          
-            print("tapped: ", addLikes)
-           
-        } else {
-            
-            print("tapped 2: ", addLikes)
-          
-        }
-        
-        
-        
-        
-        
-//        if let val = likesCounter.text {
-//            like = Int(val) ?? 0
-//            print(like)
-//        }
-//            if value {
-//                value.toggle()
-//                like += 1
-//            } else {
-//                value.toggle()
-//                like -= 1
-////                if like == 0 {
-////                    like = 0
-////                }
-//            }
-//        likesCounter.text = "\(like)"
     }
-    private var view = 0
-    private var comment = 0
+    
+    @objc private func shared(){
+        if let val = viewsCounter.text {
+            view = Int(val) ?? 0
+        }
+        if retweetBtn.currentTitleColor != UIColor.systemRed {
+            view += 1
+            retweetBtn.tintColor = .systemRed
+            retweetBtn.setImage(Images.retweeted, for: .normal)
+        } else {
+            view -= 1
+            retweetBtn.setImage(Images.retweet, for: .normal)
+            retweetBtn.tintColor = CustomColors.CustomGreen
+        }
+        viewsCounter.text = "\(view)"
+    }
+   
+    @objc private func liked(){
+        if let val = likesCounter.text {
+            like = Int(val) ?? 0
+        }
+        if likeBtn.currentTitleColor != UIColor.systemRed {
+            like += 1
+            likeBtn.tintColor = .systemRed
+            likeBtn.setImage(Images.liked, for: .normal)
+        } else {
+            like -= 1
+            likeBtn.setImage(Images.like, for: .normal)
+            likeBtn.tintColor = CustomColors.CustomGreen
+        }
+        likesCounter.text = "\(like)"
+    }
+    
+    @objc private func commented(_ sender: UIButton){
+        if let val = commentsCounter.text {
+            comment = Int(val) ?? 0
+        }
+        if replyBtn.currentTitleColor != UIColor.systemRed {
+            comment += 1
+            replyBtn.tintColor = .systemRed
+            self.commentDelegate?.presentViewComments()
+            replyBtn.setImage(Images.commented, for: .normal)
+        } else {
+            self.commentDelegate?.presentViewComments()
+            comment += 1
+        }
+        commentsCounter.text = "\(comment)"
+    }
+   
+ 
     
     private func setupConstraints() {
         let padding: CGFloat = 10

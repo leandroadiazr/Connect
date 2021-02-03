@@ -16,8 +16,11 @@ enum Images {
     
     //MARK:- CUSTOMIZED BUTTONS
     static let comment      = UIImage(systemName: "bubble.left")
+    static let commented      = UIImage(systemName: "bubble.left.and.bubble.right.fill")
     static let retweet      = UIImage(systemName: "arrow.2.squarepath")
+    static let retweeted      = UIImage(systemName: "hands.sparkles.fill")
     static let like         = UIImage(systemName: "heart")
+    static let liked        = UIImage(systemName: "hand.thumbsup.fill")
     static let share        = UIImage(systemName: "square.and.arrow.up")
     static let search       = UIImage(systemName: "magnifyingglass")
     static let newTweet     = UIImage(systemName: "note.text")

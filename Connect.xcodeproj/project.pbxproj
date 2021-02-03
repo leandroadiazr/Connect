@@ -12,6 +12,10 @@
 		E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */; };
 		E8967E5725C89B4D00AB571B /* LoginConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */; };
 		E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */; };
+		E8BECE4125CAC97D00BF989F /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4025CAC97D00BF989F /* CommentsViewController.swift */; };
+		E8BECE4425CAEE6200BF989F /* MenuOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */; };
+		E8BECE4825CAF69D00BF989F /* OptionsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4725CAF69D00BF989F /* OptionsViewCell.swift */; };
+		E8BECE4B25CAF6ED00BF989F /* OptionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4A25CAF6ED00BF989F /* OptionMenu.swift */; };
 		E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09525C4E8B400778209 /* AppDelegate.swift */; };
 		E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09725C4E8B400778209 /* SceneDelegate.swift */; };
 		E8D6D09A25C4E8B400778209 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09925C4E8B400778209 /* ViewController.swift */; };
@@ -83,6 +87,10 @@
 		E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
 		E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConstraintExtension.swift; sourceTree = "<group>"; };
 		E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpConstraintExtension.swift; sourceTree = "<group>"; };
+		E8BECE4025CAC97D00BF989F /* CommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
+		E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptionsViewController.swift; sourceTree = "<group>"; };
+		E8BECE4725CAF69D00BF989F /* OptionsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewCell.swift; sourceTree = "<group>"; };
+		E8BECE4A25CAF6ED00BF989F /* OptionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionMenu.swift; sourceTree = "<group>"; };
 		E8D6D09225C4E8B400778209 /* Connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Connect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D6D09525C4E8B400778209 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8D6D09725C4E8B400778209 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -264,7 +272,7 @@
 				E8D6D0C625C4E95800778209 /* Tweets */,
 				E8D6D0CA25C4E95800778209 /* UserProfileCells */,
 				E8D6D0CC25C4E95800778209 /* MainCells */,
-				E8D6D0CF25C4E95800778209 /* New Group */,
+				E8D6D0CF25C4E95800778209 /* MenuOptionsCells */,
 				E8D6D0D025C4E95800778209 /* FooterCells */,
 				E8D6D0D325C4E95800778209 /* HeaderCells */,
 			);
@@ -330,11 +338,12 @@
 			path = MainCells;
 			sourceTree = "<group>";
 		};
-		E8D6D0CF25C4E95800778209 /* New Group */ = {
+		E8D6D0CF25C4E95800778209 /* MenuOptionsCells */ = {
 			isa = PBXGroup;
 			children = (
+				E8BECE4725CAF69D00BF989F /* OptionsViewCell.swift */,
 			);
-			path = "New Group";
+			path = MenuOptionsCells;
 			sourceTree = "<group>";
 		};
 		E8D6D0D025C4E95800778209 /* FooterCells */ = {
@@ -464,6 +473,8 @@
 			children = (
 				E8D6D13325C4E96200778209 /* AlertContainerView.swift */,
 				E8D6D13425C4E96200778209 /* AlertViewController.swift */,
+				E8BECE4025CAC97D00BF989F /* CommentsViewController.swift */,
+				E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */,
 			);
 			path = AlertViewControllers;
 			sourceTree = "<group>";
@@ -520,6 +531,7 @@
 				E8D6D16B25C4E96B00778209 /* Story.swift */,
 				E8D6D16C25C4E96B00778209 /* Menu.swift */,
 				E8D6D16D25C4E96B00778209 /* Feed.swift */,
+				E8BECE4A25CAF6ED00BF989F /* OptionMenu.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -659,9 +671,11 @@
 				E8D6D0F325C4E95800778209 /* MainFeedViewCell.swift in Sources */,
 				E8D6D10925C4E95800778209 /* CustomMenuButton.swift in Sources */,
 				E8D6D10D25C4E95800778209 /* CustomMainButton.swift in Sources */,
+				E8BECE4825CAF69D00BF989F /* OptionsViewCell.swift in Sources */,
 				E8D6D0F925C4E95800778209 /* StoryViewCell.swift in Sources */,
 				E8D6D0B325C4E94300778209 /* CustomTransition.swift in Sources */,
 				E8D6D10F25C4E95800778209 /* CustomTextField.swift in Sources */,
+				E8BECE4B25CAF6ED00BF989F /* OptionMenu.swift in Sources */,
 				E8D6D10425C4E95800778209 /* FooterViewCell.swift in Sources */,
 				E8D6D17225C4E96B00778209 /* Menu.swift in Sources */,
 				E8D6D0F625C4E95800778209 /* PostsFeedCell.swift in Sources */,
@@ -694,6 +708,7 @@
 				E8D6D17125C4E96B00778209 /* Story.swift in Sources */,
 				E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */,
 				E8D6D0FB25C4E95800778209 /* MenuViewCell.swift in Sources */,
+				E8BECE4125CAC97D00BF989F /* CommentsViewController.swift in Sources */,
 				E8D6D17925C4E97400778209 /* FireStoreManager.swift in Sources */,
 				E8D6D0FE25C4E95800778209 /* HomeCollectionViewCell.swift in Sources */,
 				E841657225C6DFEA0011A237 /* UsersManager.swift in Sources */,
@@ -707,6 +722,7 @@
 				E8D6D15225C4E96200778209 /* UserProfileViewController.swift in Sources */,
 				E8D6D15F25C4E96200778209 /* LoginViewController.swift in Sources */,
 				E8D6D16F25C4E96B00778209 /* UserProfile.swift in Sources */,
+				E8BECE4425CAEE6200BF989F /* MenuOptionsViewController.swift in Sources */,
 				E8D6D15625C4E96200778209 /* AlertContainerView.swift in Sources */,
 				E8D6D14B25C4E96200778209 /* FlowViewController.swift in Sources */,
 				E8D6D15925C4E96200778209 /* TweetsViewController.swift in Sources */,
