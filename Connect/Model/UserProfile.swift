@@ -9,9 +9,11 @@ import Foundation
 
 protocol UserProfileSerializable {
     init?(dictionary: [String: Any])
+    
 }
 
 struct UserProfile: Codable, Hashable {
+    var id = UUID()
     var userID: String
     var name: String
     var handler: String
@@ -22,11 +24,11 @@ struct UserProfile: Codable, Hashable {
     var status: String
     
     static func == (lhs: UserProfile, rhs: UserProfile) -> Bool {
-        lhs.userID == rhs.userID
+        lhs.id == rhs.id
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(userID)
+        hasher.combine(id)
     }
 }
 
@@ -45,3 +47,5 @@ guard   let userID              = dictionary["userID"]           as? String,
         self.init(userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, status: status)
     }
 }
+
+

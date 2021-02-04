@@ -21,18 +21,23 @@ class SavedPostsViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        observeUserPosts()
         configureNavigationBar()
         configureCollectionView()
         registerCell()
         configureDataSource()
-        reloadData(with: feeds)
-        observeUserPosts()
+       
+     
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //        reloadData(with: feeds)
         self.showLoadingView()
+        DispatchQueue.main.async {
+            self.reloadData(with: self.feeds)
+        }
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -78,6 +83,7 @@ class SavedPostsViewController: UIViewController, UITextFieldDelegate {
     
     @objc func addNewPost() {
         print("New post")
+        
         let postVC = CreateNewPostViewController()
         let navController = UINavigationController(rootViewController: postVC)
         self.navigationController?.present(navController, animated: true, completion: nil)

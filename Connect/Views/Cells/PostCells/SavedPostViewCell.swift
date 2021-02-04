@@ -63,7 +63,7 @@ class SavedPostViewCell: UICollectionViewCell {
         userProfileImage.downloadImage(from: url.absoluteString)
         userNameLabel.text = feed.author.name
         locationLabel.text = feed.author.userLocation
-        mainImageViewArea.downloadImage(from: feed.mainImage)
+        mainImageViewArea.downloadImage(from: feed.otherImages[2])
         imageViewAreaTwo.downloadImage(from: feed.otherImages[0])
         imageViewAreaThree.downloadImage(from: feed.otherImages[1])
         //falta una imagen
@@ -82,10 +82,6 @@ class SavedPostViewCell: UICollectionViewCell {
         self.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
         //PROFILE PICTURE
         addSubview(userProfileImage)
-        //        profileView.translatesAutoresizingMaskIntoConstraints = false
-        
-        //MENU BUTTON
-        //        menuButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(menuButton)
         
         //MEDIA VIEW AREA
@@ -95,6 +91,7 @@ class SavedPostViewCell: UICollectionViewCell {
             imageView.backgroundColor = .lightGray
             imageView.applyCustomShadow()
             imageView.clipsToBounds = true
+            imageView.contentMode = .scaleAspectFill
             addSubview(imageView)
         }
         

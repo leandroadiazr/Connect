@@ -12,6 +12,8 @@
 		E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */; };
 		E8967E5725C89B4D00AB571B /* LoginConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */; };
 		E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */; };
+		E8AE047425CC6B19005383A8 /* CreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AE047325CC6B19005383A8 /* CreateViewController.swift */; };
+		E8AE047925CC6C49005383A8 /* CreateViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AE047825CC6C49005383A8 /* CreateViewCell.swift */; };
 		E8BECE4125CAC97D00BF989F /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4025CAC97D00BF989F /* CommentsViewController.swift */; };
 		E8BECE4425CAEE6200BF989F /* MenuOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */; };
 		E8BECE4825CAF69D00BF989F /* OptionsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4725CAF69D00BF989F /* OptionsViewCell.swift */; };
@@ -89,6 +91,8 @@
 		E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
 		E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConstraintExtension.swift; sourceTree = "<group>"; };
 		E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpConstraintExtension.swift; sourceTree = "<group>"; };
+		E8AE047325CC6B19005383A8 /* CreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewController.swift; sourceTree = "<group>"; };
+		E8AE047825CC6C49005383A8 /* CreateViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewCell.swift; sourceTree = "<group>"; };
 		E8BECE4025CAC97D00BF989F /* CommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
 		E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptionsViewController.swift; sourceTree = "<group>"; };
 		E8BECE4725CAF69D00BF989F /* OptionsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewCell.swift; sourceTree = "<group>"; };
@@ -200,6 +204,14 @@
 			path = "Login Signup Constraints";
 			sourceTree = "<group>";
 		};
+		E8AE047725CC6C27005383A8 /* CreatePostCells */ = {
+			isa = PBXGroup;
+			children = (
+				E8AE047825CC6C49005383A8 /* CreateViewCell.swift */,
+			);
+			path = CreatePostCells;
+			sourceTree = "<group>";
+		};
 		E8D6D08925C4E8B400778209 = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +281,7 @@
 		E8D6D0B725C4E95800778209 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				E8AE047725CC6C27005383A8 /* CreatePostCells */,
 				E8FBC08E25CB4C7100AB9F90 /* DetailsCells */,
 				E8D6D0B825C4E95800778209 /* FeedCells */,
 				E8D6D0BB25C4E95800778209 /* PostCells */,
@@ -524,6 +537,7 @@
 			isa = PBXGroup;
 			children = (
 				E8D6D14625C4E96200778209 /* CreateNewPostViewController.swift */,
+				E8AE047325CC6B19005383A8 /* CreateViewController.swift */,
 			);
 			path = NewPostViewControllers;
 			sourceTree = "<group>";
@@ -714,6 +728,7 @@
 				E8D6D16425C4E96200778209 /* CreateNewPostViewController.swift in Sources */,
 				E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */,
 				E8D6D0B225C4E94300778209 /* BackupCells.swift in Sources */,
+				E8AE047425CC6B19005383A8 /* CreateViewController.swift in Sources */,
 				E8D6D0F825C4E95800778209 /* SavedPostViewCell.swift in Sources */,
 				E8D6D11D25C4E95800778209 /* CustomAvatarImage.swift in Sources */,
 				E8D6D10625C4E95800778209 /* HeaderViewCell.swift in Sources */,
@@ -727,6 +742,7 @@
 				E8D6D16125C4E96200778209 /* CustomNavCon.swift in Sources */,
 				E8D6D17325C4E96B00778209 /* Feed.swift in Sources */,
 				E8D6D0B425C4E94300778209 /* Extension.swift in Sources */,
+				E8AE047925CC6C49005383A8 /* CreateViewCell.swift in Sources */,
 				E8D6D14F25C4E96200778209 /* MenuViewController.swift in Sources */,
 				E8D6D17125C4E96B00778209 /* Story.swift in Sources */,
 				E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */,

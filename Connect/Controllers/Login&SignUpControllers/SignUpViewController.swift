@@ -292,7 +292,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
 //                    self.storage.uploadProfileImage(user: saveThisUser) { (string) in
 //                        print("Saved")
 ////                    }
-                    self.firestore.saveUser(user: saveThisUser, userID: uuid) { (result) in
+                    self.userManager.saveUser(user: saveThisUser, userID: uuid) { (result) in
                     print("saved user")
 
                     print("Saved suscessfully into firebase database need an alert")

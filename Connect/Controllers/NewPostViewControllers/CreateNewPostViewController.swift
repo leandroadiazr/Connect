@@ -18,16 +18,21 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     let imageBtnThree           = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
     let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
     let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
-    let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .systemGray)
+    let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
     let titleLabel              = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
-    let descriptionLabel        = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
+    let descriptionLabel        = CustomTextView(textAlignment: .left, fontSize: 13)
+    let hashtagLabel            = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
+    let tagFriendsLabel         = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
         
     //textFields
     let titleField              = CustomTextField(textAlignment: .left, fontSize: 15, placeholder: "Give it a Title...")
     let descriptionField        = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "Description...!")
+    let hashtagField            = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "Hashtag...!")
+    let tagFriendsField         = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "tag Some Friends...!")
     
     let storage                 = FireStorageManager.shared
     let firestore               = FireStoreManager.shared
+    let userManager             = UserManager.shared
     let newPost                 = [UserProfile]()
     
     let imagePicker = UIImagePickerController()
@@ -38,7 +43,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         setGradientBackground(colorTop: .systemGreen, colorBottom: .systemBlue)
 //        guard let userProfile = user else { return }
 //        print(userProfile)
-        let currentUser = firestore.currentUserProfile
+        let currentUser = userManager.currentUserProfile
         configure(with: currentUser)
         imagePicker.delegate = self
         configureNavigationBar()
@@ -64,17 +69,19 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         
         //LABELS
         userNameLabel.text = user.name
-        statusLabel.text = user.status
-        locationLabel.text = user.userLocation
+        statusLabel.text = "Privacy" //user.status ??
+        locationLabel.text = "get current Location"// user.userLocation ?? "location"
         titleLabel.text = "Title label"
         descriptionLabel.text = "Description"
+        hashtagLabel.text = "Hashtag"
+        tagFriendsLabel.text = "Tag some friends in this post"
         
-        let labels = [userNameLabel, statusLabel, locationLabel, titleLabel, descriptionLabel]
+        let labels = [userNameLabel, statusLabel, locationLabel, titleLabel, descriptionLabel, hashtagLabel, tagFriendsLabel]
         for label in labels {
             view.addSubview(label)
         }
-        descriptionLabel.numberOfLines = 2
-        descriptionLabel.lineBreakMode = .byTruncatingTail
+//        descriptionLabel.numberOfLines = 2
+//        descriptionLabel.lineBreakMode = .byTruncatingTail
         configureTextField()
         setupActionButtons()
         setupConstraints()
@@ -83,8 +90,11 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     private func configureTextField() {
         titleField.becomeFirstResponder()
         titleField.delegate = self
-        view.addSubview(titleField)
-        view.addSubview(descriptionField)
+        let textFields = [titleField, descriptionField, descriptionField, hashtagField, tagFriendsField]
+        for fields in textFields {
+        view.addSubview(fields)
+        }
+   
     }
     
     fileprivate func setupActionButtons() {
@@ -119,8 +129,8 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
            let postTitle        = titleField.text,
            let postDescription  = descriptionField.text {
             
-            storage.bulkUpload([mainImage, imageOne, imageTwo, imageThree]) { [weak self] (urlPath) in
-                guard let self = self else { return }
+            storage.bulkUpload([mainImage, imageOne, imageTwo, imageThree]) { (urlPath) in
+
                 let mainImg         = urlPath[0]
                 let imgOne          = urlPath[1]
                 let imgTwo           = urlPath[2]
@@ -132,7 +142,8 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
                 let comments        = 0
                 let views           = 0
                 
-                guard let userProfile = self.firestore.currentUserProfile else { return }
+                guard let userProfile = self.userManager.currentUserProfile else { return }
+                print("User Profile", userProfile)
                 let newPost: [String: Any] = [
                     "author": [
                         "userID": userProfile.userID,
@@ -151,7 +162,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
                     "views          " : views
                 ]
                 self.firestore.savePost(post: newPost) { (result) in
-                    print(result)
+                    print("result: ", result)
                 }
                 //WHEN SAVING I NEED TO SEE THE POST AUTOMATICALLY IN THE SAVED POSTS VIEW CONTROLLER
                 
@@ -187,7 +198,11 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
     
     private func setupConstraints() {
         let padding: CGFloat = 10
-        let mediaHeight: CGFloat = view.frame.height / 4
+        let verticalPadding: CGFloat = 5
+        let mediaHeight: CGFloat = view.frame.height / 8
+        let mediaWidth: CGFloat = (view.frame.width / 4) - 5
+        let mediaPadding: CGFloat = 4
+        let fieldHeight: CGFloat = 30
         
         //ProfileImage
         NSLayoutConstraint.activate([
@@ -195,8 +210,8 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
             
             userProfileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
             userProfileImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            userProfileImageView.widthAnchor.constraint(equalToConstant: 50),
-            userProfileImageView.heightAnchor.constraint(equalToConstant: 50)
+            userProfileImageView.widthAnchor.constraint(equalToConstant: 70),
+            userProfileImageView.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         //User name Label
@@ -210,47 +225,47 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         
         //status Label
         NSLayoutConstraint.activate([
-            statusLabel.centerYAnchor.constraint(equalTo: userNameLabel.centerYAnchor),
-            statusLabel.leadingAnchor.constraint(equalTo: userNameLabel.trailingAnchor, constant: padding),
+            statusLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: padding),
+            statusLabel.leadingAnchor.constraint(equalTo: userProfileImageView.trailingAnchor, constant: padding),
         ])
         
         //Location Label
         NSLayoutConstraint.activate([
-            locationLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 5),
-            locationLabel.leadingAnchor.constraint(equalTo: userProfileImageView.trailingAnchor, constant: padding),
+            locationLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor),
+            locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
         ])
         
         
         //MediaViewArea
         NSLayoutConstraint.activate([
             mainImageViewArea.topAnchor.constraint(equalTo: userProfileImageView.bottomAnchor, constant: padding),
-            mainImageViewArea.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            mainImageViewArea.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            mainImageViewArea.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: mediaPadding),
+            mainImageViewArea.widthAnchor.constraint(equalToConstant: mediaWidth),
             mainImageViewArea.heightAnchor.constraint(equalToConstant: mediaHeight)
         ])
         
         //Button One
         NSLayoutConstraint.activate([
-            imageBtnOne.topAnchor.constraint(equalTo: mainImageViewArea.bottomAnchor, constant: padding),
-            imageBtnOne.trailingAnchor.constraint(equalTo: imageBtnTwo.leadingAnchor, constant: -padding),
-            imageBtnOne.widthAnchor.constraint(equalToConstant: 100),
-            imageBtnOne.heightAnchor.constraint(equalToConstant: 100)
+            imageBtnOne.topAnchor.constraint(equalTo: userProfileImageView.bottomAnchor, constant: padding),
+            imageBtnOne.leadingAnchor.constraint(equalTo: mainImageViewArea.trailingAnchor, constant: mediaPadding),
+            imageBtnOne.widthAnchor.constraint(equalToConstant: mediaWidth),
+            imageBtnOne.heightAnchor.constraint(equalToConstant: mediaHeight)
         ])
         
         //Button Tow
         NSLayoutConstraint.activate([
-            imageBtnTwo.topAnchor.constraint(equalTo: mainImageViewArea.bottomAnchor, constant: padding),
-            imageBtnTwo.centerXAnchor.constraint(equalTo: mainImageViewArea.centerXAnchor),
-            imageBtnTwo.widthAnchor.constraint(equalToConstant: 100),
-            imageBtnTwo.heightAnchor.constraint(equalToConstant: 100)
+            imageBtnTwo.topAnchor.constraint(equalTo: userProfileImageView.bottomAnchor, constant: padding),
+            imageBtnTwo.leadingAnchor.constraint(equalTo: imageBtnOne.trailingAnchor, constant: mediaPadding),
+            imageBtnTwo.widthAnchor.constraint(equalToConstant: mediaWidth),
+            imageBtnTwo.heightAnchor.constraint(equalToConstant: mediaHeight)
         ])
         
         //Button Three
         NSLayoutConstraint.activate([
-            imageBtnThree.topAnchor.constraint(equalTo: mainImageViewArea.bottomAnchor, constant: padding),
-            imageBtnThree.leadingAnchor.constraint(equalTo: imageBtnTwo.trailingAnchor, constant: padding),
-            imageBtnThree.widthAnchor.constraint(equalToConstant: 100),
-            imageBtnThree.heightAnchor.constraint(equalToConstant: 100)
+            imageBtnThree.topAnchor.constraint(equalTo: userProfileImageView.bottomAnchor, constant: padding),
+            imageBtnThree.leadingAnchor.constraint(equalTo: imageBtnTwo.trailingAnchor, constant: mediaPadding),
+            imageBtnThree.widthAnchor.constraint(equalToConstant: mediaWidth),
+            imageBtnThree.heightAnchor.constraint(equalToConstant: mediaHeight)
         ])
         
         
@@ -258,7 +273,7 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         
         //Title Label
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: imageBtnOne.bottomAnchor, constant: padding),
+            titleLabel.topAnchor.constraint(equalTo: imageBtnThree.bottomAnchor, constant: verticalPadding),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
         ])
         //Title Field
@@ -266,12 +281,12 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
             titleField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
             titleField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             titleField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            titleField.heightAnchor.constraint(equalToConstant: 30)
+            titleField.heightAnchor.constraint(equalToConstant: fieldHeight)
         ])
         
         //Description Label
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: padding),
+            descriptionLabel.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: verticalPadding),
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
         ])
@@ -281,8 +296,40 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
             descriptionField.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 2),
             descriptionField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             descriptionField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            descriptionField.heightAnchor.constraint(equalToConstant: 30)
+            descriptionField.heightAnchor.constraint(equalToConstant: 100)
         ])
+        
+        //Description Label
+        NSLayoutConstraint.activate([
+            hashtagLabel.topAnchor.constraint(equalTo: descriptionField.bottomAnchor, constant: verticalPadding),
+            hashtagLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            hashtagLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+        ])
+        
+        //Description Field
+        NSLayoutConstraint.activate([
+            hashtagField.topAnchor.constraint(equalTo: hashtagLabel.bottomAnchor, constant: 2),
+            hashtagField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            hashtagField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            hashtagField.heightAnchor.constraint(equalToConstant: fieldHeight)
+        ])
+        
+        //Description Label
+        NSLayoutConstraint.activate([
+            tagFriendsLabel.topAnchor.constraint(equalTo: hashtagField.bottomAnchor, constant: verticalPadding),
+            tagFriendsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            tagFriendsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+        ])
+        
+        //Description Field
+        NSLayoutConstraint.activate([
+            tagFriendsField.topAnchor.constraint(equalTo: tagFriendsLabel.bottomAnchor, constant: 2),
+            tagFriendsField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            tagFriendsField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            tagFriendsField.heightAnchor.constraint(equalToConstant: fieldHeight)
+        ])
+        
+        
         
     }
     

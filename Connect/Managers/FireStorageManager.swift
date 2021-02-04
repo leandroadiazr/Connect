@@ -14,6 +14,7 @@ class FireStorageManager {
     static let shared       = FireStorageManager()
     private let storage     = Storage.storage()
     private let firestore   = FireStoreManager.shared
+    private let userManager = UserManager.shared
     private lazy var imagesReferences = storage.reference().child("images")
     let cache               = NSCache<NSString, UIImage>()
     
@@ -28,7 +29,7 @@ class FireStorageManager {
                 print(unwrappedError.localizedDescription)
             } else {
                 guard let userID = Auth.auth().currentUser?.uid else { return }
-                self.firestore.saveUser(user: user, userID: userID) { (error) in
+                self.userManager.saveUser(user: user, userID: userID) { (error) in
                     completion(.success("Profile Saved"))
                 }
                 completion(.success("Profile Saved"))
@@ -41,7 +42,7 @@ class FireStorageManager {
         let imageRef = imagesReferences.child("images/\(UUID().uuidString).jpg")
         
         //convert image to data
-        guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
+        guard let imageData = image.jpegData(compressionQuality: 0.2) else { return }
         
         imageRef.putData(imageData, metadata: nil) { (_, error) in
             if let unwrappedError = error {
@@ -67,7 +68,6 @@ class FireStorageManager {
         for image in images {
             semaphore.wait()
             uploadSingleImage(image) { (urlPath) in
-                
                 imagesPaths.append(urlPath)
                 counter += 1
                 if counter == images.count {

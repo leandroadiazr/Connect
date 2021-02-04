@@ -10,6 +10,7 @@ import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var firestore = FireStoreManager.shared
+    var userManager = UserManager.shared
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -17,13 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
+//        firestore.handleLogout()
         Auth.auth().addStateDidChangeListener( { auth, user in
             if user != nil {
-                self.firestore.observeUserProfile(user!.uid) { result in
+                self.userManager.observeUserProfile(user!.uid) { result in
                     switch result {
                     case .success(let user):
-                        self.firestore.currentUserProfile = user
+                        self.userManager.currentUserProfile = user
                         guard let uuid = user?.userID else { return }
                         print("User ID Found in SceneDelegate :********", uuid)
                       
@@ -38,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.window?.makeKeyAndVisible()
             } else {
                 print("User Not Found in SceneDelegate :********, Login")
-                self.firestore.currentUserProfile = nil
+                self.userManager.currentUserProfile = nil
                 self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
                 self.window?.windowScene = windowScene
                 self.window?.rootViewController = LoginViewController()

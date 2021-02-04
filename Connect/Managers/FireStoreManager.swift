@@ -20,106 +20,7 @@ class FireStoreManager {
     static let shared = FireStoreManager()
     private var database = Firestore.firestore()
     private var refId: DocumentReference? = nil
-    var currentUserProfile: UserProfile?
-    
-    
-    private var userObject = [User]()
-    private var singleUser = [User]()
-    private var feedObject = [User]()
-    private var currentUser = [UserProfile]()
     private var postObject = [Feed]()
-    func configure() {
-        
-    }
-    
-    
-    //    MARK:- TO BE MOVE TO USER MANAGER
-    // 1.- USER MANAGER RELATED
-    //MARK:- GET CURRENT USER IN THE DATABASE FROM USERPROFILE***
-    //THIS IS WILL GET THE CURRENT USER ARRAY ON USERS PROFILE AND IS NEEDED
-    func getCurrentUser(userID: String, completion: @escaping ([UserProfile]?) -> Void) {
-        database.collection("users").document(userID).getDocument  { (querySnapshot, error) in
-            if let unwrappedError = error {
-                print(unwrappedError.localizedDescription)
-            } else {
-                guard let document = querySnapshot else {
-                    print(error!.localizedDescription)
-                    return
-                }
-                guard let dictionary = document.data() else { return }
-                guard
-                    let profileImage          = dictionary["profileImage"] as? String,
-                    let profImgURL = URL(string: profileImage),
-                    let name                  = dictionary["name"        ] as? String,
-                    let handler               = dictionary["handler"     ] as? String,
-                    let email                 = dictionary["email"       ] as? String,
-                    let bio                   = dictionary["bio"         ] as? String,
-                    let location              = dictionary["location"    ] as? String,
-                    let status                = dictionary["status"      ] as? String
-                else {
-                    return //continue //in case should be a continue and the for each changed to a for loop
-                }
-                guard let uid = Auth.auth().currentUser?.uid else { return }
-                let currentUser = UserProfile(userID: uid, name: name, handler: handler, email: email, profileImage: profImgURL, userLocation: location, userBio: bio, status: status)
-                self.currentUser.append(currentUser)
-                print(self.currentUser)
-            }
-            completion(self.currentUser)
-        }
-    }
-    
-    //MARK:-  2.- USER MANAGER RELATED
-    //MARK:- GET SINGLE USER ON LOGIN SCENE DELEGATE NEEDED BUT CAN BE REFACTORED LATER***
-    func observeUserProfile(_ userID: String, completion: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
-        let userRef = database.collection("users").document(userID)
-        userRef.getDocument { (snapshot, error) in
-            var userProfile: UserProfile?
-            if let unwrappedError = error {
-                print(unwrappedError.localizedDescription)
-            } else {
-                guard let document = snapshot else {
-                    print(error!.localizedDescription)
-                    return
-                }
-                guard let dictionary = document.data() else { return }
-                guard let username = dictionary["name"] as? String,
-                      let profileImage = dictionary["profileImage"] as? String,
-                      let profImgURL = URL(string: profileImage),
-                      let uuid = snapshot?.documentID
-                else { return }
-                userProfile = UserProfile(userID: uuid, name: username, handler: "", email: "", profileImage: profImgURL, userLocation: "", userBio: "", status: "")
-            }
-            completion(.success(userProfile))
-        }
-    }
-    
-    
-    //MARK:- SAVE USER ON SIGNUP VIEW CONTROLLER ***
-    func saveUser(user: User, userID: String, completion: @escaping (Result<Bool, NSError>) -> Void) {
-        guard let userID = Auth.auth().currentUser?.uid else {
-            return  }
-        let newUser = self.database.collection("users").document(userID)
-        newUser.setData(user.userDictionary) { (error) in
-            if let unwrappedError = error  {
-                completion(.failure(unwrappedError as NSError))
-                print("Error saving the document :", unwrappedError.localizedDescription)
-            } else {
-                print("Saved with Id :", self.refId?.documentID ?? "SAVED")
-                completion(.success(true))
-            }
-        }
-    }
-    
-    //MARK:- UPDATE USER PROFILE
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     //MARK:- GET CURRENT USER POSTS RELATED TO FIRESTORE MANAGER
@@ -251,7 +152,7 @@ class FireStoreManager {
     //MARK:- USER STUFF
     
     
-
+    
     
     
     
