@@ -76,6 +76,5 @@ class UserManager {
         } catch let logoutError {
             print(logoutError.localizedDescription)
         }
-        
     }
 }

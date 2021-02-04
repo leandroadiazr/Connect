@@ -10,39 +10,38 @@ import FirebaseAuth
 
 
 class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
-
-    let userProfileImageView         = CustomAvatarImage(frame: .zero)
+    
+    let userProfileImageView    = CustomAvatarImage(frame: .zero)
     let mainImageViewArea       = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
-    let imageBtnOne         = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
-    let imageBtnTwo         = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
-    let imageBtnThree       = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
-    let userNameLabel       = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
-    let statusLabel         = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
-    let locationLabel       = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .systemGray)
-    let titleLabel          = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
-    let descriptionLabel    = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
-    
+    let imageBtnOne             = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
+    let imageBtnTwo             = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
+    let imageBtnThree           = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
+    let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
+    let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
+    let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .systemGray)
+    let titleLabel              = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
+    let descriptionLabel        = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
+        
     //textFields
-    let titleField          = CustomTextField(textAlignment: .left, fontSize: 15, placeholder: "Give it a Title...")
-    let descriptionField    = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "Description...!")
+    let titleField              = CustomTextField(textAlignment: .left, fontSize: 15, placeholder: "Give it a Title...")
+    let descriptionField        = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "Description...!")
     
-    var user: User?
-    let storage = FireStorageManager.shared
-    let firestore = FireStoreManager.shared
-    let newPost = [User]()
-
+    let storage                 = FireStorageManager.shared
+    let firestore               = FireStoreManager.shared
+    let newPost                 = [UserProfile]()
+    
     let imagePicker = UIImagePickerController()
     private var currentButton: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setGradientBackground(colorTop: .systemGreen, colorBottom: .systemBlue)
-        configure()
+//        guard let userProfile = user else { return }
+//        print(userProfile)
+        let currentUser = firestore.currentUserProfile
+        configure(with: currentUser)
         imagePicker.delegate = self
         configureNavigationBar()
-//        firestore.configure()
-        print(firestore)
-        print(storage)
     }
     
     private func configureNavigationBar() {
@@ -51,24 +50,25 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         let saveBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(saveNewPost))
         navigationItem.rightBarButtonItem = saveBtn
     }
-  
-    private func configure() {
+    
+    private func configure(with userProfile: UserProfile?) {
+        guard let user = userProfile else { return }
         self.view.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
         //PROFILE PICTURE
         view.addSubview(userProfileImageView)
-        userProfileImageView.image = UIImage(named: user?.profileImage ?? Images.Avatar)
-
+        userProfileImageView.downloadImage(from: user.profileImage.absoluteString)
+        
         //MEDIA VIEW AREA
         mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mainImageViewArea)
         
         //LABELS
-        userNameLabel.text = "Leandro Diaz"
-        statusLabel.text = "Status"
-        locationLabel.text = "Location"
+        userNameLabel.text = user.name
+        statusLabel.text = user.status
+        locationLabel.text = user.userLocation
         titleLabel.text = "Title label"
         descriptionLabel.text = "Description"
-               
+        
         let labels = [userNameLabel, statusLabel, locationLabel, titleLabel, descriptionLabel]
         for label in labels {
             view.addSubview(label)
@@ -83,8 +83,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     private func configureTextField() {
         titleField.becomeFirstResponder()
         titleField.delegate = self
-//        textFields
-             view.addSubview(titleField)
+        view.addSubview(titleField)
         view.addSubview(descriptionField)
     }
     
@@ -100,58 +99,18 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
             button.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
             button.addTarget(self, action: #selector(getImage), for: .touchUpInside)
         }
-         
+        
     }
     
     @objc private func saveNewPost() {
         print("Clicked Save Btn 'Done'")
-        //        self.navigationController?.dismiss(animated: true, completion: nil)
         self.dismisVC()
-        
         createNewPost()
-        
-//        var newPost: [User]?
-//        var newUser: User?
-//
-//        if let name             = self.userNameLabel.text,
-//           let profileImage     = self.userProfileImageView.image,
-//           let location         = self.locationLabel.text,
-//           let title            = titleField.text,
-//
-//           let mainImage        = mainImageViewArea.currentImage,
-//           let imageOne         = imageBtnOne.currentImage,
-//           let imageTwo         = imageBtnTwo.currentImage,
-//           let imageThree       = imageBtnThree.currentImage,
-//           let status           = statusLabel.text,
-//           let descriptionField = descriptionField.text {
-//
-//            storage.bulkUpload([profileImage, mainImage, imageOne, imageTwo, imageThree]) {  (urlPath) in
-//                //            guard let self = self else { return }
-//                let profImg     = urlPath[0]
-//                let imgOne      = urlPath[1]
-//                let imgTwo      = urlPath[2]
-//                let imgThree    = urlPath[3]
-//                let imgFour     = urlPath[4]
-//                let otherImagesPaths = [imgTwo, imgThree, imgFour]
-//                print("urlPath :", urlPath)
-//
-//
-//                newUser = User( profileImage: profImg, name: name, handler: "", email: "", password: nil, bio: "", location: location, feedID: UUID().uuidString, mainImage: imgOne, otherImages: otherImagesPaths, status: status, postedOn: Date(), postTitle: title, messageDescription: descriptionField, likes: "1", comments: "1", views: "1")
-//                guard let userID = Auth.auth().currentUser?.uid else { return }
-//                guard let newUserPost = newUser else { return }
-//                self.firestore.saveFeeds(userID: userID, feeds: newUserPost ) { (result) in
-//                    print("Saved Sucessfully")
-//                }
-//            }
-//
-//        }
     }
     
     
     private func createNewPost() {
-//        var newPost: Feed?
-        if 
-           let mainImage        = mainImageViewArea.currentImage,
+        if let mainImage         = mainImageViewArea.currentImage,
            let imageOne         = imageBtnOne.currentImage,
            let imageTwo         = imageBtnTwo.currentImage,
            let imageThree       = imageBtnThree.currentImage,
@@ -159,10 +118,9 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
            let location         = self.locationLabel.text,
            let postTitle        = titleField.text,
            let postDescription  = descriptionField.text {
-        
-
-            storage.bulkUpload([mainImage, imageOne, imageTwo, imageThree]) {  (urlPath) in
-                //            guard let self = self else { return }
+            
+            storage.bulkUpload([mainImage, imageOne, imageTwo, imageThree]) { [weak self] (urlPath) in
+                guard let self = self else { return }
                 let mainImg         = urlPath[0]
                 let imgOne          = urlPath[1]
                 let imgTwo           = urlPath[2]
@@ -173,11 +131,9 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
                 let likes           = 0
                 let comments        = 0
                 let views           = 0
-                    
+                
                 guard let userProfile = self.firestore.currentUserProfile else { return }
-           
                 let newPost: [String: Any] = [
-                    
                     "author": [
                         "userID": userProfile.userID,
                         "name"  : userProfile.name,
@@ -194,28 +150,24 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
                     "comments       " : comments,
                     "views          " : views
                 ]
-                
                 self.firestore.savePost(post: newPost) { (result) in
                     print(result)
                 }
-                    
-//                    Feed(author: author, mainImage: mainImg, otherImages: otherImagesPaths, status: status, postedOn: postedOn, location: location, postTitle: postTitle, postDescription: postDescription, likes: likes, comments: comments, views: views)
-//
-        }
-        
-        
-        
+                //WHEN SAVING I NEED TO SEE THE POST AUTOMATICALLY IN THE SAVED POSTS VIEW CONTROLLER
+                
+                //                    Feed(author: author, mainImage: mainImg, otherImages: otherImagesPaths, status: status, postedOn: postedOn, location: location, postTitle: postTitle, postDescription: postDescription, likes: likes, comments: comments, views: views)
+                //
+            }
         }
         
     }
-
+    
     
     @objc private func getImage(_ sender: UIButton) {
         currentButton = sender
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
-
 }
 
 
@@ -226,8 +178,6 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         print(image)
         picker.dismiss(animated: true) {
             self.currentButton!.setImage(image, for: .normal)
-//            self.mainImageViewArea.setImage(image, for: .normal)
-            print(self.currentButton!)
         }
     }
     
@@ -241,22 +191,22 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         
         //ProfileImage
         NSLayoutConstraint.activate([
-
+            
             
             userProfileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
             userProfileImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            userProfileImageView.widthAnchor.constraint(equalToConstant: 40),
-            userProfileImageView.heightAnchor.constraint(equalToConstant: 40)
+            userProfileImageView.widthAnchor.constraint(equalToConstant: 50),
+            userProfileImageView.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         //User name Label
         NSLayoutConstraint.activate([
             userNameLabel.topAnchor.constraint(equalTo: userProfileImageView.topAnchor),
             userNameLabel.leadingAnchor.constraint(equalTo: userProfileImageView.trailingAnchor, constant: padding),
-
+            
         ])
         
-
+        
         
         //status Label
         NSLayoutConstraint.activate([
@@ -303,8 +253,8 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
             imageBtnThree.heightAnchor.constraint(equalToConstant: 100)
         ])
         
-       
-
+        
+        
         
         //Title Label
         NSLayoutConstraint.activate([
@@ -333,7 +283,7 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
             descriptionField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             descriptionField.heightAnchor.constraint(equalToConstant: 30)
         ])
- 
+        
     }
     
     @objc func dismisVC() {

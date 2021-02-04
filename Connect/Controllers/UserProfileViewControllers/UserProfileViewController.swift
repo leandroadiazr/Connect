@@ -10,7 +10,7 @@ import FirebaseAuth
 import Firebase
 
 class UserProfileViewController: UIViewController {
-
+    
     enum Section {
         case main
     }
@@ -18,7 +18,6 @@ class UserProfileViewController: UIViewController {
     let firestore       = FireStoreManager.shared
     var ref             : DatabaseReference!
     var userManager     = UserManager.shared
-    var updateTitle     = UserManager.shared.updatedTitle
     
     let sections        = Section.self
     var collectionView  : UICollectionView!
@@ -38,7 +37,6 @@ class UserProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        isUserLoggedIn()
     }
     
     private func fetchUserProfile() {
@@ -48,7 +46,9 @@ class UserProfileViewController: UIViewController {
             print(user!)
             if let user = user {
                 print(user)
-                
+                for field in user {
+                    self.title = field.name
+                }
                 self.currentLoggedUser.append(contentsOf: user)
                 print(self.currentLoggedUser)
                 DispatchQueue.main.async {
@@ -58,50 +58,25 @@ class UserProfileViewController: UIViewController {
         }
     }
     
-
     @objc private func handleLogout() {
         print("Logut")
         userManager.handleLogout()
-        
         showLoadingView()
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .custom
         loginVC.transitioningDelegate = self
         present(loginVC, animated: true)
     }
-    
-    func getUserDataFromServer() {
-        guard let userID = Auth.auth().currentUser?.uid else { return }
-        firestore.getUser(userID: userID){ (receivedUser) in
-            print("receivedUser :", receivedUser!)
-            guard let dataReceived = receivedUser else { return }
-            print("received user on postVC: ", dataReceived)
-            
-            dataReceived.forEach{
-                let receivedFeed = $0
-                print(receivedFeed)
-                self.loggedUser.append(receivedFeed)
-            }
-            
-            DispatchQueue.main.async {
-                self.reloadData(with: self.currentLoggedUser)
-            }
-        }
-    }
-    
+
     
     private func configureNavigationBar() {
- 
-                let titleImageView = UIImageView(image: Images.like)
-                titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-                titleImageView.contentMode = .scaleAspectFit
-                titleImageView.tintColor = .blue
-                navigationItem.title = updateTitle
-        
-       
+        let titleImageView = UIImageView(image: Images.like)
+        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        titleImageView.contentMode = .scaleAspectFit
+        titleImageView.tintColor = .blue
+        //        navigationItem.title = updateTitle
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoutButton)
         logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
-        
         let newPost = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPost))
         navigationItem.rightBarButtonItem = newPost
         setupConstraints()
@@ -114,7 +89,7 @@ class UserProfileViewController: UIViewController {
         self.navigationController?.present(navController, animated: true, completion: nil)
     }
     
-
+    
     
     private func configureCollectionView() {
         let layuout = configureLayout()
@@ -135,7 +110,6 @@ class UserProfileViewController: UIViewController {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserProfileViewCell.reuseID, for: indexPath) as? UserProfileViewCell else {
                 fatalError("can't deque cell")
             }
-            
             cell.setCell(with: user)
             return cell
         }
@@ -143,19 +117,17 @@ class UserProfileViewController: UIViewController {
     
     fileprivate func reloadData(with feed: [UserProfile]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, UserProfile>()
-
-            snapshot.appendSections([.main])
-            snapshot.appendItems(feed)
-            DispatchQueue.main.async {
-                self.dataSource.apply(snapshot, animatingDifferences: false)
-            }
+        snapshot.appendSections([.main])
+        snapshot.appendItems(feed)
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapshot, animatingDifferences: false)
+        }
     }
     
     private func configureLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         //        item.contentInsets = NSDirectionalEdgeInsets(top: 50, leading: 5, bottom: 5, trailing: 5)
-        
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.96), heightDimension: .fractionalHeight(0.6))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -167,12 +139,11 @@ class UserProfileViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
-
+    
 }
 
 extension UserProfileViewController {
     private func setupConstraints() {
-
         NSLayoutConstraint.activate([
             logoutButton.heightAnchor.constraint(equalToConstant: 25),
             logoutButton.widthAnchor.constraint(equalToConstant: 80)

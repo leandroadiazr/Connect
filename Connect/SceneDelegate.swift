@@ -9,9 +9,8 @@ import UIKit
 import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    var firestore = FireStoreManager.shared
     var window: UIWindow?
-
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -19,16 +18,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-       
-        
-        
-        
-//        let navVC = UINavigationController(rootViewController: CustomTabBarController())
-        
-        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-        window?.windowScene = windowScene
-        window?.rootViewController = CustomTabBarController()
-        window?.makeKeyAndVisible()
+        Auth.auth().addStateDidChangeListener( { auth, user in
+            if user != nil {
+                self.firestore.observeUserProfile(user!.uid) { result in
+                    switch result {
+                    case .success(let user):
+                        self.firestore.currentUserProfile = user
+                        guard let uuid = user?.userID else { return }
+                        print("User ID Found in SceneDelegate :********", uuid)
+                      
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+                //let navVC = UINavigationController(rootViewController: CustomTabBarController())
+                self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+                self.window?.windowScene = windowScene
+                self.window?.rootViewController = CustomTabBarController()
+                self.window?.makeKeyAndVisible()
+            } else {
+                print("User Not Found in SceneDelegate :********, Login")
+                self.firestore.currentUserProfile = nil
+                self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+                self.window?.windowScene = windowScene
+                self.window?.rootViewController = LoginViewController()
+                self.window?.makeKeyAndVisible()
+            }
+        })
+        configureGlobalNavBar()
+    }
+    
+    private func configureGlobalNavBar() {
+        UINavigationBar.appearance().tintColor = CustomColors.CustomGreenBright
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

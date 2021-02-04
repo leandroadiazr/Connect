@@ -423,15 +423,15 @@
 		E8D6D11F25C4E96200778209 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				E8FBC08925CB4C3100AB9F90 /* DetailsViewController */,
+				E8D6D14025C4E96200778209 /* Navigation&TabBarControllers */,
 				E8D6D12025C4E96200778209 /* HomeBaseViewController */,
+				E8FBC08925CB4C3100AB9F90 /* DetailsViewController */,
 				E8D6D12C25C4E96200778209 /* UserProfileViewControllers */,
 				E8D6D12E25C4E96200778209 /* PostViewControllers */,
 				E8D6D13125C4E96200778209 /* AlertViewControllers */,
 				E8D6D13625C4E96200778209 /* TweetsViewController */,
 				E8D6D13825C4E96200778209 /* DiscussionViewControllers */,
 				E8D6D13B25C4E96200778209 /* Login&SignUpControllers */,
-				E8D6D14025C4E96200778209 /* Nav&TabControllers */,
 				E8D6D14525C4E96200778209 /* NewPostViewControllers */,
 			);
 			path = Controllers;
@@ -511,13 +511,13 @@
 			path = "Login&SignUpControllers";
 			sourceTree = "<group>";
 		};
-		E8D6D14025C4E96200778209 /* Nav&TabControllers */ = {
+		E8D6D14025C4E96200778209 /* Navigation&TabBarControllers */ = {
 			isa = PBXGroup;
 			children = (
 				E8D6D14225C4E96200778209 /* CustomNavCon.swift */,
 				E8D6D14325C4E96200778209 /* CustomTabBarController.swift */,
 			);
-			path = "Nav&TabControllers";
+			path = "Navigation&TabBarControllers";
 			sourceTree = "<group>";
 		};
 		E8D6D14525C4E96200778209 /* NewPostViewControllers */ = {

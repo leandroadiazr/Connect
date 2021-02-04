@@ -28,16 +28,13 @@ class HomeBaseViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//                dismissLoadingView()
-      
-        isUserLoggedIn()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        dismissLoadingView()
         configureNavigationBar()
+        print("dismissCAlled on homebased")
+        self.dismissLoadingView()
     }
     
     

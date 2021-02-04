@@ -60,26 +60,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         inputErrorLabel.isHidden = true
         forgotPasswordBtn.isHidden = true
-        //        showLoadingView()
-        
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
-        dismissLoadingView()
     }
     
     //MARK:- LOGIN & LOGOUT FUNCTIONALITY
     
-    @objc private func handleLogout() {
-        print("Logut")
-        do {
-            try Auth.auth().signOut()
-        } catch let logoutError {
-            print(logoutError.localizedDescription)
-        }
-        backTosignInAction()
-    }
+//    @objc private func handleLogout() {
+//        print("Logut")
+//        do {
+//            try Auth.auth().signOut()
+//        } catch let logoutError {
+//            print(logoutError.localizedDescription)
+//        }
+//        backTosignInAction()
+//    }
     
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS

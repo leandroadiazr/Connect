@@ -17,73 +17,30 @@ class CustomTabBarController: UITabBarController {
     var userProfile: UserProfile?
     let firestore = FireStoreManager.shared
     let storage = FireStorageManager.shared
-    
+    private let Green = CustomColors.CustomGreenBright
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        UITabBar.setTransparency()
-        UITabBar.appearance().tintColor = CustomColors.CustomGreenBright
+        createTabBar()
     }
-    
-    private func isUserLoggedIn() {
-        if Auth.auth().currentUser?.uid == nil {
-            print("No user found")
-            userManager.handleLogout()
-            showLoadingView()
-            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
-            
-        } else {
-            guard let uuid = Auth.auth().currentUser?.uid else { return }
-            
-            firestore.observeUserProfile(uuid) { (result) in
-                switch result {
-                case .success(let user):
-                    print(user?.email)
-                    self.firestore.currentUserProfile = user
-                case .failure(let error):
-                        print(error.localizedDescription)
-                }
-            }
-            
-            
-            firestore.getUser(userID: uuid) { (user) in
-                print("user :******", user ?? "")
-                self.showLoadingView()
-                self.createTabBar()
-                
-            }
-//            userManager.fetchUser { (result) in
-//                print("user loaded :", result)
-//
-//                self.showLoadingView()
-//                self.createTabBar()
-//            }
-        }
-    }
-    
-    @objc private func showLoginVC() {
-        showLoginViewController()
-    }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //        self.showLoadingView()
-        isUserLoggedIn()
-        
+        self.showLoadingView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //        self.dismissLoadingView()
         self.title = updateTitle
     }
-    
-    
+
+    @objc private func showLoginVC() {
+        showLoginViewController()
+    }
     
     fileprivate func createTabBar() {
-//        UITabBar.appearance().tintColor = CustomColors.CustomGreenBright
-//        UITabBar.setTransparency()
+        UITabBar.appearance().tintColor = Green
+        UITabBar.setTransparency()
         self.viewControllers = [createHomeBaseViewController(), createTweetsViewController(), createPostViewController(), createDiscussionViewController(), createProfileViewController()]
     }
     
@@ -164,3 +121,41 @@ extension CustomTabBarController: UIViewControllerTransitioningDelegate {
 //
 //            }
 //            guard let userID = userProfile?.userID else { return }
+
+
+//    private func isUserLoggedIn() {
+//        if Auth.auth().currentUser?.uid == nil {
+//            print("No user found")
+//            userManager.handleLogout()
+//            showLoadingView()
+//            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
+//
+//        } else {
+//            guard let uuid = Auth.auth().currentUser?.uid else { return }
+//            print("User ID:********", uuid)
+//
+//            firestore.observeUserProfile(uuid) { (result) in
+//                switch result {
+//                case .success(let user):
+//                    print(user?.email)
+//                    self.firestore.currentUserProfile = user
+//                case .failure(let error):
+//                        print(error.localizedDescription)
+//                }
+//            }
+//
+//
+//            firestore.getUser(userID: uuid) { (user) in
+//                print("user :******", user ?? "")
+//                self.showLoadingView()
+//                self.createTabBar()
+//
+//            }
+////            userManager.fetchUser { (result) in
+////                print("user loaded :", result)
+////
+////                self.showLoadingView()
+////                self.createTabBar()
+////            }
+//        }
+//    }

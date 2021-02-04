@@ -41,22 +41,40 @@ class PostViewController: UIViewController, UITextFieldDelegate {
     }
     
     func getFeedsFromServer() {
+//        firestore.observePost { [weak self] (result) in
+//            guard let self = self else { return }
+//            
+//            switch result {
+//            case .success(let post):
+//                print("receivedFeeds :", "\(String(describing: post))")
+//                
+//                
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//                //create alert showing error or show empty state
+//            }
+//        }
         
-        firestore.getFeeds { (receivedFeeds) in
-            print("receivedFeeds :", "\(String(describing: receivedFeeds))")
-            guard let dataReceived = receivedFeeds else { return }
-            print("received feeds on postVC: ", dataReceived)
-
-            dataReceived.forEach{
-                let receivedFeed = $0
-                self.feedReference.append(receivedFeed)
-            }
-
-            DispatchQueue.main.async {
-                self.reloadData(with: self.feedReference)
-            }
-            
-        }
+        
+        
+        
+        
+        
+        
+        
+//        firestore.getFeeds { (receivedFeeds) in
+//            print("receivedFeeds :", "\(String(describing: receivedFeeds))")
+//            guard let dataReceived = receivedFeeds else { return }
+//            print("received feeds on postVC: ", dataReceived)
+//            dataReceived.forEach{
+//                let receivedFeed = $0
+//                self.feedReference.append(receivedFeed)
+//            }
+//            DispatchQueue.main.async {
+//                self.reloadData(with: self.feedReference)
+//            }
+//
+//        }
 //        firestore.getFeeds { [weak self ](receivedFeeds) in
 //            guard let self = self else { return }
 //            guard let receivedFeeds = receivedFeeds else { return }

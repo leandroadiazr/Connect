@@ -69,19 +69,19 @@ class DetailsViewController: UIViewController, DetailsAction {
     
 //    get feeds from everyoneElse
     func getFeedsFromServer() {
-        firestore.getFeeds { (receivedFeeds) in
-            print("receivedFeeds :", receivedFeeds!)
-            guard let dataReceived = receivedFeeds else { return }
-            print("received feeds on postVC: ", dataReceived)
-            
-            dataReceived.forEach{
-                let receivedFeed = $0
-                self.feedReference.append(receivedFeed)
-            }
-            DispatchQueue.main.async {
-//                self.reloadData(with: self.feedReference)
-            }
-        }
+//        firestore.getFeeds { (receivedFeeds) in
+//            print("receivedFeeds :", receivedFeeds!)
+//            guard let dataReceived = receivedFeeds else { return }
+//            print("received feeds on postVC: ", dataReceived)
+//            
+//            dataReceived.forEach{
+//                let receivedFeed = $0
+//                self.feedReference.append(receivedFeed)
+//            }
+//            DispatchQueue.main.async {
+////                self.reloadData(with: self.feedReference)
+//            }
+//        }
     }
     
     
