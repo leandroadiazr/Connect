@@ -20,8 +20,8 @@ class DetailsViewController: UIViewController, DetailsAction {
     
     let sections = Section.self
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, User>!
-    var feedReference = [User]()
+    var dataSource: UICollectionViewDiffableDataSource<Section, Feed>!
+    var feedReference = [Feed]()
     var feeds = [Feed]()
     
     
@@ -123,7 +123,7 @@ class DetailsViewController: UIViewController, DetailsAction {
     }
     
     private func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, User>(collectionView: collectionView) { (collectionView, indexPath, feed) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, Feed>(collectionView: collectionView) { (collectionView, indexPath, feed) -> UICollectionViewCell? in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsViewCell.reuseID, for: indexPath) as? DetailsViewCell else {
                 fatalError("can't deque cell")
             }
@@ -133,8 +133,8 @@ class DetailsViewController: UIViewController, DetailsAction {
         }
     }
     
-    fileprivate func reloadData(with feed: [User]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, User>()
+    fileprivate func reloadData(with feed: [Feed]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Feed>()
     
             snapshot.appendSections([.main])
             snapshot.appendItems(feed)

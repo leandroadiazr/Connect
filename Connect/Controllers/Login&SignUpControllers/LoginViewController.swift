@@ -257,20 +257,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         if let email = emailTextField.text,
            let passOne = passwordTextField.text {
 
-            Auth.auth().signIn(withEmail: email, password: passOne) { [weak self] (user, error) in
-                guard let self = self else { return }
+            Auth.auth().signIn(withEmail: email, password: passOne) { (user, error) in
+//                guard let self = self else { return }
                 if let unwrappedError = error {
                     self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
                     self.forgotPassword()
                     print(unwrappedError.localizedDescription)
                     return
                 }
+                
+              
+                
                
+                print(Auth.auth().currentUser?.uid)
+//                self.userManager.setCurrentProfile()
+                
                 let mainVC = CustomTabBarController()
                 mainVC.modalPresentationStyle = .overFullScreen
                 self.present(mainVC, animated: true, completion: nil) 
             }
         }
+        
+        
         
     }
     

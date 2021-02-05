@@ -47,7 +47,6 @@ struct User: Codable, Hashable {
             "name"          : name,
             "handler"       : handler,
             "email"         : email,
-//            "password"      : password,
             "bio"           : bio,
             "location"      : location,
             "feedID"        : feedID,

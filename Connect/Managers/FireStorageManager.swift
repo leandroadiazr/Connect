@@ -18,10 +18,10 @@ class FireStorageManager {
     private lazy var imagesReferences = storage.reference().child("images")
     let cache               = NSCache<NSString, UIImage>()
     
-    func uploadProfileImage(user: User, completion: @escaping (Result<String, ErrorMessages>) -> Void) {
+    func uploadProfileImage(user: UserProfile, completion: @escaping (Result<String, ErrorMessages>) -> Void) {
         let changeProfile = Auth.auth().currentUser?.createProfileChangeRequest()
         changeProfile?.displayName = user.name
-        let imageURL = URL(fileURLWithPath: user.profileImage)
+        let imageURL = URL(string: user.profileImage)
         changeProfile?.photoURL = imageURL
         changeProfile?.commitChanges(completion: { (error) in
             if let unwrappedError = error {

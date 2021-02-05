@@ -19,17 +19,19 @@ class UserManager {
     private lazy var childCollection = "users"
     var updatedTitle = ""
     var currentUserProfile: UserProfile?
-    //    var SingleUser = [User]()
-    
-    
-    private var currentUser = [UserProfile]()
     private var refId: DocumentReference? = nil
+    private var currentUser: UserProfile?
+   
     
     
     // 1.- USER MANAGER RELATED
     //MARK:- GET CURRENT USER IN THE DATABASE FROM USERPROFILE***
     //THIS IS WILL GET THE CURRENT USER ARRAY ON USERS PROFILE AND IS NEEDED
-    func getCurrentUser(userID: String, completion: @escaping ([UserProfile]?) -> Void) {
+    func getCurrentUser(userID: String, completion: @escaping (UserProfile?) -> Void) {
+//        guard userID == currentUserProfile?.userID else { return }
+        print(userID)
+        print(Auth.auth().currentUser?.uid)
+        print(currentUserProfile?.userID)
         database.collection("users").document(userID).getDocument  { (querySnapshot, error) in
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
@@ -52,8 +54,8 @@ class UserManager {
                     return //continue //in case should be a continue and the for each changed to a for loop
                 }
                 guard let uid = Auth.auth().currentUser?.uid else { return }
-                let currentUser = UserProfile(userID: uid, name: name, handler: handler, email: email, profileImage: profImgURL, userLocation: location, userBio: bio, status: status)
-                self.currentUser.append(currentUser)
+                let loadedUser = UserProfile(userID: uid, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: location, userBio: bio, status: status)
+                self.currentUser = loadedUser
                 print(self.currentUser)
             }
             completion(self.currentUser)
@@ -61,8 +63,10 @@ class UserManager {
     }
     
     //MARK:- GET SINGLE USER ON LOGIN SCENE DELEGATE NEEDED BUT CAN BE REFACTORED LATER***
+    
     func observeUserProfile(_ userID: String, completion: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
         let userRef = database.collection("users").document(userID)
+        print(userRef.documentID)
         userRef.getDocument { (snapshot, error) in
             var userProfile: UserProfile?
             if let unwrappedError = error {
@@ -78,14 +82,14 @@ class UserManager {
                       let profImgURL = URL(string: profileImage),
                       let uuid = snapshot?.documentID
                 else { return }
-                userProfile = UserProfile(userID: uuid, name: username, handler: "", email: "", profileImage: profImgURL, userLocation: "", userBio: "", status: "")
+                userProfile = UserProfile(userID: uuid, name: username, handler: "", email: "", profileImage: profileImage, userLocation: "", userBio: "", status: "")
             }
             completion(.success(userProfile))
         }
     }
     
     //MARK:- SAVE USER ON SIGNUP VIEW CONTROLLER ***
-    func saveUser(user: User, userID: String, completion: @escaping (Result<Bool, NSError>) -> Void) {
+    func saveUser(user: UserProfile, userID: String, completion: @escaping (Result<Bool, NSError>) -> Void) {
         guard let userID = Auth.auth().currentUser?.uid else {
             return  }
         let newUser = self.database.collection("users").document(userID)
@@ -107,6 +111,30 @@ class UserManager {
         } catch let logoutError {
             print(logoutError.localizedDescription)
         }
+    }
+    
+    //MARK:- SET CURRENT USER PROFILE
+    func setCurrentProfile() {
+        Auth.auth().addStateDidChangeListener( { auth, user in
+            if user != nil {
+                self.observeUserProfile(user!.uid) { result in
+                    print("current logged ", user?.uid)
+                    switch result {
+                    case .success(let user):
+                        
+                        self.currentUserProfile = user
+                        guard let uuid = user?.userID else { return }
+                        print("User ID Found in SceneDelegate :********", uuid)
+                        
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+                
+            } else {
+                print("User Not Found in Set CURRENT PROFILE :********, Login")
+            }
+        })
     }
 }
 

@@ -61,7 +61,7 @@ class DetailsViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setCell(with data: User) {
+    func setCell(with data: Feed) {
         locationLabel.text = data.location
         
         mainImageViewArea.image = UIImage(named: data.mainImage)
@@ -69,7 +69,7 @@ class DetailsViewCell: UICollectionViewCell {
         imageViewAreaThree.image = UIImage(named: data.otherImages[1])
         imageViewAreaFour.image = UIImage(named: data.mainImage)
         titleLabel.text = data.postTitle
-        messageDescriptionLabel.text = data.messageDescription
+        messageDescriptionLabel.text = data.postDescription
         likesCounter.text = "\(data.likes)"
         commentsCounter.text = "\(data.comments)"
         viewsCounter.text = "\(data.views)"

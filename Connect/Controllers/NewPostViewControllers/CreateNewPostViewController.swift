@@ -61,7 +61,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         self.view.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
         //PROFILE PICTURE
         view.addSubview(userProfileImageView)
-        userProfileImageView.downloadImage(from: user.profileImage.absoluteString)
+        userProfileImageView.downloadImage(from: user.profileImage)
         
         //MEDIA VIEW AREA
         mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
@@ -148,7 +148,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
                     "author": [
                         "userID": userProfile.userID,
                         "name"  : userProfile.name,
-                        "profileImage": userProfile.profileImage.absoluteString
+                        "profileImage": userProfile.profileImage
                     ],
                     "mainImage      " : mainImg,
                     "otherImages    " : otherImagesPaths,

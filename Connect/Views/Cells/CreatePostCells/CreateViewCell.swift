@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+/*
 class CreateViewCell: UITableViewCell, UITextFieldDelegate {
     
     static let reuseID = "CreateViewCell"
@@ -211,3 +211,4 @@ class CreateViewCell: UITableViewCell, UITextFieldDelegate {
         
     }
 }
+*/

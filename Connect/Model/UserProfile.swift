@@ -18,7 +18,7 @@ struct UserProfile: Codable, Hashable {
     var name: String
     var handler: String
     var email: String
-    var profileImage: URL
+    var profileImage: String
     var userLocation: String
     var userBio: String
     var status: String
@@ -30,6 +30,19 @@ struct UserProfile: Codable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    var userDictionary : [String: Any] {
+        return [
+            "userID"        : userID,
+            "profileImage"  : profileImage,
+            "name"          : name,
+            "handler"       : handler,
+            "email"         : email,
+            "bio"           : userBio,
+            "location"      : userLocation,
+            "status"        : status
+        ]
+    }
+    
 }
 
 extension UserProfile: UserProfileSerializable {
@@ -39,7 +52,7 @@ guard   let userID              = dictionary["userID"]           as? String,
         let name                = dictionary["name"]             as? String,
         let handler             = dictionary["handler"]          as? String,
         let email               = dictionary["email"]            as? String,
-        let profileImage        = dictionary["profileImage    "] as? URL,
+        let profileImage        = dictionary["profileImage    "] as? String,
         let userLocation        = dictionary["location        "] as? String,
         let userBio             = dictionary["userBio         "] as? String,
         let status              = dictionary["status          "] as? String else {return nil}

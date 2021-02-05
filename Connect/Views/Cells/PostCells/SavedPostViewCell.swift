@@ -59,7 +59,7 @@ class SavedPostViewCell: UICollectionViewCell {
 //        }
 //        
         
-        guard let url = URL(string: feed.author.profileImage.absoluteString) else { return }
+        guard let url = URL(string: feed.author.profileImage) else { return }
         userProfileImage.downloadImage(from: url.absoluteString)
         userNameLabel.text = feed.author.name
         locationLabel.text = feed.author.userLocation

@@ -12,35 +12,55 @@ class FlowViewController: UIViewController, PresentCommentVC {
         showSettingsMenu(sender)
     }
 
-    
     func presentViewComments() {
         self.showComments(message: "", buttonTitle: "Post")
     }
-    
     
     enum Section {
         case main
     }
     
-    
-    
     let sections = Section.self
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, User>!
-    var feeds = testingData
-    
+    var dataSource: UICollectionViewDiffableDataSource<Section, Feed>!
+    var firestore = FireStoreManager.shared
+    var feeds = [Feed]()     //= testingData
+
     var optionsView    = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        observeUserPosts()
         configureCollectionView()
         registerCell()
         configureDataSource()
-        reloadData(with: feeds)
+//        reloadData(with: feeds)
     }
     
-
+    //MARK:- GET POSTS FROM SERVER
+    //the one using today 8.13 for the current logged user
+    func observeUserPosts() {
+        firestore.observePost { [weak self](result) in
+            guard let self = self else { return }
+            switch result{
+            case.success(let post):
+                if post.isEmpty{
+                    self.showEmptyState(with: "Nothing to show here yet, Create some posts...", in: self.view)
+                }
+                post.forEach{
+                    self.feeds.append($0)
+                    self.navigationItem.title = $0.author.name
+                    print("receivedPost :", self.feeds)
+                }
+                DispatchQueue.main.async {
+                    self.reloadData(with: self.feeds)
+                }
+            case.failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     
     private func configureCollectionView() {
         let layuout = configureLayout()
@@ -56,7 +76,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
     }
     
     private func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, User>(collectionView: collectionView) { (collectionView, indexPath, feed) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, Feed>(collectionView: collectionView) { (collectionView, indexPath, feed) -> UICollectionViewCell? in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainFeedViewCell.reuseID, for: indexPath) as? MainFeedViewCell else {
                 fatalError("can't deque cell")
             }
@@ -66,8 +86,8 @@ class FlowViewController: UIViewController, PresentCommentVC {
         }
     }
     
-    fileprivate func reloadData(with feed: [User]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, User>()
+    fileprivate func reloadData(with feed: [Feed]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Feed>()
         snapshot.appendSections([.main])
         snapshot.appendItems(feed)
         DispatchQueue.main.async {

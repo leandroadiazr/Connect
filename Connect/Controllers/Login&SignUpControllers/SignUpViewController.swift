@@ -257,14 +257,14 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             print("pass are not equal & needs to be at least 8 chars")
             return
         }
-        var newUser: User?
+        var newUser: UserProfile?
         
         if let userProfile = bubbleImageView.image,
             let name = nameTextField.text,
            let email = emailTextField.text,
            let passOne = passwordTextField.text {
-            Auth.auth().createUser(withEmail: email, password: passOne) { [weak self] authResult, error in
-                guard let self = self else { return }
+            Auth.auth().createUser(withEmail: email, password: passOne) { authResult, error in
+//                guard let self = self else { return }
                 if let unwrappedError = error {
                     self.thereIsAnError()
                     self.showAlert(title: "Something went wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
@@ -277,15 +277,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 
-                
-                
                 self.storage.uploadSingleImage(userProfile) { (imageURL) in
-                    let profileImage = imageURL
+                    
+//                    let imageProfile = imageURL
 
-                    newUser = User(profileImage: profileImage, name: name, handler: "", email: email, password: passOne, bio: "", location: "", feedID: "", mainImage: "", otherImages: [""], status: "", postedOn: Date(), postTitle: "", messageDescription: "", likes: 0, comments: 0, views: 0)
-                    
-                    
-                   
+                    newUser = UserProfile(userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "Florida", userBio: "Aqui", status: "Active")
                     
                 guard let saveThisUser = newUser else { return}
                     

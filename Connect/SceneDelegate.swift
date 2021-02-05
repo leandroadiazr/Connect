@@ -22,6 +22,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Auth.auth().addStateDidChangeListener( { auth, user in
             if user != nil {
                 self.userManager.observeUserProfile(user!.uid) { result in
+                    print("current logged ", user?.uid)
+                    
                     switch result {
                     case .success(let user):
                         self.userManager.currentUserProfile = user

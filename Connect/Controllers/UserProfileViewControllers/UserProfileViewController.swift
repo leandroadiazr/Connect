@@ -40,16 +40,20 @@ class UserProfileViewController: UIViewController {
     }
     
     private func fetchUserProfile() {
+        
+        
+        
+        
         guard let userID = Auth.auth().currentUser?.uid else { return }
         print(userID)
         userManager.getCurrentUser(userID: userID) { (user) in
             print(user!)
             if let user = user {
                 print(user)
-                for field in user {
-                    self.title = field.name
-                }
-                self.currentLoggedUser.append(contentsOf: user)
+//                for field in user {
+                    self.title = user.name
+//                }
+                self.currentLoggedUser.append(user)
                 print(self.currentLoggedUser)
                 DispatchQueue.main.async {
                     self.reloadData(with: self.currentLoggedUser)

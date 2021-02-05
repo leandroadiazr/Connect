@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+/*
 class CreateViewController: UIViewController {
 
     var userProfile = [UserProfile]()
@@ -48,3 +48,4 @@ extension CreateViewController: UITableViewDelegate, UITableViewDataSource {
     
     
 }
+*/

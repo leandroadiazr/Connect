@@ -15,7 +15,7 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
     static let reuseID            = "MainFeedViewCell"
     let userProfileImage        = CustomAvatarImage(frame: .zero)
     let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
-    let mainImageViewArea       = UIImageView()
+    let mainImageViewArea       = CustomAvatarImage(frame: .zero)
     let menuButton              = CustomMenuButton()
     let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
     let postedLabel             = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 12)
@@ -61,30 +61,27 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setCell(with data: User) {
-        if data.profileImage.isEmpty {
+    func setCell(with data: Feed) {
+        if data.author.profileImage.isEmpty {
             userProfileImage.image = UIImage(named: Images.Avatar)
         }
         
-        userProfileImage.image = UIImage(named: data.profileImage)
-        userNameLabel.text = data.name
-        locationLabel.text = data.location
+        userProfileImage.downloadImage(from: data.author.profileImage)   //     .image = UIImage(named: data.profileImage)
+        userNameLabel.text = data.author.name
+        locationLabel.text = data.author.userLocation
         
         //FEEDS
         //        for feed in data.feed! {
-        mainImageViewArea.image = UIImage(named: data.mainImage)
+        mainImageViewArea.downloadImage(from: data.mainImage)
         statusLabel.text = data.status
-        postedLabel.text = String(data.postedOn.timeIntervalSinceNow)
+        postedLabel.text = data.postedOn
         titleLabel.text = data.postTitle
-        messageDescriptionLabel.text = data.messageDescription
+        messageDescriptionLabel.text = data.postDescription
         likesCounter.text = "\(data.likes)"
         commentsCounter.text = "\(data.comments)"
         viewsCounter.text = "\(data.views)"
     }
-    
-    
-    
-    
+
     private func configure() {
         
         likesLabel.text = "Likes: "
@@ -99,7 +96,7 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
         menuButton.addTarget(self, action: #selector(showMenuOptions), for: .touchUpInside)
         
         //MEDIA VIEW AREA
-        mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
+        mainImageViewArea.contentMode = .scaleToFill
         addSubview(mainImageViewArea)
         
         //LABELS
