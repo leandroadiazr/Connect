@@ -10,6 +10,8 @@
 		5119710C2AC63B250DF6E247 /* Pods_Connect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEAC96232049A3D01586BEDA /* Pods_Connect.framework */; };
 		E841657225C6DFEA0011A237 /* UsersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E841657125C6DFEA0011A237 /* UsersManager.swift */; };
 		E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */; };
+		E86B341B25D07357004FD2E9 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341A25D07357004FD2E9 /* ChatViewController.swift */; };
+		E86B341E25D079D4004FD2E9 /* CreateChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */; };
 		E8967E5725C89B4D00AB571B /* LoginConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */; };
 		E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */; };
 		E8AE047925CC6C49005383A8 /* CreateViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AE047825CC6C49005383A8 /* CreateViewCell.swift */; };
@@ -90,6 +92,8 @@
 		6269AAD5F904C6818B27195A /* Pods-Connect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Connect.release.xcconfig"; path = "Target Support Files/Pods-Connect/Pods-Connect.release.xcconfig"; sourceTree = "<group>"; };
 		E841657125C6DFEA0011A237 /* UsersManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersManager.swift; sourceTree = "<group>"; };
 		E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
+		E86B341A25D07357004FD2E9 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatViewController.swift; sourceTree = "<group>"; };
 		E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConstraintExtension.swift; sourceTree = "<group>"; };
 		E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpConstraintExtension.swift; sourceTree = "<group>"; };
 		E8AE047825CC6C49005383A8 /* CreateViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewCell.swift; sourceTree = "<group>"; };
@@ -514,6 +518,8 @@
 			isa = PBXGroup;
 			children = (
 				E8D6D13A25C4E96200778209 /* DiscussionViewController.swift */,
+				E86B341A25D07357004FD2E9 /* ChatViewController.swift */,
+				E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */,
 			);
 			path = DiscussionViewControllers;
 			sourceTree = "<group>";
@@ -606,6 +612,7 @@
 				E8D6D08F25C4E8B400778209 /* Frameworks */,
 				E8D6D09025C4E8B400778209 /* Resources */,
 				E77B223A083DA0E2BB3D3471 /* [CP] Embed Pods Frameworks */,
+				4C579366F5C5065C8BA3200F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -663,6 +670,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4C579366F5C5065C8BA3200F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Connect/Pods-Connect-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Connect/Pods-Connect-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Connect/Pods-Connect-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8C618A55C20F23DA88F1BA58 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -735,6 +759,7 @@
 				E8D6D10125C4E95800778209 /* SecondaryCollectionViewCell.swift in Sources */,
 				E8D6D11625C4E95800778209 /* CustomTitleLabel.swift in Sources */,
 				E8D6D15425C4E96200778209 /* PostViewController.swift in Sources */,
+				E86B341E25D079D4004FD2E9 /* CreateChatViewController.swift in Sources */,
 				E8E55CA225C901EB0029D7BC /* ImageCacheManager.swift in Sources */,
 				E8D6D16425C4E96200778209 /* CreateNewPostViewController.swift in Sources */,
 				E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */,
@@ -743,6 +768,7 @@
 				E8D6D11D25C4E95800778209 /* CustomAvatarImage.swift in Sources */,
 				E8D6D10625C4E95800778209 /* HeaderViewCell.swift in Sources */,
 				E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */,
+				E86B341B25D07357004FD2E9 /* ChatViewController.swift in Sources */,
 				E8FBC08B25CB4C6500AB9F90 /* DetailsViewController.swift in Sources */,
 				E8E8BCE325D03D2900F1751F /* GenericImageView.swift in Sources */,
 				E8D6D10025C4E95800778209 /* UserProfileViewCell.swift in Sources */,

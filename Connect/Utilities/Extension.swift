@@ -142,3 +142,11 @@ extension UITextField {
         self.layer.addSublayer(bottomLine)
     }
 }
+
+
+extension UITableView {
+    
+    func removeEmptyCells() {
+        tableFooterView = UIView(frame: .zero)
+    }
+}
