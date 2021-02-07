@@ -10,9 +10,9 @@ import UIKit
 class PostsFeedCell: UICollectionViewCell {
     static let reuseID          = "PostFeedCell"
    
-    let mainImageViewArea       = CustomAvatarImage(frame: .zero)
-    let imageViewAreaTwo        = CustomAvatarImage(frame: .zero)
-    let imageViewAreaThree      = CustomAvatarImage(frame: .zero)
+    let mainImageViewArea       = GenericImageView(frame: .zero)
+    let imageViewAreaTwo        = GenericImageView(frame: .zero)
+    let imageViewAreaThree      = GenericImageView(frame: .zero)
     let titleLabel              = CustomSecondaryTitleLabel(title: "", fontSize: 15, textColor: .label)
     let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 12, textColor: .systemGray)
     let messageDescriptionLabel = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 11)

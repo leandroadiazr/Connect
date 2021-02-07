@@ -10,7 +10,7 @@ import UIKit
 class HomeCollectionViewCell: UICollectionViewCell {
     
     static let reuseID  = "CollectionViewCell"
-    let viewImage       = UIImageView()
+    let userProfileImage       = CustomAvatarImage(frame: .zero)
     let userNameLabel   = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 20)
     let handlerLabel    = CustomSubtitleLabel(fontSize: 16, backgroundColor: .clear)
     let bioLabel        = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 14)
@@ -29,7 +29,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
         userNameLabel.text = user.name
         handlerLabel.text  = user.handler
         bioLabel.text      = user.bio
-        viewImage.image = UIImage(named: Images.profilePic)
+        userProfileImage.image = UIImage(named: Images.profilePic)
     }
     
     private func configure() {
@@ -43,11 +43,11 @@ class HomeCollectionViewCell: UICollectionViewCell {
         iconButton.tintColor = CustomColors.CustomGreen
         
         
-        viewImage.translatesAutoresizingMaskIntoConstraints = false
-        viewImage.clipsToBounds = true
-        viewImage.layer.cornerRadius = 8
-        viewImage.tintColor = CustomColors.CustomGreen
-        addSubview(viewImage)
+        userProfileImage.translatesAutoresizingMaskIntoConstraints = false
+        userProfileImage.clipsToBounds = true
+        userProfileImage.layer.cornerRadius = 8
+        userProfileImage.tintColor = CustomColors.CustomGreen
+        addSubview(userProfileImage)
         
         setupConstraints()
     }
@@ -56,18 +56,18 @@ class HomeCollectionViewCell: UICollectionViewCell {
         let padding: CGFloat = 10
         
         NSLayoutConstraint.activate([
-            viewImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
-            viewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            viewImage.widthAnchor.constraint(equalToConstant: 60),
-            viewImage.heightAnchor.constraint(equalToConstant: 60),
+            userProfileImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            userProfileImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            userProfileImage.widthAnchor.constraint(equalToConstant: 60),
+            userProfileImage.heightAnchor.constraint(equalToConstant: 60),
             
             userNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
-            userNameLabel.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding),
+            userNameLabel.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
             userNameLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
             userNameLabel.heightAnchor.constraint(equalToConstant: 22),
             
             handlerLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 0),
-            handlerLabel.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding),
+            handlerLabel.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
             handlerLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
             handlerLabel.heightAnchor.constraint(equalToConstant: 18),
             
@@ -77,7 +77,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
             iconButton.heightAnchor.constraint(equalToConstant: 38),
             
             bioLabel.topAnchor.constraint(equalTo: iconButton.bottomAnchor, constant: 0),
-            bioLabel.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding),
+            bioLabel.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
             bioLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             bioLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
         ])

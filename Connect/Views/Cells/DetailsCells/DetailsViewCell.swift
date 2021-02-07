@@ -14,10 +14,10 @@ protocol DetailsAction: class {
 class DetailsViewCell: UICollectionViewCell {
     static let reuseID          = "DetailsViewCell"
     
-    let mainImageViewArea       = CustomAvatarImage(frame: .zero)
-    let imageViewAreaTwo        = CustomAvatarImage(frame: .zero)
-    let imageViewAreaThree      = CustomAvatarImage(frame: .zero)
-    let imageViewAreaFour       = CustomAvatarImage(frame: .zero)
+    let mainImageViewArea       = GenericImageView(frame: .zero)
+    let imageViewAreaTwo        = GenericImageView(frame: .zero)
+    let imageViewAreaThree      = GenericImageView(frame: .zero)
+    let imageViewAreaFour       = GenericImageView(frame: .zero)
     let titleLabel              = CustomSecondaryTitleLabel(title: "", fontSize: 15, textColor: .label)
     let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 12, textColor: .systemGray)
     let messageDescriptionLabel = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 11)
@@ -64,10 +64,10 @@ class DetailsViewCell: UICollectionViewCell {
     func setCell(with data: Feed) {
         locationLabel.text = data.location
         
-        mainImageViewArea.image = UIImage(named: data.mainImage)
-        imageViewAreaTwo.image = UIImage(named: data.otherImages[0])
-        imageViewAreaThree.image = UIImage(named: data.otherImages[1])
-        imageViewAreaFour.image = UIImage(named: data.mainImage)
+        mainImageViewArea.downloadImage(from: data.mainImage)
+        imageViewAreaTwo.downloadImage(from: data.otherImages[0])
+        imageViewAreaThree.downloadImage(from: data.otherImages[1])
+        imageViewAreaFour.downloadImage(from: data.otherImages[2])
         titleLabel.text = data.postTitle
         messageDescriptionLabel.text = data.postDescription
         likesCounter.text = "\(data.likes)"

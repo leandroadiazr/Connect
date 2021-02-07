@@ -14,10 +14,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- UI ELELMENTS
     //MARK:- IMAGES
-    let topBackgroundImage = UIImageView()
-    let bottomBackgroundImage = UIImageView()
-    let bubbleImageView = UIImageView()
-    let starsImage      = UIImageView()
+    let topBackgroundImage      = UIImageView()
+    let bottomBackgroundImage   = UIImageView()
+    let bubbleImageView         = UIImageView()
+    let starsImage              = UIImageView()
     
     //MARK:- TextFields and Labels
     let titleLabel = CustomTitleLabel(title: "Welcome", textAlignment: .center, fontSize: 28)
@@ -66,17 +66,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
     }
     
-    //MARK:- LOGIN & LOGOUT FUNCTIONALITY
-    
-//    @objc private func handleLogout() {
-//        print("Logut")
-//        do {
-//            try Auth.auth().signOut()
-//        } catch let logoutError {
-//            print(logoutError.localizedDescription)
-//        }
-//        backTosignInAction()
-//    }
     
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS
@@ -195,7 +184,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let textFields = [emailTextField, passwordTextField]
-        if textField == textFields[1] {
+        if textField == textFields[0] {
             textField.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
@@ -203,7 +192,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     @objc private func dismissKeyboard() {
-        emailTextField.resignFirstResponder()
+        let textFields = [emailTextField, passwordTextField]
+        for field in textFields {
+            field.resignFirstResponder()
+        }
     }
     
     

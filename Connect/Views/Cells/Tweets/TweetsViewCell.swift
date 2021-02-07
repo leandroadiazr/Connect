@@ -9,7 +9,7 @@ import UIKit
 
 class TweetsViewCell: UICollectionViewCell {
         static let reuseID = "TweetsCollectionCell"
-    let viewImage       = CustomAvatarImage(frame: .zero)
+    let userProfileImage       = CustomAvatarImage(frame: .zero)
     let userNameLabel   = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
     let handlerLabel    = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
     let messageTextView = CustomTextView(textAlignment: .left, fontSize: 12)
@@ -51,11 +51,11 @@ class TweetsViewCell: UICollectionViewCell {
     
     func configureCell(with tweet: Tweet) {
         if tweet.user.profileImage == "" {
-            viewImage.image = UIImage(named: Images.Avatar)
+            userProfileImage.image = UIImage(named: Images.Avatar)
         }
         userNameLabel.text = tweet.user.name
         handlerLabel.text  = tweet.user.handler
-        viewImage.image = UIImage(named: tweet.user.profileImage)
+        userProfileImage.image = UIImage(named: tweet.user.profileImage)
         messageTextView.text = tweet.message
     }
     
@@ -66,11 +66,11 @@ class TweetsViewCell: UICollectionViewCell {
         addSubview(userNameLabel)
         addSubview(handlerLabel)
         
-        viewImage.translatesAutoresizingMaskIntoConstraints = false
-        viewImage.clipsToBounds = true
-        viewImage.layer.cornerRadius = 8
-        viewImage.tintColor = CustomColors.CustomGreen
-        addSubview(viewImage)
+        userProfileImage.translatesAutoresizingMaskIntoConstraints = false
+        userProfileImage.clipsToBounds = true
+        userProfileImage.layer.cornerRadius = 8
+        userProfileImage.tintColor = CustomColors.CustomGreen
+        addSubview(userProfileImage)
         
         messageTextView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(messageTextView)
@@ -98,13 +98,13 @@ class TweetsViewCell: UICollectionViewCell {
             contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            viewImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
-            viewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            viewImage.widthAnchor.constraint(equalToConstant: 40),
-            viewImage.heightAnchor.constraint(equalToConstant: 40),
+            userProfileImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            userProfileImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            userProfileImage.widthAnchor.constraint(equalToConstant: 40),
+            userProfileImage.heightAnchor.constraint(equalToConstant: 40),
             
             userNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
-            userNameLabel.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding),
+            userNameLabel.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
             userNameLabel.heightAnchor.constraint(equalToConstant: 18),
             
             handlerLabel.centerYAnchor.constraint(equalTo: userNameLabel.centerYAnchor),
@@ -112,12 +112,12 @@ class TweetsViewCell: UICollectionViewCell {
             handlerLabel.heightAnchor.constraint(equalToConstant: 16),
             
             messageTextView.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 0),
-            messageTextView.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding),
+            messageTextView.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
             messageTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             messageTextView.bottomAnchor.constraint(equalTo: buttonStackView.topAnchor, constant: -padding),
             
             buttonStackView.topAnchor.constraint(equalTo: messageTextView.bottomAnchor, constant: padding),
-            buttonStackView.leadingAnchor.constraint(equalTo: viewImage.trailingAnchor, constant: padding),
+            buttonStackView.leadingAnchor.constraint(equalTo: userProfileImage.trailingAnchor, constant: padding),
             buttonStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
             buttonStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
             

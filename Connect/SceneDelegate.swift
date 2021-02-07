@@ -18,18 +18,52 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
-//        firestore.handleLogout()
+//        userManager.handleLogout()
+        
+//        if Auth.auth().currentUser == nil {
+////            guard let userID = Auth.auth().currentUser?.uid else { return }
+////            print(userID)
+//            self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+//                            self.window?.windowScene = windowScene
+//                            self.window?.rootViewController = LoginViewController()
+//                            self.window?.makeKeyAndVisible()
+//        } else {
+//            guard let userID = Auth.auth().currentUser?.uid else { return }
+//            print(userID)
+//            self.userManager.observeUserProfile(userID) { result in
+//                switch result {
+//                                   case .success(let user):
+//               //                        self.userManager.currentUserProfile = UserProfile(dictionary: user)
+//                                       self.userManager.currentUserProfile = user
+//
+//                                       guard let uuid = user?.userID else { return }
+//                                       print("User ID Found in SceneDelegate :********", uuid)
+//
+//                                   case .failure(let error):
+//                                       print(error.localizedDescription)
+//                                   }
+//            }
+//            self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+//                           self.window?.windowScene = windowScene
+//                           self.window?.rootViewController = CustomTabBarController()
+//                           self.window?.makeKeyAndVisible()
+//        }
+        
+        
         Auth.auth().addStateDidChangeListener( { auth, user in
-            if user != nil {
+            if user != nil && user?.uid == Auth.auth().currentUser?.uid {
+                guard let userID = auth.currentUser?.uid else { return }
                 self.userManager.observeUserProfile(user!.uid) { result in
-                    print("current logged ", user?.uid)
-                    
+                    print("current logged ", user!.uid)
+
                     switch result {
                     case .success(let user):
+//                        self.userManager.currentUserProfile = UserProfile(dictionary: user)
                         self.userManager.currentUserProfile = user
+                        print(self.userManager.currentUserProfile)
                         guard let uuid = user?.userID else { return }
                         print("User ID Found in SceneDelegate :********", uuid)
-                      
+
                     case .failure(let error):
                         print(error.localizedDescription)
                     }

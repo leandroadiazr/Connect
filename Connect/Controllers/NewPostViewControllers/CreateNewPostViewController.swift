@@ -16,75 +16,107 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     let imageBtnOne             = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
     let imageBtnTwo             = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
     let imageBtnThree           = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
-    let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
+    let userNameLabel           = CustomSecondaryTitleLabel(title: "Username", fontSize: 16, textColor: .white)
     let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
-    let locationLabel           = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
-    let titleLabel              = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
+    let locationLabel           = CustomSecondaryTitleLabel(title: "Location", fontSize: 13, textColor: .white)
+    let titleLabel              = CustomSecondaryTitleLabel(title: "Title", fontSize: 13, textColor: .white)
     let descriptionLabel        = CustomTextView(textAlignment: .left, fontSize: 13)
-    let hashtagLabel            = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
-    let tagFriendsLabel         = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
-        
+    let hashtagLabel            = CustomSecondaryTitleLabel(title: "Hashtag", fontSize: 13, textColor: .white)
+    let tagFriendsLabel         = CustomSecondaryTitleLabel(title: "Tag Some Friends...!", fontSize: 13, textColor: .white)
+    
     //textFields
     let titleField              = CustomTextField(textAlignment: .left, fontSize: 15, placeholder: "Give it a Title...")
     let descriptionField        = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "Description...!")
     let hashtagField            = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "Hashtag...!")
-    let tagFriendsField         = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "tag Some Friends...!")
+    let tagFriendsField         = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "Tag Some Friends...!")
     
     let storage                 = FireStorageManager.shared
     let firestore               = FireStoreManager.shared
     let userManager             = UserManager.shared
-    let newPost                 = [UserProfile]()
+    var userProfile             : UserProfile?
+    
     
     let imagePicker = UIImagePickerController()
     private var currentButton: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setGradientBackground(colorTop: .systemGreen, colorBottom: .systemBlue)
-//        guard let userProfile = user else { return }
-//        print(userProfile)
-        let currentUser = userManager.currentUserProfile
-        configure(with: currentUser)
+        setGradientBackground(colorTop: .systemGreen, colorBottom: .systemBackground)
+        configureUI()
         imagePicker.delegate = self
         configureNavigationBar()
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
     }
     
     private func configureNavigationBar() {
-        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismisVC))
+        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(backToMainVC))
         navigationItem.leftBarButtonItem = cancelBtn
-        let saveBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(saveNewPost))
+        let saveBtn = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveNewPost))
         navigationItem.rightBarButtonItem = saveBtn
     }
     
-    private func configure(with userProfile: UserProfile?) {
-        guard let user = userProfile else { return }
+    private func configureUI() {
         self.view.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
-        //PROFILE PICTURE
         view.addSubview(userProfileImageView)
-        userProfileImageView.downloadImage(from: user.profileImage)
-        
-        //MEDIA VIEW AREA
         mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mainImageViewArea)
-        
-        //LABELS
-        userNameLabel.text = user.name
-        statusLabel.text = "Privacy" //user.status ??
-        locationLabel.text = "get current Location"// user.userLocation ?? "location"
-        titleLabel.text = "Title label"
-        descriptionLabel.text = "Description"
-        hashtagLabel.text = "Hashtag"
-        tagFriendsLabel.text = "Tag some friends in this post"
         
         let labels = [userNameLabel, statusLabel, locationLabel, titleLabel, descriptionLabel, hashtagLabel, tagFriendsLabel]
         for label in labels {
             view.addSubview(label)
         }
-//        descriptionLabel.numberOfLines = 2
-//        descriptionLabel.lineBreakMode = .byTruncatingTail
         configureTextField()
         setupActionButtons()
         setupConstraints()
+        //        guard let currentUser = userManager.currentUserProfile else { return }
+        //        print(currentUser)
+        fetchUserProfile()
+        
+    }
+    
+    //    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+    //        tabBarController.selectedIndex = 0
+    //    }
+    
+    
+    @objc private func backToMainVC() {
+        if let tabCon = self.presentingViewController as? CustomTabBarController {
+            self.dismiss(animated: true, completion: nil)
+            //            self.dismiss(animated: true) {
+            tabCon.selectedIndex = 0
+            //            }
+        }
+    }
+    
+    private func fetchUserProfile() {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        print(userID)
+        userManager.getCurrentUser(userID: userID) { (user) in
+            print(user)
+            if let user = user {
+                print(user)
+                //                for field in user {
+                self.title = user.name
+                //                }
+                self.userProfile = user
+                print(self.userProfile)
+                DispatchQueue.main.async {
+                    self.configure(with: user)
+                }
+            }
+        }
+    }
+    
+    private func configure(with user: UserProfile) {
+        userProfileImageView.downloadImage(from: user.profileImage)
+        userNameLabel.text = user.name
+        statusLabel.text = user.userStatus
+        locationLabel.text = user.userLocation
     }
     
     private func configureTextField() {
@@ -92,9 +124,17 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         titleField.delegate = self
         let textFields = [titleField, descriptionField, descriptionField, hashtagField, tagFriendsField]
         for fields in textFields {
-        view.addSubview(fields)
+            fields.backgroundColor = .systemGray2
+            view.addSubview(fields)
         }
-   
+        
+    }
+    
+    @objc private func dismissKeyboard() {
+        let textFields = [titleField, descriptionField, descriptionField, hashtagField, tagFriendsField]
+        for field in textFields {
+            field.resignFirstResponder()
+        }
     }
     
     fileprivate func setupActionButtons() {
@@ -115,11 +155,12 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     @objc private func saveNewPost() {
         print("Clicked Save Btn 'Done'")
         self.dismisVC()
-        createNewPost()
+        guard let userProfile = self.userProfile else { return }
+        createNewPost(userProfile: userProfile)
     }
     
     
-    private func createNewPost() {
+    private func createNewPost(userProfile: UserProfile) {
         if let mainImage         = mainImageViewArea.currentImage,
            let imageOne         = imageBtnOne.currentImage,
            let imageTwo         = imageBtnTwo.currentImage,
@@ -130,7 +171,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
            let postDescription  = descriptionField.text {
             
             storage.bulkUpload([mainImage, imageOne, imageTwo, imageThree]) { (urlPath) in
-
                 let mainImg         = urlPath[0]
                 let imgOne          = urlPath[1]
                 let imgTwo           = urlPath[2]
@@ -141,36 +181,46 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
                 let likes           = 0
                 let comments        = 0
                 let views           = 0
+                guard let userID = Auth.auth().currentUser else { return }
                 
-                guard let userProfile = self.userManager.currentUserProfile else { return }
-                print("User Profile", userProfile)
                 let newPost: [String: Any] = [
+                    "customDocumentId": UUID().uuidString,
                     "author": [
-                        "userID": userProfile.userID,
-                        "name"  : userProfile.name,
-                        "profileImage": userProfile.profileImage
+                        "userID": userID.uid,
+                        "name": userProfile.name,
+                        "handler": userProfile.handler,
+                        "email": userProfile.email,
+                        "profileImage": userProfile.profileImage,
+                        "userLocation": userProfile.userLocation,
+                        "userBio": userProfile.userBio,
+                        "userStatus": userProfile.userStatus,
                     ],
-                    "mainImage      " : mainImg,
-                    "otherImages    " : otherImagesPaths,
-                    "status         " : status,
-                    "postedOn       " : postedOn,
-                    "location       " : location,
-                    "postTitle      " : postTitle,
-                    "postDescription" : postDescription,
-                    "likes          " : likes,
-                    "comments       " : comments,
-                    "views          " : views
+                    "mainImage": mainImg,
+                    "otherImages": otherImagesPaths,
+                    "status": status,
+                    "postedOn": postedOn,
+                    "location": location,
+                    "postTitle": postTitle,
+                    "postDescription": postDescription,
+                    "likes": likes,
+                    "comments": comments,
+                    "views": views
                 ]
                 self.firestore.savePost(post: newPost) { (result) in
                     print("result: ", result)
+                    switch result {
+                    case .success(true):
+                        print("")
+                        
+                    case .success(false):
+                        self.showAlert(title: "Ups... Something is wrong", message: "Please check your network connection and try again", buttonTitle: "Okay")
+                    case .failure(_):
+                        self.showAlert(title: "Ups... Something is wrong", message: "Please check your network connection and try again", buttonTitle: "Okay")
+                    }
                 }
-                //WHEN SAVING I NEED TO SEE THE POST AUTOMATICALLY IN THE SAVED POSTS VIEW CONTROLLER
-                
-                //                    Feed(author: author, mainImage: mainImg, otherImages: otherImagesPaths, status: status, postedOn: postedOn, location: location, postTitle: postTitle, postDescription: postDescription, likes: likes, comments: comments, views: views)
-                //
             }
         }
-        
+        self.backToMainVC()
     }
     
     
@@ -269,8 +319,6 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         ])
         
         
-        
-        
         //Title Label
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: imageBtnThree.bottomAnchor, constant: verticalPadding),
@@ -328,12 +376,24 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
             tagFriendsField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             tagFriendsField.heightAnchor.constraint(equalToConstant: fieldHeight)
         ])
-        
-        
-        
     }
     
     @objc func dismisVC() {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+//MARK:- CUSTOM STORYBOARD ANIMATED TRANSITION
+extension CreateNewPostViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let customTransition = CustomTransition()
+        customTransition.isPresenting = true
+        return customTransition
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let customTransition = CustomTransition()
+        customTransition.isPresenting = false
+        return customTransition
     }
 }

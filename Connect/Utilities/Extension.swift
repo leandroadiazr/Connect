@@ -80,7 +80,7 @@ extension UIViewController {
     func setGradientBackground(colorTop: UIColor, colorBottom: UIColor){
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colorTop.cgColor, colorBottom.cgColor]
-        gradientLayer.startPoint = CGPoint(x: 0.2, y: 1.5)
+        gradientLayer.startPoint = CGPoint(x: 0.2, y: 5.5)
         gradientLayer.endPoint = CGPoint(x: 0.3, y: 0.0)
         gradientLayer.locations = [NSNumber(floatLiteral: 0.0), NSNumber(floatLiteral: 1.0)]
         gradientLayer.frame = view.bounds

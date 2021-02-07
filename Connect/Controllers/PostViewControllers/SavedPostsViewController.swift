@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SavedPostsViewController: UIViewController, UITextFieldDelegate {
     
@@ -14,6 +15,7 @@ class SavedPostsViewController: UIViewController, UITextFieldDelegate {
     }
     
     let firestore = FireStoreManager.shared
+    let userManager = UserManager.shared
     let sections = Section.self
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Feed>!
@@ -21,22 +23,21 @@ class SavedPostsViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeUserPosts()
+        getUserPosts()
         configureNavigationBar()
         configureCollectionView()
         registerCell()
         configureDataSource()
-       
-     
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //        reloadData(with: feeds)
         self.showLoadingView()
-        DispatchQueue.main.async {
-            self.reloadData(with: self.feeds)
-        }
+//        DispatchQueue.main.async {
+//            self.reloadData(with: self.feeds)
+//        }
         
     }
     
@@ -48,9 +49,9 @@ class SavedPostsViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- GET POSTS FROM SERVER
     //the one using today 8.13 for the current logged user
-    func observeUserPosts() {
-        firestore.observePost { [weak self](result) in
-            guard let self = self else { return }
+    func getUserPosts() {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        firestore.observePost { (result) in
             switch result{
             case.success(let post):
                 if post.isEmpty{

@@ -74,19 +74,9 @@ class HomeBaseViewController: UIViewController {
         titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         titleImageView.contentMode = .scaleAspectFit
         titleImageView.tintColor = .blue
-//        navigationItem.titleView = titleImageView
         navigationItem.title = updateTitle
-        
-        let newPost = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPost))
-        navigationItem.rightBarButtonItem = newPost
     }
     
-    @objc func addNewPost() {
-        print("New post")
-        let postVC = CreateNewPostViewController()
-        let navController = UINavigationController(rootViewController: postVC)
-        self.navigationController?.present(navController, animated: true, completion: nil)
-    }
     
     func add(childVC: UIViewController, to containerView: UIView) {
         addChild(childVC)

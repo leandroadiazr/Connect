@@ -11,9 +11,9 @@ class UserProfileViewCell: UICollectionViewCell {
     static let reuseID          = "UserProfileViewCell"
     
     let userProfileImage        = CustomAvatarImage(frame: .zero)
-    let userProfileImgTwo       = CustomAvatarImage(frame: .zero)
-    let userProfileImgThree     = CustomAvatarImage(frame: .zero)
-    let userProfileImgFour      = CustomAvatarImage(frame: .zero)
+    let userProfileImgTwo       = GenericImageView(frame: .zero)
+    let userProfileImgThree     = GenericImageView(frame: .zero)
+    let userProfileImgFour      = GenericImageView(frame: .zero)
     let menuButton              = CustomMenuButton()
     let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
     let bio                     = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
@@ -56,8 +56,8 @@ class UserProfileViewCell: UICollectionViewCell {
     func setCell(with user: UserProfile){
         userProfileImage.downloadImage(from: user.profileImage)
         userNameLabel.text = user.name
-        statusLabel.text = user.status
-        postedLabel.text = user.status
+        statusLabel.text = user.userStatus
+        postedLabel.text = user.userStatus
         titleLabel.text = user.userBio
     }
     

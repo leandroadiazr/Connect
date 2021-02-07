@@ -30,8 +30,9 @@ class UserManager {
     func getCurrentUser(userID: String, completion: @escaping (UserProfile?) -> Void) {
 //        guard userID == currentUserProfile?.userID else { return }
         print(userID)
-        print(Auth.auth().currentUser?.uid)
-        print(currentUserProfile?.userID)
+//        guard let user = Auth.auth().currentUser?.uid else { return }
+//        print("auth id for get current: ",Auth.auth().currentUser?.uid)
+//        print("currentUserProfile?.userID :",currentUserProfile?.userID)
         database.collection("users").document(userID).getDocument  { (querySnapshot, error) in
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
@@ -40,21 +41,21 @@ class UserManager {
                     print(error!.localizedDescription)
                     return
                 }
-                guard let dictionary = document.data() else { return }
+                guard let dictionary = document.data()else { return }
                 guard
-                    let profileImage          = dictionary["profileImage"] as? String,
-                    let profImgURL = URL(string: profileImage),
-                    let name                  = dictionary["name"        ] as? String,
-                    let handler               = dictionary["handler"     ] as? String,
-                    let email                 = dictionary["email"       ] as? String,
-                    let bio                   = dictionary["bio"         ] as? String,
-                    let location              = dictionary["location"    ] as? String,
-                    let status                = dictionary["status"      ] as? String
+                    let userID              = dictionary["userID"]           as? String,
+                     let name                = dictionary["name"]             as? String,
+                     let handler             = dictionary["handler"]          as? String,
+                     let email               = dictionary["email"]            as? String,
+                     let profileImage        = dictionary["profileImage"] as? String,
+                     let userLocation        = dictionary["location"] as? String,
+                     let userBio             = dictionary["bio"] as? String,
+                     let userStatus              = dictionary["userStatus"] as? String
                 else {
                     return //continue //in case should be a continue and the for each changed to a for loop
                 }
                 guard let uid = Auth.auth().currentUser?.uid else { return }
-                let loadedUser = UserProfile(userID: uid, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: location, userBio: bio, status: status)
+                let loadedUser = UserProfile(userID: uid, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
                 self.currentUser = loadedUser
                 print(self.currentUser)
             }
@@ -65,24 +66,50 @@ class UserManager {
     //MARK:- GET SINGLE USER ON LOGIN SCENE DELEGATE NEEDED BUT CAN BE REFACTORED LATER***
     
     func observeUserProfile(_ userID: String, completion: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
-        let userRef = database.collection("users").document(userID)
-        print(userRef.documentID)
-        userRef.getDocument { (snapshot, error) in
+        guard let uid = auth.currentUser?.uid else { return }
+        print(uid)
+        let userRef = database.collection("users")
+//        print(userRef.documentID)
+        userRef.getDocuments { (snapshot, error) in
             var userProfile: UserProfile?
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
             } else {
-                guard let document = snapshot else {
+                guard let documents = snapshot?.documents else {
                     print(error!.localizedDescription)
                     return
                 }
-                guard let dictionary = document.data() else { return }
-                guard let username = dictionary["name"] as? String,
-                      let profileImage = dictionary["profileImage"] as? String,
-                      let profImgURL = URL(string: profileImage),
-                      let uuid = snapshot?.documentID
-                else { return }
-                userProfile = UserProfile(userID: uuid, name: username, handler: "", email: "", profileImage: profileImage, userLocation: "", userBio: "", status: "")
+                
+                for document in documents {
+                    if document.documentID == uid {
+                        print("do they mathc:?", document.documentID, uid)
+                        let dictionary = document.data()
+                        print("dictionary : ****",dictionary)
+                        
+//                        guard let id            = dictionary["id"]           as? String,
+                       guard let userID         = dictionary["userID"]           as? String,
+                        let name                = dictionary["name"]             as? String,
+                        let handler             = dictionary["handler"]          as? String,
+                        let email               = dictionary["email"]            as? String,
+                        let profileImage        = dictionary["profileImage"] as? String,
+                        let userLocation        = dictionary["userLocation"] as? String,
+                        let userBio             = dictionary["userBio"] as? String,
+                        let userStatus              = dictionary["userStatus"] as? String else { continue }
+                        
+                        userProfile = UserProfile( userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
+                        print(userProfile)
+                    }
+                }
+                
+                
+                
+//                guard let username = dictionary["name"] as? String,
+//                      let profileImage = dictionary["profileImage"] as? String,
+//                      let profImgURL = URL(string: profileImage)
+//                else { return }
+//                guard let uuid = self.auth.currentUser?.uid else { return }
+//                userProfile = UserProfile(id: uuid, userID: uuid, name: username, handler: "", email: "", profileImage: profileImage, userLocation: "", userBio: "", status: "")
+//                completion(.success(userDictionary))
             }
             completion(.success(userProfile))
         }

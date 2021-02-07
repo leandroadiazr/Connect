@@ -75,18 +75,16 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         configureLabels()
         configureButtons()
         signUpSetupConstraints()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         wrongPassLabel.isHidden = true
-        //        showLoadingView()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
-        //        dismissLoadingView()
-        //        isUserLoggedIn()
     }
     
     //MARK:- LABELS & TEXT FIELDS
@@ -102,11 +100,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             field.clearButtonMode = .whileEditing
             field.addTarget(self, action: #selector(textFieldAction), for: .primaryActionTriggered)
             view.addSubview(field)
+            
         }
-        emailTextField.delegate = self
-        emailTextField.becomeFirstResponder()
-        passwordTextField.delegate = self
-        
+        nameTextField.delegate = self
+        nameTextField.becomeFirstResponder()
         let labels = [titleLabel, nameLabel, emailLabel, passwordLabel, retypepasswordLabel, firstTimeLabel, wrongPassLabel]
         for label in labels {
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -196,8 +193,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         signUpWithEmail()
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let textFields = [emailTextField, passwordTextField]
-        if textField == textFields[1] {
+        let textFields = [nameTextField, emailTextField, passwordTextField, passwordTextFieldTwo]
+        if textField == textFields[0] {
             textField.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
@@ -205,7 +202,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     @objc private func dismissKeyboard() {
-        emailTextField.resignFirstResponder()
+        let textFields = [nameTextField, emailTextField, passwordTextField, passwordTextFieldTwo]
+        for field in textFields {
+            field.resignFirstResponder()
+        }
     }
     
     //MARK:- BUTTON ACTIONS
@@ -257,6 +257,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             print("pass are not equal & needs to be at least 8 chars")
             return
         }
+        
+        guard bubbleImageView.image != Images.bubbleImage else {
+            showAlert(title: "No Image Selected", message: "Please Choose a Profile Image...!", buttonTitle: "Ok")
+            wrongPassLabel.isHidden = false
+            return
+        }
+        
         var newUser: UserProfile?
         
         if let userProfile = bubbleImageView.image,
@@ -281,7 +288,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     
 //                    let imageProfile = imageURL
 
-                    newUser = UserProfile(userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "Florida", userBio: "Aqui", status: "Active")
+                    newUser = UserProfile(id: uuid, userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "Florida", userBio: "Aqui", userStatus: "Active")
                     
                 guard let saveThisUser = newUser else { return}
                     

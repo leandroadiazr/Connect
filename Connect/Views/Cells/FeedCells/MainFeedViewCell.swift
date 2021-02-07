@@ -15,7 +15,7 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
     static let reuseID            = "MainFeedViewCell"
     let userProfileImage        = CustomAvatarImage(frame: .zero)
     let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
-    let mainImageViewArea       = CustomAvatarImage(frame: .zero)
+    let mainImageViewArea       = GenericImageView(frame: .zero)
     let menuButton              = CustomMenuButton()
     let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)
     let postedLabel             = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 12)
@@ -69,9 +69,7 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
         userProfileImage.downloadImage(from: data.author.profileImage)   //     .image = UIImage(named: data.profileImage)
         userNameLabel.text = data.author.name
         locationLabel.text = data.author.userLocation
-        
-        //FEEDS
-        //        for feed in data.feed! {
+  
         mainImageViewArea.downloadImage(from: data.mainImage)
         statusLabel.text = data.status
         postedLabel.text = data.postedOn
@@ -185,9 +183,7 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
         }
         commentsCounter.text = "\(comment)"
     }
-   
- 
-    
+
     private func setupConstraints() {
         let padding: CGFloat = 10
         let textHeight: CGFloat = 15

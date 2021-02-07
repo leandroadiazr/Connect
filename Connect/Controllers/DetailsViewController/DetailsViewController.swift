@@ -16,6 +16,8 @@ class DetailsViewController: UIViewController, DetailsAction {
         case main
     }
     
+    var detailsString: String!
+    
     let firestore = FireStoreManager.shared
     
     let sections = Section.self
@@ -33,55 +35,22 @@ class DetailsViewController: UIViewController, DetailsAction {
         configureCollectionView()
         registerCell()
         configureDataSource()
-        reloadData(with: feedReference)
-        getFeedsFromServer()
-//        observeUserPosts()
+        getFeedsFromServer(string: detailsString)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        reloadData(with: feedReference)
     }
-    /*
-    //the one using today 8.13 for the current logged user
-    func observeUserPosts() {
-        firestore.observePost { [weak self](result) in
-            guard let self = self else { return }
-
-            switch result{
-            case.success(let post):
-                if post.isEmpty{
-                        self.showEmptyState(with: "Nothing to show here yet, Create some posts...", in: self.view)
-                }
-                post.forEach{
-                    self.feeds.append($0)
-                    self.navigationItem.title = $0.author.name
-                    print("receivedPost :", self.feeds)
-                }
-                DispatchQueue.main.async {
-                    self.reloadData(with: self.feeds)
-                }
-            case.failure(let error):
-                print(error.localizedDescription)
+   
+//    get details Feeds
+    func getFeedsFromServer(string: String) {
+        firestore.getFeeds(for: string) { (receivedFeeds) in
+            guard let dataReceived = receivedFeeds else { return }
+            self.feeds.append(contentsOf: dataReceived)
+            DispatchQueue.main.async {
+                self.reloadData(with: self.feeds)
             }
         }
-    }*/
-    
-//    get feeds from everyoneElse
-    func getFeedsFromServer() {
-//        firestore.getFeeds { (receivedFeeds) in
-//            print("receivedFeeds :", receivedFeeds!)
-//            guard let dataReceived = receivedFeeds else { return }
-//            print("received feeds on postVC: ", dataReceived)
-//            
-//            dataReceived.forEach{
-//                let receivedFeed = $0
-//                self.feedReference.append(receivedFeed)
-//            }
-//            DispatchQueue.main.async {
-////                self.reloadData(with: self.feedReference)
-//            }
-//        }
     }
     
     
@@ -92,28 +61,20 @@ class DetailsViewController: UIViewController, DetailsAction {
         //        titleImageView.tintColor = .blue
         //        navigationItem.titleView = titleImageView
         
-        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissVC))
+        let cancel = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissVC))
         navigationItem.leftBarButtonItem = cancel
     }
     
     @objc func dismissVC() {
         self.dismiss(animated: true, completion: nil)
     }
-    
-//    @objc func addNewPost() {
-//        print("New post")
-//        let postVC = CreateNewPostViewController()
-//        let navController = UINavigationController(rootViewController: postVC)
-//        self.navigationController?.present(navController, animated: true, completion: nil)
-//    }
-    
-    
-    
+
     private func configureCollectionView() {
         let layuout = configureLayout()
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layuout)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.sizeToFit()
+        collectionView.isScrollEnabled = false
         collectionView.backgroundColor = .systemBackground
         view.addSubview(collectionView)
     }
@@ -146,21 +107,14 @@ class DetailsViewController: UIViewController, DetailsAction {
     private func configureLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        //        item.contentInsets = NSDirectionalEdgeInsets(top: 50, leading: 5, bottom: 5, trailing: 5)
-        
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.96), heightDimension: .fractionalHeight(0.85))
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.85))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
         group.interItemSpacing = .flexible(15)
-        
+
         let section = NSCollectionLayoutSection(group: group)
-        //        section.interGroupSpacing = 15
-        //        section.contentInsets = NSDirectionalEdgeInsets(top: 50, leading: 5, bottom: 5, trailing: 5)
-        section.orthogonalScrollingBehavior = .groupPagingCentered
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
-    
-
 }

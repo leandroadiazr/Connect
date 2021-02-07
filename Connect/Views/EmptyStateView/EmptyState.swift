@@ -10,7 +10,7 @@ import UIKit
 class EmptyState: UIView {
 
     let messageLabel = CustomTitleLabel(title: "Uff... Nothing to show here yet", textAlignment: .center, fontSize: 28)
-    let logoImageView = UIImageView()
+    let logoImageView = GenericImageView(frame: .zero)
     
     override init(frame: CGRect) {
         super.init(frame: frame)

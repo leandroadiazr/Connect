@@ -11,7 +11,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
     func showMenu(_ sender: UIButton) {
         showSettingsMenu(sender)
     }
-
+    
     func presentViewComments() {
         self.showComments(message: "", buttonTitle: "Post")
     }
@@ -25,7 +25,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
     var dataSource: UICollectionViewDiffableDataSource<Section, Feed>!
     var firestore = FireStoreManager.shared
     var feeds = [Feed]()     //= testingData
-
+    
     var optionsView    = UIView()
     
     override func viewDidLoad() {
@@ -34,14 +34,22 @@ class FlowViewController: UIViewController, PresentCommentVC {
         configureCollectionView()
         registerCell()
         configureDataSource()
-//        reloadData(with: feeds)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+//        self.collectionView.reloadData()
     }
     
     //MARK:- GET POSTS FROM SERVER
     //the one using today 8.13 for the current logged user
     func observeUserPosts() {
-        firestore.observePost { [weak self](result) in
-            guard let self = self else { return }
+        firestore.observePost { (result) in
             switch result{
             case.success(let post):
                 if post.isEmpty{
@@ -50,8 +58,8 @@ class FlowViewController: UIViewController, PresentCommentVC {
                 post.forEach{
                     self.feeds.append($0)
                     self.navigationItem.title = $0.author.name
-                    print("receivedPost :", self.feeds)
                 }
+                
                 DispatchQueue.main.async {
                     self.reloadData(with: self.feeds)
                 }
@@ -104,7 +112,6 @@ class FlowViewController: UIViewController, PresentCommentVC {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        //        section.orthogonalScrollingBehavior = .
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
@@ -129,7 +136,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
         let y = sender.bounds.origin.y
         let size = CGRect(x: x - 10, y: y - 50, width: width, height: view.frame.width - 130)
         
-       
+        
         optionsView.frame = size
         optionsView.alpha = 0
         optionsView.backgroundColor = .clear
@@ -150,10 +157,8 @@ class FlowViewController: UIViewController, PresentCommentVC {
     @objc private func dismissSettingsAnimation() {
         UIView.animate(withDuration: 0.5) {
             self.optionsView.alpha = 0
-//            self.mapView.reloadInputViews()
         }
     }
-    
 }
 
 extension FlowViewController: UICollectionViewDelegate {
@@ -162,15 +167,9 @@ extension FlowViewController: UICollectionViewDelegate {
         let items = feeds[indexPath.item]
         
         let detailsVC = DetailsViewController()
-        detailsVC.feedReference.append(items)
+        detailsVC.detailsString = items.documentId
         let navVC = UINavigationController(rootViewController: detailsVC)
         self.present(navVC, animated: true, completion: nil)
     }
 }
 
-extension FlowViewController {
-    private func setupConstraints() {
-        // MenuBtn
-  
-    }
-}

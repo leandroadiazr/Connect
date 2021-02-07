@@ -12,7 +12,7 @@ class OptionsViewCell: UITableViewCell {
     static let reuseID = "OptionsViewCell"
     let titleLabel  = CustomTitleLabel()
     let detailsLabel = CustomBodyLabel(textAlignment: .left, backgroundColor: .clear, fontSize: 11)
-    let viewImage   = UIImageView()
+    let viewImage   = GenericImageView(frame: .zero)
      
     var settings: Options?
      override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

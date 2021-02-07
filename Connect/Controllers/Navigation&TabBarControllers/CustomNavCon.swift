@@ -15,7 +15,7 @@ class CustomNavCon: UINavigationController {
     var largeTitles: Bool?
     
     var mainTitle = UILabel()
-    var leftImage = UIImageView()
+    var leftImage = GenericImageView(frame: .zero)
     
     
     

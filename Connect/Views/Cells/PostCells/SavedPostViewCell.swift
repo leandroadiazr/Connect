@@ -10,9 +10,9 @@ import UIKit
 class SavedPostViewCell: UICollectionViewCell {
     static let reuseID          = "SavedPostViewCell"
     let userProfileImage        = CustomAvatarImage(frame: .zero)
-    let mainImageViewArea       = CustomAvatarImage(frame: .zero)
-    let imageViewAreaTwo        = CustomAvatarImage(frame: .zero)
-    let imageViewAreaThree      = CustomAvatarImage(frame: .zero)
+    let mainImageViewArea       = GenericImageView(frame: .zero)
+    let imageViewAreaTwo        = GenericImageView(frame: .zero)
+    let imageViewAreaThree      = GenericImageView(frame: .zero)
     let menuButton              = CustomMenuButton()
     let userNameLabel           = CustomTitleLabel(title: "", textAlignment: .left, fontSize: 16)
     let statusLabel             = CustomSubtitleLabel(fontSize: 14, backgroundColor: .clear)

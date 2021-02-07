@@ -40,19 +40,14 @@ class UserProfileViewController: UIViewController {
     }
     
     private func fetchUserProfile() {
-        
-        
-        
-        
+
         guard let userID = Auth.auth().currentUser?.uid else { return }
         print(userID)
         userManager.getCurrentUser(userID: userID) { (user) in
-            print(user!)
+            print(user)
             if let user = user {
                 print(user)
-//                for field in user {
                     self.title = user.name
-//                }
                 self.currentLoggedUser.append(user)
                 print(self.currentLoggedUser)
                 DispatchQueue.main.async {
@@ -81,18 +76,8 @@ class UserProfileViewController: UIViewController {
         //        navigationItem.title = updateTitle
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoutButton)
         logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
-        let newPost = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPost))
-        navigationItem.rightBarButtonItem = newPost
         setupConstraints()
     }
-    
-    @objc func addNewPost() {
-        print("New post")
-        let postVC = CreateNewPostViewController()
-        let navController = UINavigationController(rootViewController: postVC)
-        self.navigationController?.present(navController, animated: true, completion: nil)
-    }
-    
     
     
     private func configureCollectionView() {
@@ -131,8 +116,7 @@ class UserProfileViewController: UIViewController {
     private func configureLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        //        item.contentInsets = NSDirectionalEdgeInsets(top: 50, leading: 5, bottom: 5, trailing: 5)
-        
+
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.96), heightDimension: .fractionalHeight(0.6))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)

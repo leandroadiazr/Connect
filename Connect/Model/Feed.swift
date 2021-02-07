@@ -11,8 +11,10 @@ protocol PostSerializable {
 }
 
 
-struct Feed: Codable, Hashable {
-    var id = UUID()
+struct Feed: Codable, Hashable, Identifiable {
+    var id = UUID().uuidString
+    
+    var documentId: String
     var author: UserProfile
     var mainImage: String
     var otherImages: [String]
@@ -25,28 +27,31 @@ struct Feed: Codable, Hashable {
     var comments: Int
     var views: Int
     
-    static func == (lhs: Feed, rhs: Feed) -> Bool {
-        lhs.id == rhs.id
-    }
+    private enum CodingKeys : String, CodingKey { case documentId, author, mainImage, otherImages, status, postedOn, location, postTitle, postDescription, likes, comments, views }
     
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
+//    static func == (lhs: Feed, rhs: Feed) -> Bool {
+//        lhs.id == rhs.id
+//    }
+//
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(id)
+//    }
         
     //ENCODING
     var postDictionary: [String: Any] {
         return [
-            "author         " : author,
-            "mainImage      " : mainImage,
-            "otherImages    " : otherImages,
-            "status         " : status,
-            "postedOn       " : postedOn,
-            "location       " : location,
-            "postTitle      " : postTitle,
+            "id" : documentId,
+            "author" : author,
+            "mainImage" : mainImage,
+            "otherImages" : otherImages,
+            "status" : status,
+            "postedOn" : postedOn,
+            "location" : location,
+            "postTitle" : postTitle,
             "postDescription" : postDescription,
-            "likes          " : likes,
-            "comments       " : comments,
-            "views          " : views
+            "likes" : likes,
+            "comments" : comments,
+            "views" : views
         ]
     }
 }
@@ -55,19 +60,20 @@ struct Feed: Codable, Hashable {
 //DECODING
 extension Feed: PostSerializable {
     init?(dictionary: [String : Any]) {
-          guard let author          = dictionary["author"]      as? UserProfile,
-                let mainImage       = dictionary["mainImage      "] as? String,
-                let otherImages     = dictionary["otherImages    "] as? [String],
-                let status          = dictionary["status         "] as? String,
-                let postedOn        = dictionary["postedOn       "] as? String,
-                let location        = dictionary["location       "] as? String,
-                let postTitle       = dictionary["postTitle      "] as? String,
+          guard let documentId            = dictionary["customDocumentId"]           as? String,
+            let author          = dictionary["author"]      as? UserProfile,
+                let mainImage       = dictionary["mainImage"] as? String,
+                let otherImages     = dictionary["otherImages"] as? [String],
+                let status          = dictionary["status"] as? String,
+                let postedOn        = dictionary["postedOn"] as? String,
+                let location        = dictionary["location"] as? String,
+                let postTitle       = dictionary["postTitle"] as? String,
                 let postDescription = dictionary["postDescription"] as? String,
-                let likes           = dictionary["likes          "] as? Int,
-                let comments        = dictionary["comments       "] as? Int,
-                let views           = dictionary["views          "] as? Int else { return nil}
+                let likes           = dictionary["likes"] as? Int,
+                let comments        = dictionary["comments"] as? Int,
+                let views           = dictionary["views"] as? Int else { return nil}
         
-        self.init( author: author, mainImage: mainImage, otherImages: otherImages, status: status, postedOn: postedOn, location: location, postTitle: postTitle, postDescription: postDescription, likes: likes, comments: comments, views: views)
+        self.init(documentId: documentId, author: author, mainImage: mainImage, otherImages: otherImages, status: status, postedOn: postedOn, location: location, postTitle: postTitle, postDescription: postDescription, likes: likes, comments: comments, views: views)
     }
 }
 

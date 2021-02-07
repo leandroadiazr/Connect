@@ -10,7 +10,7 @@ import AuthenticationServices
 import Firebase
 import FirebaseAuth
 
-class CustomTabBarController: UITabBarController {
+class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
     var ref: DatabaseReference!
     var userManager = UserManager.shared
     var updateTitle     = UserManager.shared.updatedTitle
@@ -22,8 +22,9 @@ class CustomTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createTabBar()
+     
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.showLoadingView()
@@ -64,14 +65,34 @@ class CustomTabBarController: UITabBarController {
     }
     
     func createPostViewController() -> UINavigationController {
-        let postNavCon        = SavedPostsViewController()
+        let postNavCon        = DummyViewController()
         postNavCon.tabBarItem = UITabBarItem(title: "", image: Images.post?.applyingSymbolConfiguration(.init(pointSize: 45))?.withTintColor(.green, renderingMode: .automatic), selectedImage: Images.postFill?.applyingSymbolConfiguration(.init(pointSize: 45)))
         tabBarItem.tag = 2
         let navCon = CustomNavCon(rootViewController: postNavCon, tintColor: .systemBackground, translucent: false,
                                   largeTitles: false, title: "")
-        
+        self.delegate = self
         return navCon
     }
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if tabBarController.selectedIndex == 2 {
+            let postNavCon = CreateNewPostViewController()
+            let navCon = UINavigationController(rootViewController: postNavCon)
+            self.present(navCon, animated: true, completion: nil)
+        }
+    }
+    
+//    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+////        if viewController is CreateNewPostViewController {
+//        if tabBarController.selectedIndex  == 2 {
+//            let postNavCon = CreateNewPostViewController()
+//            self.present(postNavCon, animated: true, completion: nil)
+//                print("selectedIndex :", selectedIndex)
+//            return false
+//        } else {
+//            return true
+//        }
+//    }
     
     func createDiscussionViewController() -> UINavigationController {
         let discussionCon             = DiscussionViewController()
@@ -108,54 +129,3 @@ extension CustomTabBarController: UIViewControllerTransitioningDelegate {
     
 }
 
-//belongs to login functionality
-//            self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
-//            let uid = Auth.auth().currentUser?.uid
-//            self.ref.child("users").child(uid!).observeSingleEvent(of: .value) { [weak self ](snapShot) in
-//                guard let self = self else { return }
-//                if let values = snapShot.value as? [String: Any]{
-//                    self.updateTitle = values["name"] as! String
-//                    print(self.updateTitle)
-//                }
-//            } withCancel: { (error) in
-//
-//            }
-//            guard let userID = userProfile?.userID else { return }
-
-
-//    private func isUserLoggedIn() {
-//        if Auth.auth().currentUser?.uid == nil {
-//            print("No user found")
-//            userManager.handleLogout()
-//            showLoadingView()
-//            perform(#selector(showLoginVC), with: nil, afterDelay: 0.1)
-//
-//        } else {
-//            guard let uuid = Auth.auth().currentUser?.uid else { return }
-//            print("User ID:********", uuid)
-//
-//            firestore.observeUserProfile(uuid) { (result) in
-//                switch result {
-//                case .success(let user):
-//                    print(user?.email)
-//                    self.firestore.currentUserProfile = user
-//                case .failure(let error):
-//                        print(error.localizedDescription)
-//                }
-//            }
-//
-//
-//            firestore.getUser(userID: uuid) { (user) in
-//                print("user :******", user ?? "")
-//                self.showLoadingView()
-//                self.createTabBar()
-//
-//            }
-////            userManager.fetchUser { (result) in
-////                print("user loaded :", result)
-////
-////                self.showLoadingView()
-////                self.createTabBar()
-////            }
-//        }
-//    }
