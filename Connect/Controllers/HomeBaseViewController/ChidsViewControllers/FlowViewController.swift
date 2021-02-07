@@ -30,10 +30,12 @@ class FlowViewController: UIViewController, PresentCommentVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeUserPosts()
+//        observeUserPosts()
         configureCollectionView()
         registerCell()
         configureDataSource()
+        realTime()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +46,8 @@ class FlowViewController: UIViewController, PresentCommentVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
 //        self.collectionView.reloadData()
+        
+       
     }
     
     //MARK:- GET POSTS FROM SERVER
@@ -65,6 +69,32 @@ class FlowViewController: UIViewController, PresentCommentVC {
                 }
             case.failure(let error):
                 print(error.localizedDescription)
+            }
+        }
+    }
+    
+   func realTime() {
+        firestore.realtimeUpdates {  (result) in
+           
+            switch result {
+            case .success(let feed):
+                for single in feed {
+                    if self.feeds.contains(single) {
+                        DispatchQueue.main.async {
+                            self.reloadData(with: self.feeds)
+                        }
+                    } else {
+                        self.feeds.append(single)
+                        print("**********************************feeds from real time :",single)
+                        DispatchQueue.main.async {
+                            self.reloadData(with: self.feeds)
+                        }
+                        
+                    }
+                }
+
+            case .failure(let error):
+                print(error)
             }
         }
     }

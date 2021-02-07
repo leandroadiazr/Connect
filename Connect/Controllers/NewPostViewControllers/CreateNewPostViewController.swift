@@ -87,9 +87,9 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     @objc private func backToMainVC() {
         if let tabCon = self.presentingViewController as? CustomTabBarController {
             self.dismiss(animated: true, completion: nil)
-            //            self.dismiss(animated: true) {
+
             tabCon.selectedIndex = 0
-            //            }
+
         }
     }
     
@@ -221,13 +221,29 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
             }
         }
         self.backToMainVC()
+        
     }
     
     
     @objc private func getImage(_ sender: UIButton) {
         currentButton = sender
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Choose An Image From:", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+            if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
+                        self.imagePicker.sourceType = UIImagePickerController.SourceType.camera
+                        self.imagePicker.allowsEditing = true
+                        self.present(self.imagePicker, animated: true, completion: nil)
+                }
+        }))
+
+        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
+            self.imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
+            self.imagePicker.allowsEditing = true
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+
+        alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

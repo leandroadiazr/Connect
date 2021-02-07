@@ -9,6 +9,7 @@ import UIKit
 import AuthenticationServices
 import Firebase
 import FirebaseAuth
+import AVFoundation
 
 class SignUpViewController: UIViewController, UITextFieldDelegate {
     
@@ -85,7 +86,18 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+//        cameraAuthorization()
+        
+     
     }
+    
+
+    
+    private func cameraAccessNeeded() {
+        self.showAlert(title: "Camera Access Needed", message: "We need access to your camera", buttonTitle: "Ok")
+        
+    }
+    
     
     //MARK:- LABELS & TEXT FIELDS
     private func configureLabels() {
@@ -216,9 +228,20 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         let alert = UIAlertController(title: "Choose An Image From:", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
-                self.imagePicker.sourceType = UIImagePickerController.SourceType.camera
-                self.imagePicker.allowsEditing = true
-                self.present(self.imagePicker, animated: true, completion: nil)
+                AVCaptureDevice.requestAccess(for: .video) { granted in
+                    if granted == false {
+                        DispatchQueue.main.async {
+                            self.alertCameraAccessNeeded()
+                        }
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self.imagePicker.sourceType = UIImagePickerController.SourceType.camera
+                        self.imagePicker.allowsEditing = true
+                        self.present(self.imagePicker, animated: true, completion: nil)
+                    }
+                }
+               
             }
             else{
                 let alert  = UIAlertController(title: "Sorry", message: "This device don't have a Camera", preferredStyle: .alert)
@@ -237,6 +260,23 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
+    
+   
+        func alertCameraAccessNeeded() {
+            let settingsAppURL = URL(string: UIApplication.openSettingsURLString)!
+            let alert = UIAlertController(
+                title: "Need Camera Access",
+                message: "Camera access is required to make full use of this app.",
+                preferredStyle: UIAlertController.Style.alert
+            )
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) -> Void in
+                UIApplication.shared.open(settingsAppURL, options: [:], completionHandler: nil)
+            }))
+            
+            present(alert, animated: true, completion: nil)
+        }
+
     //MARK:- BACK TO SIGN IN
     @objc private func backTosignInAction() {
         

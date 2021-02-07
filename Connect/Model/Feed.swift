@@ -77,33 +77,3 @@ extension Feed: PostSerializable {
     }
 }
 
-
-
-//let testingFeed: [Feed] = [Feed(userName: User(
-//                                    profileImage: "",
-//                                    name: "leandro",
-//                                    handler: "leandro",
-//                                    bio: ""),
-//                                    profile: Images.profilePic ,
-//                                    media: Images.backMedia,
-//                                    otherImages: [],
-//                                    status: "Just posted",
-//                                    postedOn: "10/10/2020",
-//                                    location: "California",
-//                                    postTitle: "Nice Background",
-//                                    description: "Just a desc asdfasdfasdfas dfasdfasd fasdfasd fasdfasdfas fasdfasdfas fasdfasdfas fasdfasdfas fasdfasdfas  dfasdfasdfasdfasd  fasdfasdf",
-//                                    likes: "100",
-//                                    comments: "no Comments",
-//                                    views: "100 views"),
-//
-                           
-                           
-                           
-//                           Feed(userName: User(profileImage: Images.profilePic, name: "leandro", handler: "leandro", bio: ""), profile: Images.profilePic , media: Images.backMedia, otherImages: [], status: "Just posted", postedOn: "10/10/2020", location: "California", postTitle: "Nice Background", description: "Just a desc", likes: "100", comments: "no Comments", views: "100 views"),
-//                           Feed(userName: User(profileImage: Images.profilePic, name: "leandro", handler: "leandro", bio: ""), profile: Images.profilePic , media: Images.backMedia, otherImages: [], status: "Just posted", postedOn: "10/10/2020", location: "California", postTitle: "Nice Background", description: "Just a desc", likes: "100", comments: "no Comments", views: "100 views"),
-//                           Feed(userName: User(profileImage: Images.profilePic, name: "leandro", handler: "leandro", bio: ""), profile: Images.profilePic , media: Images.backMedia, otherImages: [], status: "Just posted", postedOn: "10/10/2020", location: "California", postTitle: "Nice Background", description: "Just a desc", likes: "100", comments: "no Comments", views: "100 views"),
-//                           Feed(userName: User(profileImage: Images.profilePic, name: "leandro", handler: "leandro", bio: ""), profile: Images.profilePic , media: Images.backMedia, otherImages: [], status: "Just posted", postedOn: "10/10/2020", location: "California", postTitle: "Nice Background", description: "Just a desc", likes: "100", comments: "no Comments", views: "100 views"),
-//                           Feed(userName: User(profileImage: Images.profilePic, name: "leandro", handler: "leandro", bio: ""), profile: Images.profilePic , media: Images.backMedia, otherImages: [], status: "Just posted", postedOn: "10/10/2020", location: "California", postTitle: "Nice Background", description: "Just a desc", likes: "100", comments: "no Comments", views: "100 views"),
-//                           Feed(userName: User(profileImage: Images.profilePic, name: "leandro Diaz", handler: "leandro diaz", bio: ""), profile: Images.profilePic , media: Images.backMedia, otherImages: [], status: "Just posted", postedOn: "10/10/2020", location: "California", postTitle: "Nice Background", description: "Just a desc", likes: "100", comments: "no Comments", views: "100 views"),
-//]
-
