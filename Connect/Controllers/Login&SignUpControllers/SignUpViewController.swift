@@ -26,41 +26,41 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     //MARK:- TextFields and Labels
     let titleLabel = CustomTitleLabel(title: "Join Connect, It's Easy...!", textAlignment: .center, fontSize: 28)
     
-    let nameLabel = CustomSecondaryTitleLabel(title: "NAME", fontSize: 16, textColor: .lightText)
-    let nameTextField = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "Your name Here..")
-    let nameLine = UIView()
+    let nameLabel       = CustomSecondaryTitleLabel(title: "NAME", fontSize: 16, textColor: .lightText)
+    let nameTextField   = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "Your name Here..")
+    let nameLine        = UIView()
     
-    let emailLabel = CustomSecondaryTitleLabel(title: "EMAIL ADDRESS", fontSize: 16, textColor: .lightText)
-    let emailTextField = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "EnterYourEmail")
-    let emailLine   = UIView()
+    let emailLabel      = CustomSecondaryTitleLabel(title: "EMAIL ADDRESS", fontSize: 16, textColor: .lightText)
+    let emailTextField  = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "EnterYourEmail")
+    let emailLine       = UIView()
     
-    let passwordLabel = CustomSecondaryTitleLabel(title: "PASSWORD", fontSize: 16, textColor: .lightText)
-    let passwordTextField = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "******")
+    let passwordLabel       = CustomSecondaryTitleLabel(title: "PASSWORD", fontSize: 16, textColor: .lightText)
+    let passwordTextField   = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "******")
     
-    let retypepasswordLabel = CustomSecondaryTitleLabel(title: "RETYPE PASSWORD", fontSize: 16, textColor: .lightText)
+    let retypepasswordLabel  = CustomSecondaryTitleLabel(title: "RETYPE PASSWORD", fontSize: 16, textColor: .lightText)
     let passwordTextFieldTwo = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "******")
-    let passwordLine   = UIView()
+    let passwordLine         = UIView()
     
     let firstTimeLabel = CustomSecondaryTitleLabel(title: "Already have an account...? ", fontSize: 16, textColor: .lightText)
     let wrongPassLabel = CustomSecondaryTitleLabel(title: "Something went wrong...", fontSize: 13, textColor: .systemRed)
     
     //MARK:- Buttons
     
-    let backToSignInBtn =  CustomGenericButton(backgroundColor: .link, title: "Sign In")
-    let signUpWEmailBtn =  CustomMainButton(backgroundColor: .clear, title: "Sign Up with email", textColor: .white, borderWidth: 0.3, borderColor: CustomColors.CustomGreen.cgColor, buttonImage: nil)
-    var appleIDBtn = ASAuthorizationAppleIDButton()
-    let facebookBtn = CustomGenericButton()
-    let googleBtn =  CustomGenericButton()
+    let backToSignInBtn = CustomGenericButton(backgroundColor: .link, title: "Sign In")
+    let signUpWEmailBtn = CustomMainButton(backgroundColor: .clear, title: "Sign Up with email", textColor: .white, borderWidth: 0.3, borderColor: CustomColors.CustomGreen.cgColor, buttonImage: nil)
+    var appleIDBtn      = ASAuthorizationAppleIDButton()
+    let facebookBtn     = CustomGenericButton()
+    let googleBtn       = CustomGenericButton()
     
-    var isNameEntered: Bool { return !nameTextField.text!.isEmpty}
-    var isEmailEntered: Bool { return !emailTextField.text!.isEmpty }
+    var isNameEntered   : Bool { return !nameTextField.text!.isEmpty}
+    var isEmailEntered  : Bool { return !emailTextField.text!.isEmpty }
     var isPassOneEntered: Bool { return !passwordTextField.text!.isEmpty }
     var isPassTowEntered: Bool { return !passwordTextFieldTwo.text!.isEmpty }
     
-    var ref: DatabaseReference!
-    var userManager = UserManager.shared
-    let firestore = FireStoreManager.shared
-    let storage = FireStorageManager.shared
+    var ref             : DatabaseReference!
+    var userManager     = UserManager.shared
+    let firestore       = FireStoreManager.shared
+    let storage         = FireStorageManager.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -212,9 +212,29 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- ADD PROFILE IMAGE
     @objc private func addProfileImageAction()  {
-        imagePicker.allowsEditing = true
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
+
+        let alert = UIAlertController(title: "Choose An Image From:", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+            if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
+                self.imagePicker.sourceType = UIImagePickerController.SourceType.camera
+                self.imagePicker.allowsEditing = true
+                self.present(self.imagePicker, animated: true, completion: nil)
+            }
+            else{
+                let alert  = UIAlertController(title: "Sorry", message: "This device don't have a Camera", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }))
+
+        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
+            self.imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
+            self.imagePicker.allowsEditing = true
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+
+        alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     //MARK:- BACK TO SIGN IN
@@ -287,7 +307,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 self.storage.uploadSingleImage(userProfile) { (imageURL) in
                     
 //                    let imageProfile = imageURL
-
+                    
                     newUser = UserProfile(id: uuid, userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "Florida", userBio: "Aqui", userStatus: "Active")
                     
                 guard let saveThisUser = newUser else { return}

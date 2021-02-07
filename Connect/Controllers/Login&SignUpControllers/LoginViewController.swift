@@ -188,6 +188,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             textField.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
+            signInWithEmail()
         }
         return true
     }
@@ -210,14 +211,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK:- TRASITIONS
-    //MARK:- SIGN In
-    @objc private func backTosignInAction() {
-        print("going to signup")
-        let loginVC = LoginViewController()
-        loginVC.modalPresentationStyle = .custom
-        loginVC.transitioningDelegate = self
-        present(loginVC, animated: true)
-    }
     
     //MARK:- SIGN UP
     @objc private func goingTosignUpAction() {
@@ -227,16 +220,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signupVC.transitioningDelegate = self
         present(signupVC, animated: true)
     }
-    
-    
-    
-    private func transitionToHomeVC() {
-        let mainVC = CustomTabBarController()
-        mainVC.modalPresentationStyle = .custom
-        mainVC.transitioningDelegate = self
-        present(mainVC, animated: true, completion: nil)
-        //        self.showLoadingView()
-    }
+//    private func transitionToHomeVC() {
+//        let mainVC = CustomTabBarController()
+//        mainVC.modalPresentationStyle = .custom
+//        mainVC.transitioningDelegate = self
+//        present(mainVC, animated: true, completion: nil)
+//        //        self.showLoadingView()
+//    }
     
     //MARK:- SIGNIN WITH EMAIL
     @objc private func signInWithEmail() {
@@ -257,16 +247,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print(unwrappedError.localizedDescription)
                     return
                 }
-                
-              
-                
-               
-                print(Auth.auth().currentUser?.uid)
+  
+//                print(Auth.auth().currentUser?.uid)
 //                self.userManager.setCurrentProfile()
-                
-                let mainVC = CustomTabBarController()
-                mainVC.modalPresentationStyle = .overFullScreen
-                self.present(mainVC, animated: true, completion: nil) 
+                DispatchQueue.main.async {
+                    let mainVC = CustomTabBarController()
+                    mainVC.modalPresentationStyle = .overFullScreen
+                    self.present(mainVC, animated: true, completion: nil) 
+                }
+             
             }
         }
         
