@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 extension LoginViewController {
     //move this to an extenxion
      func LoginSetupConstraints() {
@@ -132,7 +133,7 @@ extension LoginViewController {
         
         //SIGNWITH APPLE ID
         NSLayoutConstraint.activate([
-            appleIDBtn.bottomAnchor.constraint(equalTo: facebookBtn.topAnchor, constant: -textPadding),
+            appleIDBtn.bottomAnchor.constraint(equalTo: FBloginButton.topAnchor, constant: -textPadding),
             appleIDBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             appleIDBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
             appleIDBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
@@ -140,11 +141,11 @@ extension LoginViewController {
         ])
         //SIGNWITH FACEBOOK
         NSLayoutConstraint.activate([
-            facebookBtn.bottomAnchor.constraint(equalTo: googleBtn.topAnchor, constant: -textPadding),
-            facebookBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            facebookBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
-            facebookBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
-            facebookBtn.heightAnchor.constraint(equalToConstant: customHeight)
+            FBloginButton.bottomAnchor.constraint(equalTo: googleBtn.topAnchor, constant: -textPadding),
+            FBloginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            FBloginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
+            FBloginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
+//            FBloginButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         //SIGNWITH GOOGLE
         NSLayoutConstraint.activate([

@@ -9,6 +9,7 @@ import UIKit
 import AuthenticationServices
 import Firebase
 import FirebaseAuth
+import FBSDKLoginKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
@@ -38,7 +39,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     let goToSignUpBtn =  CustomGenericButton(backgroundColor: .link, title: "Sign Up")
     let signInWEmailBtn =  CustomMainButton(backgroundColor: .clear, title: "Sign In", textColor: .white, borderWidth: 0.3, borderColor: CustomColors.CustomGreen.cgColor, buttonImage: nil)
     var appleIDBtn = ASAuthorizationAppleIDButton()
-    let facebookBtn = CustomGenericButton()
+    let FBloginButton = FBLoginButton()
     let googleBtn =  CustomGenericButton()
     
     var isEmailEntered: Bool { return !emailTextField.text!.isEmpty }
@@ -118,7 +119,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     //MARK:- BUTTONS
     private func configureButtons() {
         //FORGOT BTN
-        let buttons = [forgotPasswordBtn, signInWEmailBtn, goToSignUpBtn, appleIDBtn, facebookBtn, googleBtn ]
+        let buttons = [forgotPasswordBtn, signInWEmailBtn, goToSignUpBtn, appleIDBtn, FBloginButton, googleBtn ]
         for button in buttons {
             button.translatesAutoresizingMaskIntoConstraints = false
             button.layer.cornerRadius = 5
@@ -141,14 +142,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         appleIDBtn.addTarget(self, action: #selector(signinWithAppleID), for: .touchUpInside)
         
         //SIGNIN WITH FACEBOOK BTN
-        facebookBtn.addTarget(self, action: #selector(signInWithFacebook), for: .touchUpInside)
-        facebookBtn.setBackgroundImage(Images.loginWithFB, for: .normal)
+        facebookToken()
         
         //SIGNIN WITH GOOGLE BTN
         googleBtn.addTarget(self, action: #selector(signInWithGoogle), for: .touchUpInside)
         googleBtn.setBackgroundImage(Images.loginWGoogle, for: .normal)
         
     }
+    
+    private func facebookToken() {
+        FBloginButton.delegate = self
+        FBloginButton.permissions = ["email", "public_profile"]
+        
+        if let token = AccessToken.current,
+           !token.isExpired {
+            // User is logged in, do work such as go to next view controller.
+        }
+    }
+    
+    
     //MARK:- BACKGROUND IMAGES
     private func configureBackgroundImages() {
         //Background top Image
@@ -220,13 +232,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signupVC.transitioningDelegate = self
         present(signupVC, animated: true)
     }
-//    private func transitionToHomeVC() {
-//        let mainVC = CustomTabBarController()
-//        mainVC.modalPresentationStyle = .custom
-//        mainVC.transitioningDelegate = self
-//        present(mainVC, animated: true, completion: nil)
-//        //        self.showLoadingView()
-//    }
+    //    private func transitionToHomeVC() {
+    //        let mainVC = CustomTabBarController()
+    //        mainVC.modalPresentationStyle = .custom
+    //        mainVC.transitioningDelegate = self
+    //        present(mainVC, animated: true, completion: nil)
+    //        //        self.showLoadingView()
+    //    }
+    
+    
     
     //MARK:- SIGNIN WITH EMAIL
     @objc private func signInWithEmail() {
@@ -238,29 +252,30 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         if let email = emailTextField.text,
            let passOne = passwordTextField.text {
-
+            
             Auth.auth().signIn(withEmail: email, password: passOne) { (user, error) in
-//                guard let self = self else { return }
                 if let unwrappedError = error {
                     self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
                     self.forgotPassword()
                     print(unwrappedError.localizedDescription)
                     return
                 }
-  
-//                print(Auth.auth().currentUser?.uid)
-//                self.userManager.setCurrentProfile()
-                DispatchQueue.main.async {
-                    let mainVC = CustomTabBarController()
-                    mainVC.modalPresentationStyle = .overFullScreen
-                    self.present(mainVC, animated: true, completion: nil) 
-                }
-             
+                
+                //call the logged function
+                self.continueAfterLogin()
             }
         }
         
-        
-        
+    }
+    
+    //MARK:- ON LOGGED IN SUSCESS
+    private func continueAfterLogin() {
+        self.navigationController?.popViewController(animated: true)
+        DispatchQueue.main.async {
+            let mainVC = CustomTabBarController()
+            mainVC.modalPresentationStyle = .overFullScreen
+            self.present(mainVC, animated: true, completion: nil)
+        }
     }
     
     //MARK:- SIGN IN WITH APPLE ID
@@ -276,10 +291,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         controller.performRequests()
     }
     
-    //MARK:- SIGN IN WITH FACEBOOK
-    @objc private func signInWithFacebook() {
-        print("signInWithFacebook")
-    }
     
     //MARK:- SIGN IN WITH GOOGLE
     @objc private func signInWithGoogle() {
@@ -290,11 +301,62 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
 
 //MARK:- EXTENSIONS
-//MARK:- EXTENSIONS
+//MARK:- EXTENSIONS LOGIN WITH APPLE ID
 extension LoginViewController:  ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return view.window!
     }
+}
+
+//MARK:- EXTENSIONS LOGIN WITH FACEBOOK
+extension LoginViewController: LoginButtonDelegate {
+    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        guard let token = result?.token?.tokenString else {
+            print("Failed to login with facebook")
+            return
+        }
+        
+        self.FBloginButton.permissions = ["public_profile","email","picture"]
+        //Firebase credentials
+        let credential = FacebookAuthProvider.credential(withAccessToken: token)
+        Auth.auth().signIn(with: credential) { [weak self] (authResult, error) in
+            guard let self = self else { return }
+            if let unwrappedError = error {
+                print(unwrappedError.localizedDescription)
+                return }
+         
+            let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email, name, picture"], tokenString: token, version: nil, httpMethod: .get)
+            facebookRequest.start { (_, result, error) in
+                if let unwrappedError = error {
+                    print("Failed to login with facebook", unwrappedError.localizedDescription)
+                    return }
+                
+                guard let result = result as? [String: Any] else {return}
+                guard let name = result["name"] as? String,
+                      let email = result["email"] as? String,
+                      let picDict = result["picture"] as? [String: Any],
+                      let picData = picDict["data"] as? [String: Any],
+                      let imageURL = picData["url"] as? String else { print("failed to get name and email in the fb login")
+                    return }
+                
+                guard let uuid = Auth.auth().currentUser?.uid else { return }
+                print(name, email, imageURL, uuid)
+                self.userManager.globalSignInWith(userID: uuid, email: email, name: name, imageURL: imageURL)
+                
+            }
+            guard let result = authResult else { return }
+            print("logged in with FACEBOOK", result)
+            
+            self.continueAfterLogin()
+        }
+    }
+    
+  
+    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+        
+    }
+    
+    
 }
 
 

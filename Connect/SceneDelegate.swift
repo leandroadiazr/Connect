@@ -7,9 +7,10 @@
 
 import UIKit
 import Firebase
+import FBSDKCoreKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    var firestore = FireStoreManager.shared
+    var firestore   = FireStoreManager.shared
     var userManager = UserManager.shared
     var window: UIWindow?
     
@@ -60,7 +61,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     case .success(let user):
                         //                        self.userManager.currentUserProfile = UserProfile(dictionary: user)
                         self.userManager.currentUserProfile = user
-                        print(self.userManager.currentUserProfile)
                         guard let uuid = user?.userID else { return }
                         print("User ID Found in SceneDelegate :********", uuid)
                         
@@ -94,6 +94,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UINavigationBar.appearance().tintColor = CustomColors.CustomGreenBright
     }
     
+    //FACEBOOK SDK
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let url = URLContexts.first?.url else {
+            return
+        }
+
+        ApplicationDelegate.shared.application(
+            UIApplication.shared,
+            open: url,
+            sourceApplication: nil,
+            annotation: [UIApplication.OpenURLOptionsKey.annotation]
+        )
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
@@ -125,3 +139,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
 }
 
+
+
+
+    

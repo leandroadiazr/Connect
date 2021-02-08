@@ -85,7 +85,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
                         }
                     } else {
                         self.feeds.append(single)
-                        print("**********************************feeds from real time :",single)
+//                        print("**********************************feeds from real time :",single)
                         DispatchQueue.main.async {
                             self.reloadData(with: self.feeds)
                         }

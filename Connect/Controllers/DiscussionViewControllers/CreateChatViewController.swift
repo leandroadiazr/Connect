@@ -18,8 +18,6 @@ class CreateChatViewController: UIViewController {
         return searchBar
     }()
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()

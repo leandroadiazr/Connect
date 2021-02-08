@@ -346,27 +346,27 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 
                 self.storage.uploadSingleImage(userProfile) { (imageURL) in
                     
-//                    let imageProfile = imageURL
+                    //                    let imageProfile = imageURL
                     
                     newUser = UserProfile(id: uuid, userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "Florida", userBio: "Aqui", userStatus: "Active")
                     
-                guard let saveThisUser = newUser else { return}
+                    guard let saveThisUser = newUser else { return}
                     
-//                    self.storage.uploadProfileImage(user: saveThisUser) { (string) in
-//                        print("Saved")
-////                    }
+                    //                    self.storage.uploadProfileImage(user: saveThisUser) { (string) in
+                    //                        print("Saved")
+                    ////                    }
                     self.userManager.saveUser(user: saveThisUser, userID: uuid) { (result) in
-                    print("saved user")
-
-                    print("Saved suscessfully into firebase database need an alert")
-                    self.navigationController?.popViewController(animated: true)
-                    let customTabVC = CustomTabBarController()
-                    customTabVC.modalPresentationStyle = .custom
-                    self.present(customTabVC, animated: true, completion: nil)
-                    //                    self.showLoadingView()
+                        print("saved user")
+                        
+                        print("Saved suscessfully into firebase database need an alert")
+                        self.navigationController?.popViewController(animated: true)
+                        let customTabVC = CustomTabBarController()
+                        customTabVC.modalPresentationStyle = .custom
+                        self.present(customTabVC, animated: true, completion: nil)
+                        //                    self.showLoadingView()
+                    }
                 }
             }
-        }
         
         }
     }
