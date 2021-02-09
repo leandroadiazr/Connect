@@ -8,10 +8,9 @@
 import UIKit
 
 class DiscussionViewController: UIViewController {
-
+    
     var tableView: UITableView?
     var generics = ["String","String","String","String","String",]
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,11 +18,11 @@ class DiscussionViewController: UIViewController {
         configureTableView()
     }
     private func configureNavigationBar() {
-//        let titleImageView = UIImageView(image: Images.like)
-//        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-//        titleImageView.contentMode = .scaleAspectFit
-//        titleImageView.tintColor = .blue
-//        navigationItem.title = updateTitle
+        //        let titleImageView = UIImageView(image: Images.like)
+        //        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        //        titleImageView.contentMode = .scaleAspectFit
+        //        titleImageView.tintColor = .blue
+        //        navigationItem.title = updateTitle
         let addChat = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewChat))
         navigationItem.rightBarButtonItem = addChat
     }
@@ -48,13 +47,9 @@ class DiscussionViewController: UIViewController {
         view.addSubview(tableView)
     }
     
-    
-    
     private func fetchConversations() {
-//        showLoadingView()
+        //        showLoadingView()
     }
-    
-    
 }
 
 extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
@@ -72,7 +67,7 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let item = generics[indexPath.row]
+        _ = generics[indexPath.row]
         print(indexPath.row)
         let chatVC = ChatViewController()
         let navVC = UINavigationController(rootViewController: chatVC)

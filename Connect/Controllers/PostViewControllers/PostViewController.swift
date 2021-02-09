@@ -4,7 +4,7 @@
 //
 //  Created by Leandro Diaz on 1/17/21.
 //
-
+/*
 import UIKit
 
 class PostViewController: UIViewController, UITextFieldDelegate {
@@ -231,3 +231,4 @@ class PostViewController: UIViewController, UITextFieldDelegate {
 }
  
 
+*/

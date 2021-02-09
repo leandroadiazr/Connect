@@ -6,23 +6,15 @@
 //
 
 import UIKit
-import AuthenticationServices
-import Firebase
-import FirebaseAuth
 
 class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
-    var ref: DatabaseReference!
-    var userManager = UserManager.shared
     var updateTitle     = UserManager.shared.updatedTitle
-    var userProfile: UserProfile?
-    let firestore = FireStoreManager.shared
-    let storage = FireStorageManager.shared
-    private let Green = CustomColors.CustomGreenBright
+    var userProfile     : UserProfile?
+    private let Green   = CustomColors.CustomGreenBright
     
     override func viewDidLoad() {
         super.viewDidLoad()
         createTabBar()
-     
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -82,18 +74,6 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
     }
     
-//    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-////        if viewController is CreateNewPostViewController {
-//        if tabBarController.selectedIndex  == 2 {
-//            let postNavCon = CreateNewPostViewController()
-//            self.present(postNavCon, animated: true, completion: nil)
-//                print("selectedIndex :", selectedIndex)
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
-    
     func createDiscussionViewController() -> UINavigationController {
         let discussionCon             = DiscussionViewController()
         
@@ -126,6 +106,5 @@ extension CustomTabBarController: UIViewControllerTransitioningDelegate {
         customTransition.isPresenting = false
         return customTransition
     }
-    
 }
 

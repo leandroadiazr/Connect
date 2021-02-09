@@ -8,6 +8,8 @@
 import UIKit
 import FirebaseAuth
 import Firebase
+import FBSDKLoginKit
+import GoogleSignIn
 
 
 
@@ -25,6 +27,8 @@ class UserManager {
     
     
     //    MARK:- GLOBAL SIGN IN WITH SDK
+    
+    //    FB
     func globalSignInWith(userID: String, email: String, name: String, imageURL: String) {
         if database.collection("users").document(userID).documentID.contains(userID) {
             print("USER ALREADY EXIST ", userID)
@@ -38,17 +42,37 @@ class UserManager {
         }
     }
     
+    //    Gg
+    func globalGoogleSignInWith(userID: String, email: String, name: String, imageURL: String) {
+        if database.collection("users").document(userID).documentID.contains(userID) {
+            print("USER ALREADY EXIST ", userID)
+            return
+        } else {
+            let newUser = UserProfile(id: userID, userID: userID, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "fba", userBio: "fb", userStatus: "fb")
+            self.saveUser(user: newUser, userID: userID) { (result) in
+                print("saved user FROM FACEBOOK LOGIN")
+                print("Saved suscessfully into firebase database need an alert")
+            }
+        }
+    }
+    
+    
+    //MARK:- LOGOUT FROM FACEBOOK SDK
+    func logoutFromFacebook() {
+        FBSDKLoginKit.LoginManager().logOut()
+    }
+    
+    func logoutFromGoogle() {
+        GIDSignIn.sharedInstance()?.signOut()
+    }
+    
+    
     
     
     // 1.- USER MANAGER RELATED
     //MARK:- GET CURRENT USER IN THE DATABASE FROM USERPROFILE***
     //THIS IS WILL GET THE CURRENT USER ARRAY ON USERS PROFILE AND IS NEEDED
     func getCurrentUser(userID: String, completion: @escaping (UserProfile?) -> Void) {
-        //        guard userID == currentUserProfile?.userID else { return }
-        print(userID)
-        //        guard let user = Auth.auth().currentUser?.uid else { return }
-        //        print("auth id for get current: ",Auth.auth().currentUser?.uid)
-        //        print("currentUserProfile?.userID :",currentUserProfile?.userID)
         database.collection("users").document(userID).getDocument  { (querySnapshot, error) in
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
@@ -73,7 +97,6 @@ class UserManager {
                 guard let uid = Auth.auth().currentUser?.uid else { return }
                 let loadedUser = UserProfile(userID: uid, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
                 self.currentUser = loadedUser
-                print(self.currentUser)
             }
             completion(self.currentUser)
         }
@@ -85,7 +108,6 @@ class UserManager {
         guard let uid = auth.currentUser?.uid else { return }
         print(uid)
         let userRef = database.collection("users")
-        //        print(userRef.documentID)
         userRef.getDocuments { (snapshot, error) in
             var userProfile: UserProfile?
             if let unwrappedError = error {
@@ -100,9 +122,6 @@ class UserManager {
                     if document.documentID == uid {
                         print("do they mathc:?", document.documentID, uid)
                         let dictionary = document.data()
-                        print("dictionary : ****",dictionary)
-                        
-                        //                        guard let id            = dictionary["id"]           as? String,
                         guard let userID         = dictionary["userID"]           as? String,
                               let name                = dictionary["name"]             as? String,
                               let handler             = dictionary["handler"]          as? String,
@@ -113,19 +132,8 @@ class UserManager {
                               let userStatus              = dictionary["userStatus"] as? String else { continue }
                         
                         userProfile = UserProfile( userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
-                        print(userProfile)
                     }
                 }
-                
-                
-                
-                //                guard let username = dictionary["name"] as? String,
-                //                      let profileImage = dictionary["profileImage"] as? String,
-                //                      let profImgURL = URL(string: profileImage)
-                //                else { return }
-                //                guard let uuid = self.auth.currentUser?.uid else { return }
-                //                userProfile = UserProfile(id: uuid, userID: uuid, name: username, handler: "", email: "", profileImage: profileImage, userLocation: "", userBio: "", status: "")
-                //                completion(.success(userDictionary))
             }
             completion(.success(userProfile))
         }
@@ -161,7 +169,7 @@ class UserManager {
         Auth.auth().addStateDidChangeListener( { auth, user in
             if user != nil {
                 self.observeUserProfile(user!.uid) { result in
-                    print("current logged ", user?.uid)
+                    print("current logged ", user?.uid as Any)
                     switch result {
                     case .success(let user):
                         

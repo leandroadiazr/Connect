@@ -10,7 +10,7 @@ import UIKit
 
 extension LoginViewController {
     //move this to an extenxion
-     func LoginSetupConstraints() {
+    func LoginSetupConstraints() {
         let padding: CGFloat = 20
         let textPadding:CGFloat = 8
         let textWidth: CGFloat = view.frame.width / 1.7
@@ -33,7 +33,6 @@ extension LoginViewController {
             bubbleImageView.heightAnchor.constraint(equalToConstant: 75)
         ])
         
-        
         //  MARK: -STARS IMAGE
         NSLayoutConstraint.activate([
             starsImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -49,7 +48,6 @@ extension LoginViewController {
             bottomBackgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             bottomBackgroundImage.heightAnchor.constraint(equalToConstant: 180)
         ])
-        
         
         //        MARK:- MAIN TITLE
         NSLayoutConstraint.activate([
@@ -81,8 +79,8 @@ extension LoginViewController {
             passwordLabel.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: padding),
             passwordLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             passwordLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            
         ])
+        
         NSLayoutConstraint.activate([
             passwordTextField.topAnchor.constraint(equalTo: passwordLabel.bottomAnchor, constant: 2),
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
@@ -119,7 +117,6 @@ extension LoginViewController {
             goToSignUpBtn.leadingAnchor.constraint(equalTo: firstTimeLabel.trailingAnchor, constant: 2),
             goToSignUpBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             goToSignUpBtn.heightAnchor.constraint(equalToConstant: 35)
-            
         ])
         
         //SIGNWITH EMAIL
@@ -141,19 +138,17 @@ extension LoginViewController {
         ])
         //SIGNWITH FACEBOOK
         NSLayoutConstraint.activate([
-            FBloginButton.bottomAnchor.constraint(equalTo: googleBtn.topAnchor, constant: -textPadding),
+            FBloginButton.bottomAnchor.constraint(equalTo: GgLoginButton.topAnchor, constant: -textPadding),
             FBloginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             FBloginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
             FBloginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
-//            FBloginButton.heightAnchor.constraint(equalToConstant: 50)
+            //            FBloginButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         //SIGNWITH GOOGLE
         NSLayoutConstraint.activate([
-            googleBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding * 1.5),
-            googleBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            googleBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: awayFromBorders),
-            googleBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -awayFromBorders),
-            googleBtn.heightAnchor.constraint(equalToConstant: customHeight)
+            GgLoginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding * 1.5),
+            GgLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            GgLoginButton.widthAnchor.constraint(equalTo: FBloginButton.widthAnchor, constant: 6),
         ])
     }
 }

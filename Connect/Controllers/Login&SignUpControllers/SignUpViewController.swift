@@ -22,7 +22,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     let addProfileImage         = CustomMainButton(backgroundColor: .clear, title: "", textColor: .white, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.greenPlus)
     let imagePicker = UIImagePickerController()
     private var currentButton: UIButton?
-
     
     //MARK:- TextFields and Labels
     let titleLabel = CustomTitleLabel(title: "Join Connect, It's Easy...!", textAlignment: .center, fontSize: 28)
@@ -46,7 +45,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     let wrongPassLabel = CustomSecondaryTitleLabel(title: "Something went wrong...", fontSize: 13, textColor: .systemRed)
     
     //MARK:- Buttons
-    
     let backToSignInBtn = CustomGenericButton(backgroundColor: .link, title: "Sign In")
     let signUpWEmailBtn = CustomMainButton(backgroundColor: .clear, title: "Sign Up with email", textColor: .white, borderWidth: 0.3, borderColor: CustomColors.CustomGreen.cgColor, buttonImage: nil)
     var appleIDBtn      = ASAuthorizationAppleIDButton()
@@ -76,7 +74,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         configureLabels()
         configureButtons()
         signUpSetupConstraints()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,18 +83,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
-//        cameraAuthorization()
-        
-     
     }
-    
-
     
     private func cameraAccessNeeded() {
         self.showAlert(title: "Camera Access Needed", message: "We need access to your camera", buttonTitle: "Ok")
-        
     }
-    
     
     //MARK:- LABELS & TEXT FIELDS
     private func configureLabels() {
@@ -112,7 +102,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             field.clearButtonMode = .whileEditing
             field.addTarget(self, action: #selector(textFieldAction), for: .primaryActionTriggered)
             view.addSubview(field)
-            
         }
         nameTextField.delegate = self
         nameTextField.becomeFirstResponder()
@@ -164,7 +153,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         //SIGNIN WITH GOOGLE BTN
         googleBtn.addTarget(self, action: #selector(signInWithGoogle), for: .touchUpInside)
         googleBtn.setBackgroundImage(Images.loginWGoogle, for: .normal)
-        
     }
     //MARK:- BACKGROUND IMAGES
     private func configureBackgroundImages() {
@@ -175,15 +163,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         
         //Bubble BG Image
         bubbleImageView.image = Images.bubbleImage
-//        bubbleImageView.setImage(Images.bubbleImage, for: .normal)
         bubbleImageView.translatesAutoresizingMaskIntoConstraints = false
         bubbleImageView.backgroundColor = UIColor.clear
         bubbleImageView.clipsToBounds = true
         bubbleImageView.tintColor = CustomColors.CustomGreenLightBright.withAlphaComponent(0.8)
-//        bubbleImageView.addTarget(self, action: #selector(addProfileImageAction), for: .touchUpInside)
         imagePicker.delegate = self
         bubbleImageView.applyCustomShadow()
-        
         view.addSubview(bubbleImageView)
         
         //Stars
@@ -224,7 +209,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- ADD PROFILE IMAGE
     @objc private func addProfileImageAction()  {
-
         let alert = UIAlertController(title: "Choose An Image From:", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
@@ -241,7 +225,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                         self.present(self.imagePicker, animated: true, completion: nil)
                     }
                 }
-               
             }
             else{
                 let alert  = UIAlertController(title: "Sorry", message: "This device don't have a Camera", preferredStyle: .alert)
@@ -249,49 +232,43 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 self.present(alert, animated: true, completion: nil)
             }
         }))
-
+        
         alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
             self.imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
             self.imagePicker.allowsEditing = true
             self.present(self.imagePicker, animated: true, completion: nil)
         }))
-
+        
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
+    func alertCameraAccessNeeded() {
+        let settingsAppURL = URL(string: UIApplication.openSettingsURLString)!
+        let alert = UIAlertController(
+            title: "Need Camera Access",
+            message: "Camera access is required to make full use of this app.",
+            preferredStyle: UIAlertController.Style.alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) -> Void in
+            UIApplication.shared.open(settingsAppURL, options: [:], completionHandler: nil)
+        }))
+        
+        present(alert, animated: true, completion: nil)
+    }
     
-   
-        func alertCameraAccessNeeded() {
-            let settingsAppURL = URL(string: UIApplication.openSettingsURLString)!
-            let alert = UIAlertController(
-                title: "Need Camera Access",
-                message: "Camera access is required to make full use of this app.",
-                preferredStyle: UIAlertController.Style.alert
-            )
-            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-            alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) -> Void in
-                UIApplication.shared.open(settingsAppURL, options: [:], completionHandler: nil)
-            }))
-            
-            present(alert, animated: true, completion: nil)
-        }
-
     //MARK:- BACK TO SIGN IN
     @objc private func backTosignInAction() {
-        
-        print("going back")
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .custom
         loginVC.transitioningDelegate = self
         present(loginVC, animated: true)
-        
     }
     
     //MARK:- FORGOT PASSWORD
     @objc private func thereIsAnError() {
         wrongPassLabel.isHidden = false
-        print("there is an error")
     }
     
     //MARK: TRANSITIONS
@@ -314,7 +291,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         guard passwordTextField.text == passwordTextFieldTwo.text && passwordTextField.text!.count >= 6 && passwordTextFieldTwo.text!.count >= 6 else  {
             thereIsAnError()
             self.showAlert(title: "Something went wrong...", message: "pass are not equal & needs to be at least 8 characters", buttonTitle: "Return")
-            print("pass are not equal & needs to be at least 8 chars")
             return
         }
         
@@ -327,11 +303,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         var newUser: UserProfile?
         
         if let userProfile = bubbleImageView.image,
-            let name = nameTextField.text,
+           let name = nameTextField.text,
            let email = emailTextField.text,
            let passOne = passwordTextField.text {
+            
             Auth.auth().createUser(withEmail: email, password: passOne) { authResult, error in
-//                guard let self = self else { return }
                 if let unwrappedError = error {
                     self.thereIsAnError()
                     self.showAlert(title: "Something went wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
@@ -339,35 +315,23 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 
-                //Get the UUID for the current user
-                guard let uuid = authResult?.user.uid else {
-                    return
-                }
+                guard let uuid = authResult?.user.uid else { return }
                 
                 self.storage.uploadSingleImage(userProfile) { (imageURL) in
-                    
-                    //                    let imageProfile = imageURL
-                    
                     newUser = UserProfile(id: uuid, userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "Florida", userBio: "Aqui", userStatus: "Active")
                     
                     guard let saveThisUser = newUser else { return}
                     
-                    //                    self.storage.uploadProfileImage(user: saveThisUser) { (string) in
-                    //                        print("Saved")
-                    ////                    }
                     self.userManager.saveUser(user: saveThisUser, userID: uuid) { (result) in
-                        print("saved user")
                         
                         print("Saved suscessfully into firebase database need an alert")
                         self.navigationController?.popViewController(animated: true)
                         let customTabVC = CustomTabBarController()
                         customTabVC.modalPresentationStyle = .custom
                         self.present(customTabVC, animated: true, completion: nil)
-                        //                    self.showLoadingView()
                     }
                 }
             }
-        
         }
     }
     
@@ -393,15 +357,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     @objc private func signInWithGoogle() {
         print("signInWithGoogle")
     }
-    
-    
 }
 
 extension SignUpViewController: ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return view.window!
     }
-    
 }
 
 //MARK:- CUSTOM STORYBOARD ANIMATED TRANSITION
@@ -423,14 +384,11 @@ extension SignUpViewController: UIViewControllerTransitioningDelegate {
 
 //MARK:- IMAGE PICKER DELEGATES
 extension SignUpViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else { return }
         print(image)
         picker.dismiss(animated: true) {
             self.bubbleImageView.image = image
-//            self.currentButton!.setImage(image, for: .normal)
-
         }
     }
     
@@ -439,29 +397,26 @@ extension SignUpViewController: UIImagePickerControllerDelegate & UINavigationCo
     }
 }
 
-
-
-
 /*                }
  
  ORIGINAL WAY OF SAVING
  //Suscess auth
-//                self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
-//                let usersReferences = self.ref.child("users").child(uuid)
-//
-//                let userReference = self.userManager.database.collection("users").document(uuid)
-//                let values = ["name": name, "email": email]
-//                userReference.updateData(values) { (error) in
-//    //            userReference.updateChildValues(values) { (error, reference) in
-//                    if let _ = error {
-//                        print(error?.localizedDescription)
-//                    }
-//
-//                usersReferences.updateChildValues(values) { (error, ref) in
-//                    if let unwrappedError = error {
-//                        self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
-//                        self.thereIsAnError()
-//                        print(unwrappedError.localizedDescription)
-//
-//                        return
-//                    }*/
+ //                self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/")
+ //                let usersReferences = self.ref.child("users").child(uuid)
+ //
+ //                let userReference = self.userManager.database.collection("users").document(uuid)
+ //                let values = ["name": name, "email": email]
+ //                userReference.updateData(values) { (error) in
+ //    //            userReference.updateChildValues(values) { (error, reference) in
+ //                    if let _ = error {
+ //                        print(error?.localizedDescription)
+ //                    }
+ //
+ //                usersReferences.updateChildValues(values) { (error, ref) in
+ //                    if let unwrappedError = error {
+ //                        self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
+ //                        self.thereIsAnError()
+ //                        print(unwrappedError.localizedDescription)
+ //
+ //                        return
+ //                    }*/

@@ -18,11 +18,8 @@ class HomeBaseViewController: UIViewController {
     var ref: DatabaseReference!
     var updateTitle     = ""
     
-    //    let storyVC = StoryViewController()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = CustomColors.CustomGreen
         configureChildViewControllers()
     }
@@ -41,7 +38,6 @@ class HomeBaseViewController: UIViewController {
     private func isUserLoggedIn() {
         if Auth.auth().currentUser?.uid == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
-            
         } else {
             self.ref = Database.database().reference(fromURL: "https://connect-f747d-default-rtdb.firebaseio.com/") 
             let uid = Auth.auth().currentUser?.uid
@@ -52,7 +48,6 @@ class HomeBaseViewController: UIViewController {
                     print(self.updateTitle)
                 }
             } withCancel: { (error) in
-               
             }
         }
     }
@@ -87,7 +82,6 @@ class HomeBaseViewController: UIViewController {
     
     //MARK:- CONFIGURE COLLECTION VIEW
     func configureChildViewControllers() {
-        
         self.edgesForExtendedLayout = UIRectEdge.top
         let menuViewController      = MenuViewController()
         let storyViewController     = StoryViewController()
@@ -105,15 +99,11 @@ class HomeBaseViewController: UIViewController {
         view.addSubview(mainFeedView)
         setupConstraints()
     }
-    
-    
 }
-
 
 extension HomeBaseViewController {
     
     func setupConstraints() {
-//        let padding: CGFloat = 10
         NSLayoutConstraint.activate([
             storyView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3),
             storyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

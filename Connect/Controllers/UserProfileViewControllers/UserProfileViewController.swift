@@ -10,15 +10,14 @@ import FirebaseAuth
 import Firebase
 
 class UserProfileViewController: UIViewController {
-    
     enum Section {
         case main
     }
+    
     let logoutButton    = CustomGenericButton(backgroundColor: .systemRed, title: "Logout")
     let firestore       = FireStoreManager.shared
     var ref             : DatabaseReference!
     var userManager     = UserManager.shared
-    
     let sections        = Section.self
     var collectionView  : UICollectionView!
     var dataSource      : UICollectionViewDiffableDataSource<Section, UserProfile>!
@@ -40,14 +39,13 @@ class UserProfileViewController: UIViewController {
     }
     
     private func fetchUserProfile() {
-
         guard let userID = Auth.auth().currentUser?.uid else { return }
         print(userID)
         userManager.getCurrentUser(userID: userID) { (user) in
-            print(user)
+            //            print(user)
             if let user = user {
-                print(user)
-                    self.title = user.name
+                //                print(user)
+                self.title = user.name
                 self.currentLoggedUser.append(user)
                 print(self.currentLoggedUser)
                 DispatchQueue.main.async {
@@ -60,25 +58,24 @@ class UserProfileViewController: UIViewController {
     @objc private func handleLogout() {
         print("Logut")
         userManager.handleLogout()
+        userManager.logoutFromFacebook()
+        userManager.logoutFromGoogle()
         showLoadingView()
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .custom
         loginVC.transitioningDelegate = self
         present(loginVC, animated: true)
     }
-
     
     private func configureNavigationBar() {
         let titleImageView = UIImageView(image: Images.like)
         titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         titleImageView.contentMode = .scaleAspectFit
         titleImageView.tintColor = .blue
-        //        navigationItem.title = updateTitle
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoutButton)
         logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
         setupConstraints()
     }
-    
     
     private func configureCollectionView() {
         let layuout = configureLayout()
@@ -116,7 +113,7 @@ class UserProfileViewController: UIViewController {
     private func configureLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+        
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.96), heightDimension: .fractionalHeight(0.6))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
@@ -127,7 +124,6 @@ class UserProfileViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
-    
 }
 
 extension UserProfileViewController {

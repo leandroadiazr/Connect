@@ -22,13 +22,11 @@ class AlertViewController: UIViewController {
         self.alertTitle     = alertTitle
         self.message        = message
         self.buttonTitle    = buttonTitle
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,7 +92,7 @@ class AlertViewController: UIViewController {
             actionButton.bottomAnchor.constraint(equalTo: containerview.bottomAnchor, constant: -padding),
             actionButton.leadingAnchor.constraint(equalTo: containerview.leadingAnchor, constant: padding),
             actionButton.trailingAnchor.constraint(equalTo: containerview.trailingAnchor, constant: -padding),
-//            actionButton.heightAnchor.constraint(equalToConstant: )
+            //            actionButton.heightAnchor.constraint(equalToConstant: )
         ])
         
         //Message Label Constraints

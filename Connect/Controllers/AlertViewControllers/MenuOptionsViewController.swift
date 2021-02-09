@@ -8,24 +8,25 @@
 import UIKit
 
 class MenuOptionsViewController: UIViewController {
-
+    
     var tableView: UITableView?
     var optionMenu = [Options]()
     var endOfSettings = [ResetSettings]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor =  UIColor(red: 0.2, green: 0.2, blue: 1, alpha: 0.2)
-        
         configureTableView()
-        
+        generateSettingsMenu()
+    }
+    
+    fileprivate func generateSettingsMenu() {
         let setting = Options(titleLabel: "Save", detailsLabel: "Save for later...", viewImage: UIImage(systemName: "bookmark.circle.fill"))
         let navigation = Options(titleLabel: "Hide", detailsLabel: "I don't want to see this post",viewImage: UIImage(systemName: "eye.slash.fill"))
         let DistanceUnits = Options(titleLabel: "Report", detailsLabel: "This post is offensive", viewImage: UIImage(systemName: "flag.slash.fill"))
         let notifications = Options(titleLabel: "Embed", detailsLabel: "Copy and paste this post in you Feeds...", viewImage: UIImage(systemName: "link.badge.plus"))
         let settingsArr = [setting, navigation, DistanceUnits,notifications]
         optionMenu.append(contentsOf: settingsArr)
-
+        
         let reset = ResetSettings(titleLabel: "Delete Post", viewImage: UIImage(systemName: "xmark.circle.fill"))
         let resetArr = [ reset]
         endOfSettings.append(contentsOf: resetArr)
@@ -64,7 +65,6 @@ extension MenuOptionsViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: OptionsViewCell.reuseID, for: indexPath) as! OptionsViewCell

@@ -37,10 +37,9 @@ class FireStorageManager {
         })
     }
     
-    
     func uploadSingleImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         let imageRef = imagesReferences.child("images/\(UUID().uuidString).jpg")
-        
+    
         //convert image to data
         guard let imageData = image.jpegData(compressionQuality: 0.2) else { return }
         
@@ -51,7 +50,6 @@ class FireStorageManager {
                 imageRef.downloadURL { (url, downloadError) in
                     if let unwrappedDownloadError = downloadError {
                         print(unwrappedDownloadError)
-                        
                     } else if let unwrappedUrl = url {
                         completion(unwrappedUrl.absoluteString)
                     }
@@ -62,7 +60,6 @@ class FireStorageManager {
     
     func bulkUpload(_ images: [UIImage], completion: @escaping  ([String]) -> Void) {
         let semaphore = DispatchSemaphore(value: images.count)
-        
         var imagesPaths = [String]()
         var counter = 0
         for image in images {

@@ -63,8 +63,6 @@ extension CreateChatViewController: UISearchBarDelegate {
     }
 }
 
-
-
 extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return generics.count
@@ -79,8 +77,6 @@ extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textLabel?.text = item
             return cell
         }
-        
-       return cell
+        return cell
     }
-    
 }

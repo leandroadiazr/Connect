@@ -8,13 +8,12 @@
 import UIKit
 
 class MenuViewController: UIViewController {
-
+    
     var menuCollectionView: UICollectionView?
     let menu = menuTesting
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         configureMenuCollectionView()
         view.layer.borderWidth = 0.5
         view.layer.borderColor = UIColor.quaternaryLabel.cgColor
@@ -35,7 +34,6 @@ class MenuViewController: UIViewController {
         menuCollectionView?.dataSource = self
         menuCollectionView?.backgroundColor = .systemBackground
         
-        
         //MARK:- MENU COLLECTION CELL
         menuCollectionView?.register(MenuViewCell.self, forCellWithReuseIdentifier: MenuViewCell.reuseID)
         
@@ -44,13 +42,6 @@ class MenuViewController: UIViewController {
         }
         view.addSubview(menuCollectionView)
     }
-    
-
-    
-    
-    
-    
-    
 }
 
 extension MenuViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -58,19 +49,14 @@ extension MenuViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-
-            return menu.count
-            
+        return menu.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-            let grid =  collectionView.dequeueReusableCell(withReuseIdentifier: MenuViewCell.reuseID, for: indexPath) as! MenuViewCell
-            let currentMenu = menu[indexPath.item]
-        
-            grid.setCell(with: currentMenu)
-            return grid
-    
+        let grid =  collectionView.dequeueReusableCell(withReuseIdentifier: MenuViewCell.reuseID, for: indexPath) as! MenuViewCell
+        let currentMenu = menu[indexPath.item]
+        grid.setCell(with: currentMenu)
+        return grid
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

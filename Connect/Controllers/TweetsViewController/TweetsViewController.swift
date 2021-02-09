@@ -14,7 +14,6 @@ class TweetsViewController: UIViewController {
     var test = testingData
     var tweets = tweetsData
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
@@ -26,8 +25,6 @@ class TweetsViewController: UIViewController {
         collectionView?.frame = view.bounds
         collectionView?.layoutIfNeeded()
     }
-    
-    
     
     //MARK:- NAV&ITEM BAR CONFIGURATION
     private func configureNavigationBar() {
@@ -51,8 +48,6 @@ class TweetsViewController: UIViewController {
         newTweet.tintColor = CustomColors.CustomGreen
         
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: newTweet), UIBarButtonItem(customView: searchBtn)]
-        
-        //        navBar transparent background
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
@@ -104,10 +99,7 @@ extension TweetsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
     }
     
-    
     //MARK:- COLLECTION CELL
-    
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 1:
@@ -127,7 +119,6 @@ extension TweetsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let userVariable = test[indexPath.item]
         switch indexPath.section {
         case 1:
-            
             let approximateWidth = view.frame.width - 20
             let size = CGSize(width: approximateWidth, height: 600)
             let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
@@ -150,7 +141,6 @@ extension TweetsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         return 5
     }
     
-    
     //MARK:- HEADER CELL
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
@@ -169,8 +159,6 @@ extension TweetsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
         return CGSize(width: view.frame.width, height: 50)
     }
-    
-    
     
     //MARK:- FOOTER CELL
     

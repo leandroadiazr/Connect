@@ -10,8 +10,11 @@ import AuthenticationServices
 import Firebase
 import FirebaseAuth
 import FBSDKLoginKit
+import GoogleSignIn
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
+    //MARK:- NOTIFICATION CENTER PROPERTIES
+    private var loginObserver: NSObjectProtocol?
     
     //MARK:- UI ELELMENTS
     //MARK:- IMAGES
@@ -40,7 +43,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     let signInWEmailBtn =  CustomMainButton(backgroundColor: .clear, title: "Sign In", textColor: .white, borderWidth: 0.3, borderColor: CustomColors.CustomGreen.cgColor, buttonImage: nil)
     var appleIDBtn = ASAuthorizationAppleIDButton()
     let FBloginButton = FBLoginButton()
-    let googleBtn =  CustomGenericButton()
+    let GgLoginButton = GIDSignInButton()
     
     var isEmailEntered: Bool { return !emailTextField.text!.isEmpty }
     var isPassEntered: Bool { return !passwordTextField.text!.isEmpty }
@@ -53,8 +56,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        setupNofitications()
         configure()
         dismissKeyboard()
+        
+    }
+    
+    private func setupNofitications() {
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLoginNotification, object: nil, queue: .main)  {[weak self] _ in
+            guard self != nil else { return }
+        }
+    }
+    
+    deinit {
+        if loginObserver != nil {
+            NotificationCenter.default.removeObserver(loginObserver as Any)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,7 +84,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
     }
     
-    
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS
     private func configure() {
@@ -78,8 +94,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK:- UI ELEMENTS
-    
-    
     //MARK:- LABELS & TEXT FIELDS
     private func configureLabels() {
         //Labels & TextFields
@@ -119,7 +133,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     //MARK:- BUTTONS
     private func configureButtons() {
         //FORGOT BTN
-        let buttons = [forgotPasswordBtn, signInWEmailBtn, goToSignUpBtn, appleIDBtn, FBloginButton, googleBtn ]
+        let buttons = [forgotPasswordBtn, signInWEmailBtn, goToSignUpBtn, appleIDBtn, FBloginButton, GgLoginButton ]
         for button in buttons {
             button.translatesAutoresizingMaskIntoConstraints = false
             button.layer.cornerRadius = 5
@@ -145,9 +159,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         facebookToken()
         
         //SIGNIN WITH GOOGLE BTN
-        googleBtn.addTarget(self, action: #selector(signInWithGoogle), for: .touchUpInside)
-        googleBtn.setBackgroundImage(Images.loginWGoogle, for: .normal)
-        
+        googleSetupToken()
     }
     
     private func facebookToken() {
@@ -158,6 +170,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
            !token.isExpired {
             // User is logged in, do work such as go to next view controller.
         }
+    }
+    
+    private func googleSetupToken() {
+        GIDSignIn.sharedInstance()?.presentingViewController = self
     }
     
     
@@ -205,16 +221,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     @objc private func dismissKeyboard() {
+        self.view.endEditing(true)
         let textFields = [emailTextField, passwordTextField]
         for field in textFields {
             field.resignFirstResponder()
         }
     }
     
-    
-    
     //MARK:- BUTTON ACTIONS
-    
     //MARK:- FORGOT PASSWORD
     @objc private func forgotPassword() {
         print("forgotPassword")
@@ -223,7 +237,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK:- TRASITIONS
-    
     //MARK:- SIGN UP
     @objc private func goingTosignUpAction() {
         print("going to signup")
@@ -232,15 +245,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signupVC.transitioningDelegate = self
         present(signupVC, animated: true)
     }
-    //    private func transitionToHomeVC() {
-    //        let mainVC = CustomTabBarController()
-    //        mainVC.modalPresentationStyle = .custom
-    //        mainVC.transitioningDelegate = self
-    //        present(mainVC, animated: true, completion: nil)
-    //        //        self.showLoadingView()
-    //    }
-    
-    
     
     //MARK:- SIGNIN WITH EMAIL
     @objc private func signInWithEmail() {
@@ -250,9 +254,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             forgotPassword()
             return
         }
+        
         if let email = emailTextField.text,
            let passOne = passwordTextField.text {
-            
             Auth.auth().signIn(withEmail: email, password: passOne) { (user, error) in
                 if let unwrappedError = error {
                     self.showAlert(title: "Something is wrong...", message: "\(unwrappedError.localizedDescription)", buttonTitle: "Return")
@@ -260,12 +264,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print(unwrappedError.localizedDescription)
                     return
                 }
-                
-                //call the logged function
                 self.continueAfterLogin()
             }
         }
-        
     }
     
     //MARK:- ON LOGGED IN SUSCESS
@@ -291,14 +292,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         controller.performRequests()
     }
     
-    
     //MARK:- SIGN IN WITH GOOGLE
     @objc private func signInWithGoogle() {
         print("signInWithGoogle")
+        GIDSignIn.sharedInstance()?.signIn()
     }
-    
 }
-
 
 //MARK:- EXTENSIONS
 //MARK:- EXTENSIONS LOGIN WITH APPLE ID
@@ -323,13 +322,15 @@ extension LoginViewController: LoginButtonDelegate {
             guard let self = self else { return }
             if let unwrappedError = error {
                 print(unwrappedError.localizedDescription)
-                return }
-         
+                return
+            }
+            
             let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email, name, picture"], tokenString: token, version: nil, httpMethod: .get)
             facebookRequest.start { (_, result, error) in
                 if let unwrappedError = error {
                     print("Failed to login with facebook", unwrappedError.localizedDescription)
-                    return }
+                    return
+                }
                 
                 guard let result = result as? [String: Any] else {return}
                 guard let name = result["name"] as? String,
@@ -337,8 +338,8 @@ extension LoginViewController: LoginButtonDelegate {
                       let picDict = result["picture"] as? [String: Any],
                       let picData = picDict["data"] as? [String: Any],
                       let imageURL = picData["url"] as? String else { print("failed to get name and email in the fb login")
-                    return }
-                
+                    return
+                }
                 guard let uuid = Auth.auth().currentUser?.uid else { return }
                 print(name, email, imageURL, uuid)
                 self.userManager.globalSignInWith(userID: uuid, email: email, name: name, imageURL: imageURL)
@@ -351,15 +352,26 @@ extension LoginViewController: LoginButtonDelegate {
         }
     }
     
-  
     func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
-        
+        print("Logged out from FB")
     }
-    
-    
 }
 
-
+extension LoginViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive event: UIEvent) -> Bool {
+        if (event.touches(for: self.view) != nil) {
+            return true
+        }
+        return false
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view is GIDSignInButton {
+            return false
+        }
+        return true
+    }
+}
 
 //MARK:- CUSTOM STORYBOARD ANIMATED TRANSITION
 extension LoginViewController: UIViewControllerTransitioningDelegate {
@@ -375,5 +387,4 @@ extension LoginViewController: UIViewControllerTransitioningDelegate {
         return customTransition
     }
 }
-
 

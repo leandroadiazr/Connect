@@ -11,7 +11,7 @@ extension SignUpViewController {
     //move this to an extenxion
     
     func signUpSetupConstraints() {
-     
+        
         let padding: CGFloat = 20
         let textPadding:CGFloat = 8
         let textWidth: CGFloat = view.frame.width / 2.5
@@ -45,7 +45,6 @@ extension SignUpViewController {
             addProfileImage.heightAnchor.constraint(equalToConstant: 35)
         ])
         
-        
         //  MARK: -STARS IMAGE
         NSLayoutConstraint.activate([
             starsImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -61,7 +60,6 @@ extension SignUpViewController {
             bottomBackgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             bottomBackgroundImage.heightAnchor.constraint(equalToConstant: 180)
         ])
-        
         
         //        MARK:- MAIN TITLE
         NSLayoutConstraint.activate([
@@ -134,8 +132,6 @@ extension SignUpViewController {
             passwordTextFieldTwo.heightAnchor.constraint(equalToConstant: customHeight)
         ])
         
-       
-        
         //        MARK:- MESSAGE AND ERROR LABELS
         NSLayoutConstraint.activate([
             wrongPassLabel.bottomAnchor.constraint(equalTo: signUpWEmailBtn.topAnchor, constant: -textPadding + 2),
@@ -154,11 +150,9 @@ extension SignUpViewController {
             firstTimeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             firstTimeLabel.widthAnchor.constraint(equalToConstant: textWidth * 1.2)
         ])
-      
         
         //        MARK:- BUTTONS
-        //        MARK:- BUTTONS
-        
+        //        MARK:- BUTTONS        
         NSLayoutConstraint.activate([
             backToSignInBtn.bottomAnchor.constraint(equalTo: signUpWEmailBtn.topAnchor, constant: -lastButtonBottomConstraints),
             backToSignInBtn.leadingAnchor.constraint(equalTo: firstTimeLabel.trailingAnchor, constant: padding),

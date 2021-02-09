@@ -30,24 +30,18 @@ class FlowViewController: UIViewController, PresentCommentVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        observeUserPosts()
         configureCollectionView()
         registerCell()
         configureDataSource()
         realTime()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-//        self.collectionView.reloadData()
-        
-       
     }
     
     //MARK:- GET POSTS FROM SERVER
@@ -73,9 +67,9 @@ class FlowViewController: UIViewController, PresentCommentVC {
         }
     }
     
-   func realTime() {
+    func realTime() {
         firestore.realtimeUpdates {  (result) in
-           
+            
             switch result {
             case .success(let feed):
                 for single in feed {
@@ -85,14 +79,12 @@ class FlowViewController: UIViewController, PresentCommentVC {
                         }
                     } else {
                         self.feeds.append(single)
-//                        print("**********************************feeds from real time :",single)
+                        //                        print("**********************************feeds from real time :",single)
                         DispatchQueue.main.async {
                             self.reloadData(with: self.feeds)
                         }
-                        
                     }
                 }
-
             case .failure(let error):
                 print(error)
             }
@@ -166,7 +158,6 @@ class FlowViewController: UIViewController, PresentCommentVC {
         let y = sender.bounds.origin.y
         let size = CGRect(x: x - 10, y: y - 50, width: width, height: view.frame.width - 130)
         
-        
         optionsView.frame = size
         optionsView.alpha = 0
         optionsView.backgroundColor = .clear
@@ -180,7 +171,6 @@ class FlowViewController: UIViewController, PresentCommentVC {
         } completion: { (nil) in}
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissSettingsAnimation)))
-        
         view.addSubview(optionsView)
     }
     

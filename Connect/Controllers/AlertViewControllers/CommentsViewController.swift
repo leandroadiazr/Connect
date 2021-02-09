@@ -8,7 +8,7 @@
 import UIKit
 
 class CommentsViewController: UIViewController {
-
+    
     let containerview   = AlertContainerView()
     let profileImage    = CustomAvatarImage(frame: .zero)
     let titleLabel      = CustomSecondaryTitleLabel(title: "Leave your Comment...", fontSize: 14, textColor: .label)
@@ -22,13 +22,11 @@ class CommentsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         self.message        = message
         self.buttonTitle    = buttonTitle
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,17 +38,14 @@ class CommentsViewController: UIViewController {
         setupConstraints()
     }
     
-    
     func configureContainerView(){
         view.addSubview(containerview)
     }
-    
     
     func configureProfileImage(){
         containerview.addSubview(profileImage)
         profileImage.image = UIImage(named: Images.profilePic)
     }
-    
     
     func configureActionButton(){
         containerview.addSubview(actionButton)
@@ -58,14 +53,10 @@ class CommentsViewController: UIViewController {
         actionButton.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
     }
     
-    
     func configureMessageArea(){
         containerview.addSubview(titleLabel)
-        
         containerview.addSubview(messageArea)
-        
     }
-    
     
     @objc func dismissVC(){
         dismiss(animated: true)
@@ -92,27 +83,27 @@ class CommentsViewController: UIViewController {
         
         //Title Label Constraints
         NSLayoutConstraint.activate([
-           titleLabel.topAnchor.constraint(equalTo: containerview.topAnchor, constant: padding),
-           titleLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: padding),
-           titleLabel.trailingAnchor.constraint(equalTo: containerview.trailingAnchor, constant: -padding),
-           titleLabel.heightAnchor.constraint(equalToConstant: 30)
+            titleLabel.topAnchor.constraint(equalTo: containerview.topAnchor, constant: padding),
+            titleLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: padding),
+            titleLabel.trailingAnchor.constraint(equalTo: containerview.trailingAnchor, constant: -padding),
+            titleLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
         // Action Button Constraints
         NSLayoutConstraint.activate([
             actionButton.bottomAnchor.constraint(equalTo: containerview.bottomAnchor, constant: -padding),
             actionButton.widthAnchor.constraint(equalToConstant: 70),
             actionButton.trailingAnchor.constraint(equalTo: containerview.trailingAnchor, constant: -padding),
-//            actionButton.heightAnchor.constraint(equalToConstant: )
+            //            actionButton.heightAnchor.constraint(equalToConstant: )
         ])
         
         //Message Label Constraints
         NSLayoutConstraint.activate([
-           messageArea.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: padding),
-           messageArea.leadingAnchor.constraint(equalTo: containerview.leadingAnchor, constant: padding),
-           messageArea.trailingAnchor.constraint(equalTo: containerview.trailingAnchor, constant: -padding),
-           messageArea.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -padding)
+            messageArea.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: padding),
+            messageArea.leadingAnchor.constraint(equalTo: containerview.leadingAnchor, constant: padding),
+            messageArea.trailingAnchor.constraint(equalTo: containerview.trailingAnchor, constant: -padding),
+            messageArea.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -padding)
         ])
         
     }
-
+    
 }

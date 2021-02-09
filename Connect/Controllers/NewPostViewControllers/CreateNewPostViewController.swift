@@ -35,7 +35,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     let userManager             = UserManager.shared
     var userProfile             : UserProfile?
     
-    
     let imagePicker = UIImagePickerController()
     private var currentButton: UIButton?
     
@@ -45,7 +44,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         configureUI()
         imagePicker.delegate = self
         configureNavigationBar()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -73,23 +71,13 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         configureTextField()
         setupActionButtons()
         setupConstraints()
-        //        guard let currentUser = userManager.currentUserProfile else { return }
-        //        print(currentUser)
         fetchUserProfile()
-        
     }
-    
-    //    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-    //        tabBarController.selectedIndex = 0
-    //    }
-    
     
     @objc private func backToMainVC() {
         if let tabCon = self.presentingViewController as? CustomTabBarController {
             self.dismiss(animated: true, completion: nil)
-
             tabCon.selectedIndex = 0
-
         }
     }
     
@@ -97,14 +85,10 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         print(userID)
         userManager.getCurrentUser(userID: userID) { (user) in
-            print(user)
             if let user = user {
-                print(user)
-                //                for field in user {
                 self.title = user.name
-                //                }
                 self.userProfile = user
-                print(self.userProfile)
+                
                 DispatchQueue.main.async {
                     self.configure(with: user)
                 }
@@ -127,7 +111,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
             fields.backgroundColor = .systemGray2
             view.addSubview(fields)
         }
-        
     }
     
     @objc private func dismissKeyboard() {
@@ -149,7 +132,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
             button.addTopBorderWithColor(color: .blue, width: 2, alpha: 0.5)
             button.addTarget(self, action: #selector(getImage), for: .touchUpInside)
         }
-        
     }
     
     @objc private func saveNewPost() {
@@ -158,7 +140,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         guard let userProfile = self.userProfile else { return }
         createNewPost(userProfile: userProfile)
     }
-    
     
     private func createNewPost(userProfile: UserProfile) {
         if let mainImage         = mainImageViewArea.currentImage,
@@ -221,35 +202,31 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
             }
         }
         self.backToMainVC()
-        
     }
-    
     
     @objc private func getImage(_ sender: UIButton) {
         currentButton = sender
         let alert = UIAlertController(title: "Choose An Image From:", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
-                        self.imagePicker.sourceType = UIImagePickerController.SourceType.camera
-                        self.imagePicker.allowsEditing = true
-                        self.present(self.imagePicker, animated: true, completion: nil)
-                }
+                self.imagePicker.sourceType = UIImagePickerController.SourceType.camera
+                self.imagePicker.allowsEditing = true
+                self.present(self.imagePicker, animated: true, completion: nil)
+            }
         }))
-
+        
         alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
             self.imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
             self.imagePicker.allowsEditing = true
             self.present(self.imagePicker, animated: true, completion: nil)
         }))
-
+        
         alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 }
 
-
 extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.originalImage] as? UIImage else { return }
         print(image)
@@ -272,8 +249,6 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         
         //ProfileImage
         NSLayoutConstraint.activate([
-            
-            
             userProfileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
             userProfileImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             userProfileImageView.widthAnchor.constraint(equalToConstant: 70),
@@ -283,24 +258,20 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         //User name Label
         NSLayoutConstraint.activate([
             userNameLabel.topAnchor.constraint(equalTo: userProfileImageView.topAnchor),
-            userNameLabel.leadingAnchor.constraint(equalTo: userProfileImageView.trailingAnchor, constant: padding),
-            
+            userNameLabel.leadingAnchor.constraint(equalTo: userProfileImageView.trailingAnchor, constant: padding)
         ])
-        
-        
         
         //status Label
         NSLayoutConstraint.activate([
             statusLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: padding),
-            statusLabel.leadingAnchor.constraint(equalTo: userProfileImageView.trailingAnchor, constant: padding),
+            statusLabel.leadingAnchor.constraint(equalTo: userProfileImageView.trailingAnchor, constant: padding)
         ])
         
         //Location Label
         NSLayoutConstraint.activate([
             locationLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor),
-            locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding)
         ])
-        
         
         //MediaViewArea
         NSLayoutConstraint.activate([
@@ -334,11 +305,10 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
             imageBtnThree.heightAnchor.constraint(equalToConstant: mediaHeight)
         ])
         
-        
         //Title Label
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: imageBtnThree.bottomAnchor, constant: verticalPadding),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding)
         ])
         //Title Field
         NSLayoutConstraint.activate([
@@ -352,7 +322,7 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: verticalPadding),
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding)
         ])
         
         //Description Field
@@ -367,7 +337,7 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         NSLayoutConstraint.activate([
             hashtagLabel.topAnchor.constraint(equalTo: descriptionField.bottomAnchor, constant: verticalPadding),
             hashtagLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            hashtagLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            hashtagLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding)
         ])
         
         //Description Field
@@ -382,7 +352,7 @@ extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavig
         NSLayoutConstraint.activate([
             tagFriendsLabel.topAnchor.constraint(equalTo: hashtagField.bottomAnchor, constant: verticalPadding),
             tagFriendsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            tagFriendsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            tagFriendsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding)
         ])
         
         //Description Field

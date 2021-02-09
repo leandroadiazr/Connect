@@ -9,8 +9,6 @@ import UIKit
 
 
 class ImageCache: NSCache<NSString, AnyObject > {
-    
-    
     func getImage(named imageName: String, completion: @escaping (UIImage?) -> Void) {
         if let image = object(forKey: imageName as NSString) as? UIImage{
             completion(image)

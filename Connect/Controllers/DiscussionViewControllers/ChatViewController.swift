@@ -13,47 +13,43 @@ struct Message: MessageType {
     var messageId: String
     var sentDate: Date
     var kind: MessageKind
-
 }
 
 struct Sender: SenderType {
     var senderId: String
     var displayName: String
     var photoURL: String
-    
-    
-    
 }
 
 class ChatViewController: MessagesViewController {
     private var messages = [Message]()
     private var sender = Sender(senderId: "123456", displayName: "Leo", photoURL: Images.Avatar)
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = CustomColors.CustomGreenGradient
+        configureNavigationBar()
+        configureViewController()
+        testingData()
+    }
+    
+    private func testingData() {
         messages.append(Message(sender: sender, messageId: "1", sentDate: Date(), kind: .text("Hello there...")))
         messages.append(Message(sender: sender, messageId: "2", sentDate: Date(), kind: .text("Hello there...")))
         messages.append(Message(sender: sender, messageId: "3", sentDate: Date(), kind: .text("Hello there...")))
         messages.append(Message(sender: sender, messageId: "4", sentDate: Date(), kind: .text("Hello there...")))
         messages.append(Message(sender: sender, messageId: "5", sentDate: Date(), kind: .text("Hello there...")))
         messages.append(Message(sender: sender, messageId: "6", sentDate: Date(), kind: .text("Hello there...")))
-        
-        configureNavigationBar()
-        configureViewController()
     }
     
-    
     private func configureViewController() {
+        view.backgroundColor = CustomColors.CustomGreenGradient
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
     }
     
-    
     private func configureNavigationBar() {
-
+        
         let cancelBtn = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissVC))
         navigationItem.leftBarButtonItem = cancelBtn
     }
@@ -63,7 +59,6 @@ class ChatViewController: MessagesViewController {
             self.dismissLoadingView()
         }
     }
-
 }
 
 
@@ -79,6 +74,4 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
         messages.count
     }
-    
-    
 }

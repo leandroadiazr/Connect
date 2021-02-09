@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class MainFeedCollectionViewController: UIViewController {
     var collectionView: UICollectionView?
     let feed = testingData
@@ -86,12 +85,10 @@ extension MainFeedCollectionViewController: UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainFeedViewCell.reuseID, for: indexPath) as! MainFeedViewCell
-//        let item = feed[indexPath.item]
-//        cell.setCell(item)
+        //        let item = feed[indexPath.item]
+        //        cell.setCell(item)
         
         return cell
     }
-    
-    
 }
 

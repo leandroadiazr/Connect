@@ -177,7 +177,6 @@ class DetailsViewCell: UICollectionViewCell {
     
     private func setupConstraints() {
         let padding: CGFloat = 10
-        let bottomPadding: CGFloat = 20
         let textHeight: CGFloat = 15
         let textWidth: CGFloat = 30
         let mediaHeight: CGFloat = contentView.frame.height / 3

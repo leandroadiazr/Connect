@@ -36,13 +36,6 @@ extension UIView {
         border.frame = CGRect(x: 0, y: 0, width: width, height: self.frame.size.height)
         self.layer.addSublayer(border)
     }
-    
-    //    func activateBorders(color: UIColor, width: CGFloat, alpha: CGFloat) {
-    //        let border = CALayer()
-    //        border.frame = CGRect(x: 0, y: 0, width: width, height: width)
-    //        border.backgroundColor = color.cgColor.copy(alpha: alpha)
-    //        self.layer.addSublayer(border)
-    //    }
 }
 
 
@@ -92,20 +85,15 @@ extension UIViewController {
 //MARK:- CUSTOM SHADOW EXTENSION WITH BORDER&ROUNDCORNERS
 extension UIView {
     func applyCustomShadow() {
-        self.backgroundColor = UIColor.clear // Use anycolor that give you a 2d look.
-        //To apply corner radius
+        self.backgroundColor    = UIColor.clear // Use anycolor that give you a 2d look.
         self.layer.cornerRadius = 5
+        self.layer.borderWidth  = 0.15
+        self.layer.borderColor  = UIColor.label.cgColor
         
-        //To apply border
-        self.layer.borderWidth = 0.15
-        self.layer.borderColor = UIColor.label.cgColor
-        
-        //To apply Shadow
         self.layer.shadowOpacity = 0.4
         self.layer.shadowRadius = 10
         self.layer.shadowOffset = CGSize(width: -7, height: 5) // Use any CGSize
-        self.layer.shadowColor = UIColor.systemGray.cgColor
-        
+        self.layer.shadowColor  = UIColor.systemGray.cgColor
         self.layer.sublayerTransform = CATransform3DMakeTranslation(20, 0, 0)
     }
 }
@@ -113,12 +101,7 @@ extension UIView {
 extension UIView {
     func applyCustomRoundShadow() {
         self.backgroundColor = UIColor.systemBackground // Use anycolor that give you a 2d look.
-        //To apply corner radius
-        
         self.layer.cornerRadius = 5
-        
-        
-        //To apply border
         self.layer.borderWidth = 0.15
         self.layer.borderColor = UIColor.label.cgColor
         
@@ -127,7 +110,6 @@ extension UIView {
         self.layer.shadowRadius = 10
         self.layer.shadowOffset = CGSize(width: -7, height: 5) // Use any CGSize
         self.layer.shadowColor = UIColor.systemGray.cgColor
-        
         self.layer.sublayerTransform = CATransform3DMakeTranslation(20, 0, 0)
     }
 }
@@ -143,10 +125,16 @@ extension UITextField {
     }
 }
 
-
 extension UITableView {
     
     func removeEmptyCells() {
         tableFooterView = UIView(frame: .zero)
     }
 }
+
+
+//MARK:- NOTIFICATION CENTER EXTENSION
+extension Notification.Name {
+    static let didLoginNotification = Notification.Name("didLoginNotification")
+}
+
