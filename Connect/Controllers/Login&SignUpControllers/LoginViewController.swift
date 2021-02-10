@@ -49,7 +49,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var isPassEntered: Bool { return !passwordTextField.text!.isEmpty }
     var ref: DatabaseReference!
     var userManager = UserManager.shared
+    var persistenceManager = PersistenceManager.shared
     var localUser: UserProfile?
+    var userCached : [String: Any] = [:]
     let userProfile = [UserProfile]()
     
     //MARK:- LIFECYCLE EVENTS
@@ -271,6 +273,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- ON LOGGED IN SUSCESS
     private func continueAfterLogin() {
+        
         self.navigationController?.popViewController(animated: true)
         DispatchQueue.main.async {
             let mainVC = CustomTabBarController()
@@ -343,10 +346,7 @@ extension LoginViewController: LoginButtonDelegate {
                 guard let uuid = Auth.auth().currentUser?.uid else { return }
                 print(name, email, imageURL, uuid)
                 self.userManager.globalSignInWith(userID: uuid, email: email, name: name, imageURL: imageURL)
-                
             }
-            guard let result = authResult else { return }
-            print("logged in with FACEBOOK", result)
             
             self.continueAfterLogin()
         }

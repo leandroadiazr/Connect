@@ -13,6 +13,7 @@ import GoogleSignIn
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var firestore   = FireStoreManager.shared
     var userManager = UserManager.shared
+    var persistenceManager = PersistenceManager.shared
     var window: UIWindow?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -20,28 +21,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        //                userManager.handleLogout()
+//        userManager.handleLogout()
         
         Auth.auth().addStateDidChangeListener( { auth, user in
+            
             if user != nil && user?.uid == Auth.auth().currentUser?.uid {
                 guard (auth.currentUser?.uid) != nil else { return }
-                self.userManager.observeUserProfile(user!.uid) { result in
+                self.userManager.observeSingleUserProfile(user!.uid) { result in
                     print("current logged ", user!.uid)
-                    
+                    print("Current user data: ", user)
                     switch result {
                     case .success(let user):
-                        //                        self.userManager.currentUserProfile = UserProfile(dictionary: user)
-                        self.userManager.currentUserProfile = user
+                        print(self.userManager.currentUserProfile as Any)
                         guard let uuid = user?.userID else { return }
                         print("User ID Found in SceneDelegate :********", uuid)
-                        
+                        self.userManager.currentUserProfile = user
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
                 }
                 DispatchQueue.main.async {
-                    
-                    //let navVC = UINavigationController(rootViewController: CustomTabBarController())
+//                    let navVC = UINavigationController(rootViewController: CustomTabBarController())
                     self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
                     self.window?.windowScene = windowScene
                     self.window?.rootViewController = CustomTabBarController()
@@ -79,25 +79,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
     }
     
-    
-    //    //MARK:- GOOGLE SDK
-    //    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-    //        guard let _ = error else {
-    //            print("Failed to sign in with google: ", error.localizedDescription)
-    //            return
-    //        }
-    //
-    //        guard let authentication = user.authentication else { return }
-    //          let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
-    //    }
-    //
-    //    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-    //        return GIDSignIn.sharedInstance().handle(url)
-    //    }
-    //
-    //    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-    //       print("Google has sign out")
-    //    }
     
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

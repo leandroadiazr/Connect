@@ -31,7 +31,7 @@ class HomeBaseViewController: UIViewController {
         super.viewDidAppear(animated)
         configureNavigationBar()
         print("dismissCAlled on homebased")
-        self.dismissLoadingView()
+//        self.dismissLoadingView()
     }
     
     

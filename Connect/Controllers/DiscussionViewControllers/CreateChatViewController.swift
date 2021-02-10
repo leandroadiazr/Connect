@@ -18,9 +18,12 @@ class CreateChatViewController: UIViewController {
         return searchBar
     }()
     
+    private let noResultsLabel = CustomSecondaryTitleLabel(title: "No results for that search", fontSize: 16, textColor: .lightText)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTableView()
+                configureTableView()
+        configureUI()
         configureNavigationBar()
         view.backgroundColor = .systemRed
     }
@@ -37,6 +40,19 @@ class CreateChatViewController: UIViewController {
         
     }
     
+   @objc private func newChatTableView() {
+        
+    }
+    
+    private func configureUI() {
+        noResultsLabel.textAlignment = .center
+        view.bringSubviewToFront(noResultsLabel)
+        view.addSubview(noResultsLabel)
+        
+        setupConstraints()
+    }
+    
+    
     private func configureTableView() {
         tableView = UITableView(frame: .zero, style: .plain)
         tableView?.frame = view.bounds
@@ -50,11 +66,24 @@ class CreateChatViewController: UIViewController {
         view.addSubview(tableView)
     }
     
+    
+    private func setupConstraints() {
+        let padding: CGFloat = 20
+        
+        NSLayoutConstraint.activate([
+            noResultsLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
+            noResultsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            noResultsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding)
+        ])
+    }
+    
     @objc private func dismissVC() {
         self.dismiss(animated: true) {
-            self.dismissLoadingView()
+//            self.dismissLoadingView()
         }
     }
+    
+    
 }
 
 extension CreateChatViewController: UISearchBarDelegate {
@@ -80,3 +109,5 @@ extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 }
+
+

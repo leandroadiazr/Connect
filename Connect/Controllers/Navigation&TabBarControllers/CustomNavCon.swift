@@ -13,11 +13,8 @@ class CustomNavCon: UINavigationController {
     var backgroundColor: UIColor?
     var translucent: Bool?
     var largeTitles: Bool?
-    
     var mainTitle = UILabel()
     var leftImage = GenericImageView(frame: .zero)
-    
-    
     
     init(rootViewController: UIViewController, nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil){
         super.init(nibName: nil, bundle: nil)

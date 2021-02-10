@@ -75,6 +75,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func backToMainVC() {
+        print("tapped")
         if let tabCon = self.presentingViewController as? CustomTabBarController {
             self.dismiss(animated: true, completion: nil)
             tabCon.selectedIndex = 0
@@ -82,18 +83,14 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func fetchUserProfile() {
-        guard let userID = Auth.auth().currentUser?.uid else { return }
-        print(userID)
-        userManager.getCurrentUser(userID: userID) { (user) in
-            if let user = user {
-                self.title = user.name
-                self.userProfile = user
-                
+        
+        guard let userProfile = userManager.currentUserProfile else { return }
+
+        print("userProfile on create new :", userProfile)
+                self.title = userProfile.name
                 DispatchQueue.main.async {
-                    self.configure(with: user)
+                    self.configure(with: userProfile)
                 }
-            }
-        }
     }
     
     private func configure(with user: UserProfile) {

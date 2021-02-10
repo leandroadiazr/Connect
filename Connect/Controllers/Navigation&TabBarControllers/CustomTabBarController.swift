@@ -19,12 +19,13 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.showLoadingView()
+//        self.showLoadingView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.title = updateTitle
+//        self.dismissLoadingView()
     }
 
     @objc private func showLoginVC() {

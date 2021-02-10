@@ -14,6 +14,7 @@ class DiscussionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureNavigationBar()
         configureTableView()
     }

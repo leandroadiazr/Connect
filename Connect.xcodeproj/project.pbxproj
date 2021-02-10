@@ -19,6 +19,9 @@
 		E8BECE4425CAEE6200BF989F /* MenuOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */; };
 		E8BECE4825CAF69D00BF989F /* OptionsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4725CAF69D00BF989F /* OptionsViewCell.swift */; };
 		E8BECE4B25CAF6ED00BF989F /* OptionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BECE4A25CAF6ED00BF989F /* OptionMenu.swift */; };
+		E8C0A1CB25D331DC004603B7 /* NewChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0A1CA25D331DC004603B7 /* NewChatVC.swift */; };
+		E8C0A1D125D33790004603B7 /* MessagesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0A1D025D33790004603B7 /* MessagesManager.swift */; };
+		E8C0A1D425D33F41004603B7 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0A1D325D33F41004603B7 /* PersistenceManager.swift */; };
 		E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09525C4E8B400778209 /* AppDelegate.swift */; };
 		E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09725C4E8B400778209 /* SceneDelegate.swift */; };
 		E8D6D09A25C4E8B400778209 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09925C4E8B400778209 /* ViewController.swift */; };
@@ -101,6 +104,9 @@
 		E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptionsViewController.swift; sourceTree = "<group>"; };
 		E8BECE4725CAF69D00BF989F /* OptionsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewCell.swift; sourceTree = "<group>"; };
 		E8BECE4A25CAF6ED00BF989F /* OptionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionMenu.swift; sourceTree = "<group>"; };
+		E8C0A1CA25D331DC004603B7 /* NewChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatVC.swift; sourceTree = "<group>"; };
+		E8C0A1D025D33790004603B7 /* MessagesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesManager.swift; sourceTree = "<group>"; };
+		E8C0A1D325D33F41004603B7 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		E8D6D09225C4E8B400778209 /* Connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Connect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D6D09525C4E8B400778209 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8D6D09725C4E8B400778209 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -216,6 +222,14 @@
 				E8AE047825CC6C49005383A8 /* CreateViewCell.swift */,
 			);
 			path = CreatePostCells;
+			sourceTree = "<group>";
+		};
+		E8C0A1CD25D331E2004603B7 /* NewChat */ = {
+			isa = PBXGroup;
+			children = (
+				E8C0A1CA25D331DC004603B7 /* NewChatVC.swift */,
+			);
+			path = NewChat;
 			sourceTree = "<group>";
 		};
 		E8D6D08925C4E8B400778209 = {
@@ -520,6 +534,7 @@
 				E8D6D13A25C4E96200778209 /* DiscussionViewController.swift */,
 				E86B341A25D07357004FD2E9 /* ChatViewController.swift */,
 				E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */,
+				E8C0A1CD25D331E2004603B7 /* NewChat */,
 			);
 			path = DiscussionViewControllers;
 			sourceTree = "<group>";
@@ -572,6 +587,8 @@
 				E8D6D17725C4E97400778209 /* FireStoreManager.swift */,
 				E841657125C6DFEA0011A237 /* UsersManager.swift */,
 				E8E55CA125C901EB0029D7BC /* ImageCacheManager.swift */,
+				E8C0A1D025D33790004603B7 /* MessagesManager.swift */,
+				E8C0A1D325D33F41004603B7 /* PersistenceManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -742,10 +759,12 @@
 				E8D6D0F325C4E95800778209 /* MainFeedViewCell.swift in Sources */,
 				E8D6D10925C4E95800778209 /* CustomMenuButton.swift in Sources */,
 				E8D6D10D25C4E95800778209 /* CustomMainButton.swift in Sources */,
+				E8C0A1CB25D331DC004603B7 /* NewChatVC.swift in Sources */,
 				E8BECE4825CAF69D00BF989F /* OptionsViewCell.swift in Sources */,
 				E8D6D0F925C4E95800778209 /* StoryViewCell.swift in Sources */,
 				E8D6D0B325C4E94300778209 /* CustomTransition.swift in Sources */,
 				E8D6D10F25C4E95800778209 /* CustomTextField.swift in Sources */,
+				E8C0A1D125D33790004603B7 /* MessagesManager.swift in Sources */,
 				E8BECE4B25CAF6ED00BF989F /* OptionMenu.swift in Sources */,
 				E8D6D10425C4E95800778209 /* FooterViewCell.swift in Sources */,
 				E8D6D17225C4E96B00778209 /* Menu.swift in Sources */,
@@ -766,6 +785,7 @@
 				E8D6D0B225C4E94300778209 /* BackupCells.swift in Sources */,
 				E8D6D0F825C4E95800778209 /* SavedPostViewCell.swift in Sources */,
 				E8D6D11D25C4E95800778209 /* CustomAvatarImage.swift in Sources */,
+				E8C0A1D425D33F41004603B7 /* PersistenceManager.swift in Sources */,
 				E8D6D10625C4E95800778209 /* HeaderViewCell.swift in Sources */,
 				E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */,
 				E86B341B25D07357004FD2E9 /* ChatViewController.swift in Sources */,

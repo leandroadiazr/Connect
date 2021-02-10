@@ -39,20 +39,16 @@ class UserProfileViewController: UIViewController {
     }
     
     private func fetchUserProfile() {
-        guard let userID = Auth.auth().currentUser?.uid else { return }
-        print(userID)
-        userManager.getCurrentUser(userID: userID) { (user) in
-            //            print(user)
-            if let user = user {
-                //                print(user)
-                self.title = user.name
-                self.currentLoggedUser.append(user)
-                print(self.currentLoggedUser)
-                DispatchQueue.main.async {
-                    self.reloadData(with: self.currentLoggedUser)
-                }
-            }
+        guard let userProfile = userManager.currentUserProfile else { return }
+        print(userProfile)
+        self.currentLoggedUser.append(userProfile)
+        print("user on profile :", userProfile.userID)
+        self.title = userProfile.name
+        print(self.currentLoggedUser)
+        DispatchQueue.main.async {
+            self.reloadData(with: self.currentLoggedUser)
         }
+        
     }
     
     @objc private func handleLogout() {

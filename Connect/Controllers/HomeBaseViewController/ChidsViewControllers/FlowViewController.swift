@@ -42,30 +42,31 @@ class FlowViewController: UIViewController, PresentCommentVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+       
     }
     
     //MARK:- GET POSTS FROM SERVER
     //the one using today 8.13 for the current logged user
-    func observeUserPosts() {
-        firestore.observePost { (result) in
-            switch result{
-            case.success(let post):
-                if post.isEmpty{
-                    self.showEmptyState(with: "Nothing to show here yet, Create some posts...", in: self.view)
-                }
-                post.forEach{
-                    self.feeds.append($0)
-                    self.navigationItem.title = $0.author.name
-                }
-                
-                DispatchQueue.main.async {
-                    self.reloadData(with: self.feeds)
-                }
-            case.failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
+//    func observeUserPosts() {
+//        firestore.observePost { (result) in
+//            switch result{
+//            case.success(let post):
+//                if post.isEmpty{
+//                    self.showEmptyState(with: "Nothing to show here yet, Create some posts...", in: self.view)
+//                }
+//                post.forEach{
+//                    self.feeds.append($0)
+//                    self.navigationItem.title = $0.author.name
+//                }
+//                
+//                DispatchQueue.main.async {
+//                    self.reloadData(with: self.feeds)
+//                }
+//            case.failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+//    }
     
     func realTime() {
         firestore.realtimeUpdates {  (result) in

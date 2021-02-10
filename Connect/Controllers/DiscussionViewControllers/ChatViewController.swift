@@ -56,7 +56,7 @@ class ChatViewController: MessagesViewController {
     
     @objc private func dismissVC() {
         self.dismiss(animated: true) {
-            self.dismissLoadingView()
+//            self.dismissLoadingView()
         }
     }
 }
