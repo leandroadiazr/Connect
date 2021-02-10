@@ -22,11 +22,11 @@ class NewChatVC: UIViewController {
     }
     
     private func configureNavigationBar() {
-//        let titleImageView = UIImageView(image: Images.like)
-//        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-//        titleImageView.contentMode = .scaleAspectFit
-//        titleImageView.tintColor = .blue
-//        navigationItem.titleView = titleImageView
+        let titleImageView = UIImageView(image: Images.like)
+        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        titleImageView.contentMode = .scaleAspectFit
+        titleImageView.tintColor = .blue
+        navigationItem.titleView = titleImageView
         
         let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissVC))
         navigationItem.leftBarButtonItem = cancel
