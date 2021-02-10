@@ -13,4 +13,5 @@ enum ErrorMessages: String, Error {
     case unableToFindUser       = "Unable to find this user, please check your credentials"
     case uknown                 = "There is an error"
     case unableToSaveProfile    = "Unable To Save Profile Try Again"
+    
 }

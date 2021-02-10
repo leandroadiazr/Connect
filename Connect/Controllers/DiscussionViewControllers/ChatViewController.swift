@@ -22,8 +22,21 @@ struct Sender: SenderType {
 }
 
 class ChatViewController: MessagesViewController {
-    private var messages = [Message]()
+    public var isNewConversation = false
+    public let otherEmail: String
+    
+    var messages = [Message]()
+    var userProfile = [UserProfile]()
     private var sender = Sender(senderId: "123456", displayName: "Leo", photoURL: Images.Avatar)
+    
+    init(with email: String) {
+        self.otherEmail = email
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

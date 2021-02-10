@@ -8,47 +8,48 @@
 import UIKit
 
 class CreateChatViewController: UIViewController {
-    
-    var tableView: UITableView?
-    var generics = [String]()
-    
-    private let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Choose a Contact"
-        return searchBar
-    }()
+    public var completion: ((UserProfile) -> (Void))?
+    private var tableView: UITableView?
+    private var users = [UserProfile]()
+    private var filteredUsers = [UserProfile]()
+    private var hasFetched = false
+    private var database = MessagesManager.shared
+    private var persistenceManager = PersistenceManager.shared
     
     private let noResultsLabel = CustomSecondaryTitleLabel(title: "No results for that search", fontSize: 16, textColor: .lightText)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                configureTableView()
+        configureTableView()
         configureUI()
         configureNavigationBar()
         view.backgroundColor = .systemRed
     }
     
     private func configureNavigationBar() {
-        searchBar.delegate = self
-        searchBar.becomeFirstResponder()
-        navigationController?.navigationBar.topItem?.titleView = searchBar
         let cancelBtn = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissVC))
         navigationItem.leftBarButtonItem = cancelBtn
+        filterSearch()
     }
     
-    private func configureSearchBar() {
-        
-    }
-    
-   @objc private func newChatTableView() {
-        
+    //filter search function
+    func filterSearch(){
+        let search = UISearchController(searchResultsController: nil)
+        search.obscuresBackgroundDuringPresentation = false
+        search.searchBar.placeholder = "Find Friend"
+        search.searchResultsUpdater = self
+        search.delegate = self
+        navigationItem.searchController = search
+        search.becomeFirstResponder()
+        search.obscuresBackgroundDuringPresentation = true
+        navigationItem.searchController = search
     }
     
     private func configureUI() {
         noResultsLabel.textAlignment = .center
+        noResultsLabel.isHidden = true
         view.bringSubviewToFront(noResultsLabel)
         view.addSubview(noResultsLabel)
-        
         setupConstraints()
     }
     
@@ -59,7 +60,6 @@ class CreateChatViewController: UIViewController {
         tableView?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView?.delegate = self
         tableView?.dataSource = self
-        tableView?.backgroundColor = .systemBlue
         tableView?.removeEmptyCells()
         
         guard let tableView = tableView else { return}
@@ -79,35 +79,93 @@ class CreateChatViewController: UIViewController {
     
     @objc private func dismissVC() {
         self.dismiss(animated: true) {
-//            self.dismissLoadingView()
         }
     }
     
     
 }
 
-extension CreateChatViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("ajaaaa")
-    }
-}
+//MARK:- TABLE VIEW DELEGATES
 
 extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return generics.count
+        return filteredUsers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let item = generics[indexPath.row]
-        if item.isEmpty {
-            self.showEmptyState(with: "No Users yet, Please add few friends...", in: view)
-        } else {
-            cell.textLabel?.text = item
-            return cell
-        }
+        let user = filteredUsers[indexPath.row]
+        
+        cell.textLabel?.text = "\(user.name), \(user.email)"
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedUser = filteredUsers[indexPath.row]
+        
+        self.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.completion?(selectedUser)
+        }
     }
 }
 
+//MARK:- SEARCH FUNCTIONALITY
+extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let text = searchController.searchBar.text, text.count > 0 {
+            let query = text.replacingOccurrences(of: " ", with: "")
+            self.filteredUsers.removeAll()
+            self.showLoadingView()
+            
+            if hasFetched {
+                self.dismissLoadingView()
+                self.filteredUsers = users.filter({
+                    let name = $0.name.lowercased().contains(query.lowercased())
+                    return name
+                })
+                updateOnResults()
+                //                self.filteredSearchUsers(input: query)
+            } else {
+                self.database.getChatUsers { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let data):
+                        self.hasFetched = true
+                        guard let user = data else { return }
+                        self.users.append(user)
+                        print("on users array the user ",user)
+                        self.persistenceManager.saveUserToDeviceCache(user: user) { result in
+                            print(result)
+                        }
+                        self.dismissLoadingView()
+                        self.filteredUsers = self.users.filter({
+                            let name = $0.name.lowercased().contains(query.lowercased())
+                            return name
+                        })
+                        self.updateOnResults()
+                    case .failure(let error):
+                        self.noResultsLabel.text = error.rawValue
+                    }
+                }
+            }
+        }
+    }
+    
+    private func updateOnResults() {
+        if self.filteredUsers.isEmpty {
+            self.noResultsLabel.isHidden = false
+            self.tableView?.isHidden = true
+        } else {
+            self.noResultsLabel.isHidden = true
+            self.tableView?.isHidden = false
+            self.tableView?.reloadData()
+        }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print("ajaaaa")
+    }
+}
 

@@ -11,11 +11,25 @@ class NewChatVC: UIViewController {
 
     var tableView: UITableView?
     var generics = [String]()
+    var user: UserProfile?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .purple
         configureTableView()
+        configureNavigationBar()
+        print("user Received on newchat ", user)
+    }
+    
+    private func configureNavigationBar() {
+//        let titleImageView = UIImageView(image: Images.like)
+//        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+//        titleImageView.contentMode = .scaleAspectFit
+//        titleImageView.tintColor = .blue
+//        navigationItem.titleView = titleImageView
+        
+        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissVC))
+        navigationItem.leftBarButtonItem = cancel
     }
     
     private func configureTableView() {
@@ -31,7 +45,10 @@ class NewChatVC: UIViewController {
     }
     
     
-    
+    @objc private func dismissVC() {
+        self.dismiss(animated: true) {
+        }
+    }
 }
 
 extension NewChatVC: UITableViewDelegate, UITableViewDataSource {

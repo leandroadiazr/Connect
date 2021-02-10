@@ -83,6 +83,7 @@
 		E8D6D17825C4E97400778209 /* FireStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D17625C4E97400778209 /* FireStorageManager.swift */; };
 		E8D6D17925C4E97400778209 /* FireStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D17725C4E97400778209 /* FireStoreManager.swift */; };
 		E8D6D17C25C4EAB900778209 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E8D6D17B25C4EAB900778209 /* GoogleService-Info.plist */; };
+		E8E4F70525D40E01003A18AF /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E4F70425D40E01003A18AF /* ChatUser.swift */; };
 		E8E55CA225C901EB0029D7BC /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E55CA125C901EB0029D7BC /* ImageCacheManager.swift */; };
 		E8E8BCDF25D034ED00F1751F /* DummyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E8BCDE25D034ED00F1751F /* DummyViewController.swift */; };
 		E8E8BCE325D03D2900F1751F /* GenericImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E8BCE225D03D2900F1751F /* GenericImageView.swift */; };
@@ -170,6 +171,7 @@
 		E8D6D17625C4E97400778209 /* FireStorageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireStorageManager.swift; sourceTree = "<group>"; };
 		E8D6D17725C4E97400778209 /* FireStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireStoreManager.swift; sourceTree = "<group>"; };
 		E8D6D17B25C4EAB900778209 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E8E4F70425D40E01003A18AF /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
 		E8E55CA125C901EB0029D7BC /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
 		E8E8BCDE25D034ED00F1751F /* DummyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyViewController.swift; sourceTree = "<group>"; };
 		E8E8BCE225D03D2900F1751F /* GenericImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericImageView.swift; sourceTree = "<group>"; };
@@ -576,6 +578,7 @@
 				E8D6D16C25C4E96B00778209 /* Menu.swift */,
 				E8D6D16D25C4E96B00778209 /* Feed.swift */,
 				E8BECE4A25CAF6ED00BF989F /* OptionMenu.swift */,
+				E8E4F70425D40E01003A18AF /* ChatUser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -750,6 +753,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8E4F70525D40E01003A18AF /* ChatUser.swift in Sources */,
 				E8D6D14D25C4E96200778209 /* StoryViewController.swift in Sources */,
 				E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */,
 				E8D6D17825C4E97400778209 /* FireStorageManager.swift in Sources */,
