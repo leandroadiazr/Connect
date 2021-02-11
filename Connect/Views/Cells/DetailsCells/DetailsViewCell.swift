@@ -64,10 +64,10 @@ class DetailsViewCell: UICollectionViewCell {
     func setCell(with data: Feed) {
         locationLabel.text = data.location
         
-        mainImageViewArea.downloadImage(from: data.mainImage)
-        imageViewAreaTwo.downloadImage(from: data.otherImages[0])
-        imageViewAreaThree.downloadImage(from: data.otherImages[1])
-        imageViewAreaFour.downloadImage(from: data.otherImages[2])
+        mainImageViewArea.cacheImage(from: data.mainImage)
+        imageViewAreaTwo.cacheImage(from: data.otherImages[0])
+        imageViewAreaThree.cacheImage(from: data.otherImages[1])
+        imageViewAreaFour.cacheImage(from: data.otherImages[2])
         titleLabel.text = data.postTitle
         messageDescriptionLabel.text = data.postDescription
         likesCounter.text = "\(data.likes)"

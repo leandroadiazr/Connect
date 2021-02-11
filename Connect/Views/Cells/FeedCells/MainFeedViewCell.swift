@@ -66,11 +66,11 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
             userProfileImage.image = UIImage(named: Images.Avatar)
         }
         
-        userProfileImage.downloadImage(from: data.author.profileImage)   //     .image = UIImage(named: data.profileImage)
+        userProfileImage.cacheImage(from: data.author.profileImage)   //     .image = UIImage(named: data.profileImage)
         userNameLabel.text = data.author.name
         locationLabel.text = data.author.userLocation
   
-        mainImageViewArea.downloadImage(from: data.mainImage)
+        mainImageViewArea.cacheImage(from: data.mainImage)
         statusLabel.text = data.status
         postedLabel.text = data.postedOn
         titleLabel.text = data.postTitle

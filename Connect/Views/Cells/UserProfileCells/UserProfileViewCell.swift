@@ -54,7 +54,7 @@ class UserProfileViewCell: UICollectionViewCell {
     
     
     func setCell(with user: UserProfile){
-        userProfileImage.downloadImage(from: user.profileImage)
+        userProfileImage.cacheImage(from: user.profileImage)
         userNameLabel.text = user.name
         statusLabel.text = user.userStatus
         postedLabel.text = user.userStatus

@@ -13,7 +13,7 @@ class MenuViewCell: UICollectionViewCell {
     
     var menuButton      = CustomMainButton(backgroundColor: .clear, title: "", textColor: CustomColors.CustomGreen, borderWidth: 1, borderColor: UIColor.clear.cgColor, buttonImage: nil)
     var userStoryLabel  = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .black)
-
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,7 +40,7 @@ class MenuViewCell: UICollectionViewCell {
     }
     
     private func setupConstraints() {
-//        let padding: CGFloat = 10
+        //        let padding: CGFloat = 10
         
         //ImageView
         NSLayoutConstraint.activate([

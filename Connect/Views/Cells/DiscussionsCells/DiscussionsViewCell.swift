@@ -30,7 +30,7 @@ class DiscussionsViewCell: UITableViewCell {
     
     func configureCell(with: Conversations) {
         if !with.userProfileImage.isEmpty {
-            profileImage.downloadImage(from: with.userProfileImage)
+            profileImage.cacheImage(from: with.userProfileImage)     //downloadImage(from: with.userProfileImage)
         } else {
             profileImage.image = UIImage(named: Images.Avatar)
         }

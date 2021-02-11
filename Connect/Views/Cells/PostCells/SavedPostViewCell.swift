@@ -60,12 +60,12 @@ class SavedPostViewCell: UICollectionViewCell {
 //        
         
         guard let url = URL(string: feed.author.profileImage) else { return }
-        userProfileImage.downloadImage(from: url.absoluteString)
+        userProfileImage.cacheImage(from: url.absoluteString)
         userNameLabel.text = feed.author.name
         locationLabel.text = feed.author.userLocation
-        mainImageViewArea.downloadImage(from: feed.otherImages[2])
-        imageViewAreaTwo.downloadImage(from: feed.otherImages[0])
-        imageViewAreaThree.downloadImage(from: feed.otherImages[1])
+        mainImageViewArea.cacheImage(from: feed.otherImages[2])
+        imageViewAreaTwo.cacheImage(from: feed.otherImages[0])
+        imageViewAreaThree.cacheImage(from: feed.otherImages[1])
         //falta una imagen
         
         statusLabel.text    = feed.status

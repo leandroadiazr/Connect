@@ -54,7 +54,7 @@ class PostsFeedCell: UICollectionViewCell {
         
         //FEEDS
 //        for feed in data.feed! {
-            mainImageViewArea.downloadImage(from: data.mainImage) //= UIImage(named: with.media)
+            mainImageViewArea.cacheImage(from: data.mainImage) //= UIImage(named: with.media)
             titleLabel.text = data.postTitle
             messageDescriptionLabel.text = data.messageDescription
             likesLabel.text =       "\(data.likes)"

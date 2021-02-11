@@ -27,7 +27,7 @@ class StoryViewCell: UICollectionViewCell {
         if story.profileImage == "" {
             userProfileImage.image = UIImage(named: Images.Avatar)
         }
-        userProfileImage.image = UIImage(named: story.profileImage)
+        userProfileImage.cacheImage(from: story.profileImage)
         userNameLabel.text = story.name
     }
     

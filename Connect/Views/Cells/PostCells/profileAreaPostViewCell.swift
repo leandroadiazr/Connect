@@ -29,7 +29,7 @@ class ProfileAreaPostViewCell: UICollectionViewCell {
         if data.profileImage.isEmpty {
             userProfileImage.image = UIImage(named: Images.Avatar)
         }
-        userProfileImage.image =  UIImage(named: data.profileImage)
+        userProfileImage.cacheImage(from: data.profileImage)
         userNameLabel.text = data.name
         
         //FEEDS

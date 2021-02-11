@@ -94,7 +94,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func configure(with user: UserProfile) {
-        userProfileImageView.downloadImage(from: user.profileImage)
+        userProfileImageView.cacheImage(from: user.profileImage)
         userNameLabel.text = user.name
         statusLabel.text = user.userStatus
         locationLabel.text = user.userLocation
