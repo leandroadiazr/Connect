@@ -534,8 +534,8 @@
 			isa = PBXGroup;
 			children = (
 				E8D6D13A25C4E96200778209 /* DiscussionViewController.swift */,
-				E86B341A25D07357004FD2E9 /* ChatViewController.swift */,
 				E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */,
+				E86B341A25D07357004FD2E9 /* ChatViewController.swift */,
 				E8C0A1CD25D331E2004603B7 /* NewChat */,
 			);
 			path = DiscussionViewControllers;

@@ -135,3 +135,37 @@ extension UINavigationController {
         }
     }
 }
+
+
+extension String {
+    func converToDate()  -> Date? {
+        let dateFormatter           = DateFormatter()
+        dateFormatter.dateFormat    = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatter.locale        = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone      = .current
+        return dateFormatter.date(from: self)
+    }
+    
+    func convertToDisplayFormat() -> String {
+        guard let date = self.converToDate() else {
+            return "N / A"
+        }
+        return date.convertToMonthYearFormat()
+    }
+    
+    func safeEmail(emailAddress: String) -> String {
+          var safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")
+          safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+          return safeEmail
+      }
+}
+
+extension Date {
+    func convertToMonthYearFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd yyyy"
+        
+        return dateFormatter.string(from: self)
+    }
+}
+

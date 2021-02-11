@@ -152,12 +152,12 @@ class UserManager {
                 
                 self.databaseRef.child("users").observeSingleEvent(of: .value) { snapshot in
                     //if already exist
-                    if var usersCollection = snapshot.value as? [[String: Any]]{
-                        let newCollection = ["name": user.name,
+                    if var usersCollection = snapshot.value as? [String: Any]{
+                        let newCollection = ["userID": user.userID,
+                                            "name": user.name,
                                              "email": user.email,
-                                             "profileImage": user.profileImage
-                        ]
-                        usersCollection.append(newCollection)
+                                             "profileImage": user.profileImage]
+                        usersCollection = newCollection
                         self.databaseRef.setValue(newCollection) { (error, _) in
                             if let unwrappedError = error  {
                                 completion(.failure(.unableToSaveProfile))
@@ -167,9 +167,10 @@ class UserManager {
                         }
                     } else {
                         //else Create new
-                        let newCollection: [[String: String]] = [["name": user.name,
+                        let newCollection: [String: Any] = ["userID": user.userID,
+                                                                   "name": user.name,
                                                                   "email": user.email,
-                                                                  "profileImage": user.profileImage]]
+                                                                  "profileImage": user.profileImage]
                         self.databaseRef.child("users").setValue(newCollection) { (error, _) in
                             if let unwrappedError = error  {
                                 completion(.failure(.unableToSaveProfile))

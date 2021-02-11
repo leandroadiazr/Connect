@@ -47,8 +47,8 @@ class DiscussionViewController: UIViewController {
     
     private func createNewConversation(result: UserProfile?) {
         guard let name = result?.name, let email = result?.email else { return }
-        
         let chatVC = ChatViewController(with: email)
+        chatVC.isNewConversation = true
         chatVC.title = name
         let navVC = UINavigationController(rootViewController: chatVC)
         navVC.modalPresentationStyle = .fullScreen

@@ -8,7 +8,14 @@
 import Foundation
 
 struct ChatUser {
-    var name: String
-    var email: String
-    var profileImage: String
+    let userID: String
+    let name: String
+    let email: String
+    let messageId: String
+    let recepient: String
+    let date: String
+    let latestMessage: String
+    let dateReceived: String
+    let message: String
+    let isRead: String
 }

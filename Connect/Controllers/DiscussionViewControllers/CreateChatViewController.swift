@@ -126,12 +126,12 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
                     return name
                 })
                 updateOnResults()
-                //                self.filteredSearchUsers(input: query)
             } else {
                 self.database.getChatUsers { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let data):
+                        self.dismissLoadingView()
                         self.hasFetched = true
                         guard let user = data else { return }
                         self.users.append(user)
@@ -154,6 +154,7 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
     }
     
     private func updateOnResults() {
+        self.dismissLoadingView()
         if self.filteredUsers.isEmpty {
             self.noResultsLabel.isHidden = false
             self.tableView?.isHidden = true
