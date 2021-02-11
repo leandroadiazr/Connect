@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 class CustomAvatarImage: UIImageView {
     let cache = FireStorageManager.shared.cache
     let placeHolderImage = Images.Avatar
@@ -27,6 +28,10 @@ class CustomAvatarImage: UIImageView {
         image               =  UIImage(named: placeHolderImage)
         translatesAutoresizingMaskIntoConstraints = false
     }
+    
+    
+    
+    
     
     func downloadImage(from urlString: String) {
         let cacheKey = NSString(string: urlString)

@@ -7,15 +7,35 @@
 
 import UIKit
 
+struct Conversations {
+    var userID: String
+    var userProfileImage: String
+    var messageId: String
+    var name: String
+    var email: String
+    var recipient: String
+    var recepientProfileImage: String
+    var date: String
+    var latestMessage: LatestMessage
+}
+
+struct LatestMessage {
+    var dateReceived: String
+    var message: String
+    var isRead: Bool
+}
+
 class DiscussionViewController: UIViewController {
-    
+    var messagesManager = MessagesManager.shared
     var tableView: UITableView?
     var discussions = [UserProfile]()
     var user: UserProfile?
     
+    var conversations = [Conversations]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        updateConversations()
         configureNavigationBar()
         configureTableView()
     }
@@ -58,7 +78,8 @@ class DiscussionViewController: UIViewController {
     private func configureTableView() {
         tableView = UITableView(frame: .zero, style: .plain)
         tableView?.frame = view.bounds
-        tableView?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView?.rowHeight = 80
+        tableView?.register(DiscussionsViewCell.self, forCellReuseIdentifier: DiscussionsViewCell.reuseID)
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView?.backgroundColor = .systemBlue
@@ -68,28 +89,49 @@ class DiscussionViewController: UIViewController {
         view.addSubview(tableView)
     }
     
-    private func fetchConversations() {
+    private func updateConversations() {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        messagesManager.retreivedAllUsersMessages(userID: userID) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let conversations):
+                guard !conversations.isEmpty else {
+                    return
+                }
+                self.conversations.append(contentsOf: conversations)
+
+                
+                DispatchQueue.main.async {
+                    self.tableView?.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 
+
+//MARK:- TABLEVIEW DELEGATES
 extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return discussions.count
+        return conversations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let item = discussions[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: DiscussionsViewCell.reuseID, for: indexPath) as! DiscussionsViewCell
+        let conversation =    conversations[indexPath.row]
         cell.accessoryType = .disclosureIndicator
-        cell.textLabel?.text = item.name
+        cell.configureCell(with: conversation)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let currentDiscusion = discussions[indexPath.row]
+        let currentDiscusion = conversations[indexPath.row]
         let chatVC = ChatViewController(with: currentDiscusion.email)
-        chatVC.userProfile.append(currentDiscusion)
+        chatVC.conversation.append(currentDiscusion)
         let navVC = UINavigationController(rootViewController: chatVC)
         navVC.modalPresentationStyle = .fullScreen
         present(navVC, animated: true, completion: nil)

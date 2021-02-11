@@ -29,6 +29,7 @@ class ChatViewController: MessagesViewController {
     var messagesManager = MessagesManager.shared
     var messages = [Message]()
     var userProfile = [UserProfile]()
+    var conversation = [Conversations]()
     var user: UserProfile?
     var userManager = UserManager.shared
     
