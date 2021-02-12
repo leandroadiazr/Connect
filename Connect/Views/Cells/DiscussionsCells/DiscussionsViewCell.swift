@@ -30,12 +30,12 @@ class DiscussionsViewCell: UITableViewCell {
     
     func configureCell(with: Conversations) {
         if !with.userProfileImage.isEmpty {
-            profileImage.cacheImage(from: with.userProfileImage)     //downloadImage(from: with.userProfileImage)
+            profileImage.cacheImage(from: with.recipientProfileImage)     //downloadImage(from: with.userProfileImage)
         } else {
             profileImage.image = UIImage(named: Images.Avatar)
         }
         
-        userNameLabel.text = with.name
+        userNameLabel.text = with.recipientName
         receivedLabel.text = with.date
         messagesLabel.text = with.latestMessage.message
 
@@ -72,7 +72,7 @@ class DiscussionsViewCell: UITableViewCell {
             
             messagesLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 2),
             messagesLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: padding),
-            messagesLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
+            messagesLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
             
            
         ])

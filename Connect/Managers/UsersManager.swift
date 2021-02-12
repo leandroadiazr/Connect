@@ -141,6 +141,8 @@ class UserManager {
         guard let userID = Auth.auth().currentUser?.uid else {
             return  }
         let newUser = self.database.collection("users").document(userID)
+        
+        //MARK:- FIRESTORE
         newUser.setData(user.userDictionary) { (error) in
             if let unwrappedError = error  {
                 completion(.failure(.unableToSaveProfile))
@@ -148,30 +150,20 @@ class UserManager {
             } else {
                 print("Saved with Id :", self.refId?.documentID ?? "SAVED")
                 
-                //Save users to message users collection for the chat functionality
                 
+                
+                //MARK:- REALTIME DATABASE
+                //Save users to message users collection for the chat functionality
                 self.databaseRef.child("users").observeSingleEvent(of: .value) { snapshot in
                     //if already exist
                     if var usersCollection = snapshot.value as? [String: Any]{
                         let newCollection = ["userID": user.userID,
-                                            "name": user.name,
+                                             "name": user.name,
                                              "email": user.email,
                                              "profileImage": user.profileImage]
                         usersCollection = newCollection
-                        self.databaseRef.setValue(newCollection) { (error, _) in
-                            if let unwrappedError = error  {
-                                completion(.failure(.unableToSaveProfile))
-                                print("Error saving the document :", unwrappedError.localizedDescription)
-                            }
-                            completion(.success(true))
-                        }
-                    } else {
-                        //else Create new
-                        let newCollection: [String: Any] = ["userID": user.userID,
-                                                                   "name": user.name,
-                                                                  "email": user.email,
-                                                                  "profileImage": user.profileImage]
-                        self.databaseRef.child("users").setValue(newCollection) { (error, _) in
+                        
+                        self.databaseRef.child("users").child(userID).updateChildValues(usersCollection) { (error, _) in
                             if let unwrappedError = error  {
                                 completion(.failure(.unableToSaveProfile))
                                 print("Error saving the document :", unwrappedError.localizedDescription)
@@ -179,6 +171,21 @@ class UserManager {
                             completion(.success(true))
                         }
                     }
+//                    else {
+//                        //else Create new
+//                        let newCollection: [String: Any] = ["userID": user.userID,
+//                                                            "name": user.name,
+//                                                            "email": user.email,
+//                                                            "profileImage": user.profileImage]
+//                        
+//                        self.databaseRef.child("users").child(userID).setValue(newCollection) { (error, _) in
+//                            if let unwrappedError = error  {
+//                                completion(.failure(.unableToSaveProfile))
+//                                print("Error saving the document :", unwrappedError.localizedDescription)
+//                            }
+//                            completion(.success(true))
+//                        }
+//                    }
                 }
             }
         }

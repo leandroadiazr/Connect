@@ -87,6 +87,8 @@ extension UIViewController {
         view.addSubview(emptyStateView)
     }
     
+   
+    
     //Loading View for screens
     func showLoadingView(){
         containerView = UIView(frame: view.bounds)
@@ -158,6 +160,8 @@ extension String {
           safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
           return safeEmail
       }
+    
+   
 }
 
 extension Date {

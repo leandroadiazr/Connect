@@ -123,3 +123,11 @@ enum DeviceTypes {
     }
 }
 
+
+public func convertFromShortDate() -> DateFormatter? {
+    let dateformatter = DateFormatter()
+    dateformatter.dateStyle = .medium
+    dateformatter.timeStyle = .long
+    dateformatter.locale = .current
+    return dateformatter
+}

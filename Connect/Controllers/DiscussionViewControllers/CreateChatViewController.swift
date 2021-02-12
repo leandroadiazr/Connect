@@ -127,23 +127,32 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
                 })
                 updateOnResults()
             } else {
+                
                 self.database.getChatUsers { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let data):
                         self.dismissLoadingView()
                         self.hasFetched = true
+                        //                        print(data)
                         guard let user = data else { return }
-                        self.users.append(user)
-                        print("on users array the user ",user)
-                        self.persistenceManager.saveUserToDeviceCache(user: user) { result in
-                            print(result)
-                        }
+                        self.users.append(contentsOf: user)
+                        
                         self.dismissLoadingView()
-                        self.filteredUsers = self.users.filter({
-                            let name = $0.name.lowercased().contains(query.lowercased())
-                            return name
-                        })
+                        
+                        for singleUser in user {
+                            if !self.filteredUsers.contains(singleUser){
+                                self.filteredUsers = self.users.filter({
+                                    let name = $0.name.lowercased().contains(query.lowercased())
+                                    return name
+                                })
+                            }
+                            self.persistenceManager.saveUserToDeviceCache(user: singleUser) { result in
+                                print(result)
+                                print("on filtered array the user ",singleUser)
+                            }
+                        }
+                        
                         self.updateOnResults()
                     case .failure(let error):
                         self.noResultsLabel.text = error.rawValue

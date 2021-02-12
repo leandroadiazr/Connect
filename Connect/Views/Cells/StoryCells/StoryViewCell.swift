@@ -10,10 +10,9 @@ import UIKit
 class StoryViewCell: UICollectionViewCell {
     
     static let reuseID      = "StoryViewCell"
-    
     var userProfileImage    = CustomAvatarImage(frame: .zero)
     var userNameLabel       = CustomSecondaryTitleLabel(title: "", fontSize: 13, textColor: .label)
-   
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -27,7 +26,7 @@ class StoryViewCell: UICollectionViewCell {
         if story.profileImage == "" {
             userProfileImage.image = UIImage(named: Images.Avatar)
         }
-        userProfileImage.cacheImage(from: story.profileImage)
+        userProfileImage.image = UIImage(named: story.profileImage)
         userNameLabel.text = story.name
     }
     

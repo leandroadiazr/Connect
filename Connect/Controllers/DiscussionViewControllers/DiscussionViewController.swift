@@ -13,8 +13,9 @@ struct Conversations {
     var messageId: String
     var name: String
     var email: String
-    var recipient: String
-    var recepientProfileImage: String
+    var recipientID: String
+    var recipientName: String
+    var recipientProfileImage: String
     var date: String
     var latestMessage: LatestMessage
 }
@@ -30,6 +31,7 @@ class DiscussionViewController: UIViewController {
     var tableView: UITableView?
     var discussions = [UserProfile]()
     var user: UserProfile?
+    var chathingWith: UserProfile?
     
     var conversations = [Conversations]()
     
@@ -57,7 +59,9 @@ class DiscussionViewController: UIViewController {
         let createVC = CreateChatViewController()
         createVC.completion = {[weak self] user in
             print(user)
-            self?.createNewConversation(result: user)
+           
+            
+            self?.createNewConversation(recepientUser: user)
         }
         
         let navVC = UINavigationController(rootViewController: createVC)
@@ -65,9 +69,11 @@ class DiscussionViewController: UIViewController {
         self.present(navVC, animated: true, completion: nil)
     }
     
-    private func createNewConversation(result: UserProfile?) {
-        guard let name = result?.name, let email = result?.email else { return }
-        let chatVC = ChatViewController(with: email)
+    private func createNewConversation(recepientUser: UserProfile?) {
+        self.chathingWith = recepientUser
+        guard let name = recepientUser?.name, let recepientID = recepientUser else { return }
+        let chatVC = ChatViewController(with: recepientID, id: recepientID.userID)
+        chatVC.user = recepientUser
         chatVC.isNewConversation = true
         chatVC.title = name
         let navVC = UINavigationController(rootViewController: chatVC)
@@ -130,7 +136,12 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currentDiscusion = conversations[indexPath.row]
-        let chatVC = ChatViewController(with: currentDiscusion.email)
+        
+       
+        print(user?.userID)
+        let chatVC = ChatViewController(with: user, id: currentDiscusion.messageId)
+        
+//        chatVC.recepientUser = chathingWith
         chatVC.conversation.append(currentDiscusion)
         let navVC = UINavigationController(rootViewController: chatVC)
         navVC.modalPresentationStyle = .fullScreen
