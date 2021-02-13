@@ -32,6 +32,8 @@ class DiscussionViewController: UIViewController {
     var discussions = [UserProfile]()
     var user: UserProfile?
     var chathingWith: UserProfile?
+    var recipientUser: UserProfile?
+    var persistenceManager = PersistenceManager.shared
     
     var conversations = [Conversations]()
     
@@ -59,7 +61,7 @@ class DiscussionViewController: UIViewController {
         let createVC = CreateChatViewController()
         createVC.completion = {[weak self] user in
             print(user)
-            self?.createNewConversation(recepientUser: user)
+            self?.createNewConversation(recipientUser: user)
         }
         
         let navVC = UINavigationController(rootViewController: createVC)
@@ -67,14 +69,25 @@ class DiscussionViewController: UIViewController {
         self.present(navVC, animated: true, completion: nil)
     }
     
-    private func createNewConversation(recepientUser: UserProfile?) {
-        self.chathingWith = recepientUser
-        guard let name = recepientUser?.name, let recepient = recepientUser else { return }
-        let chatVC = ChatViewController(with: recepient.userID, id: recepient.userID)
-        chatVC.user = recepientUser
-        chatVC.isNewConversation = true
-        chatVC.title = name
-        let navVC = UINavigationController(rootViewController: chatVC)
+    private func createNewConversation(recipientUser: UserProfile?) {
+        guard let receivedUser = recipientUser else { return }
+        self.recipientUser = receivedUser
+        let newChat = NewChatVC(recipientUser: self.recipientUser!)
+//        save user to Cache
+        persistenceManager.saveUserToDeviceCache(user: self.recipientUser) { result in
+            print(result)
+        }
+        
+        
+        
+//        guard let name = recepientUser?.name, let recepient = recepientUser else { return }
+//        let chatVC = ChatViewController(with: recepient.userID, id: recepient.userID)
+        
+        
+//        chatVC.user = recepientUser
+//        chatVC.isNewConversation = true
+//        chatVC.title = name
+        let navVC = UINavigationController(rootViewController: newChat)
         navVC.modalPresentationStyle = .fullScreen
         present(navVC, animated: true, completion: nil)
     }
@@ -138,7 +151,8 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
 
         print("when click did selected row this is the user that is here :", currentDiscusion.recipientID)
 //        let chatVC = ChatViewController(with: currentDiscusion.recipientID, id: currentDiscusion.messageId)
-        let chatVC = NewChatVC()
+        guard let recipientUser = self.recipientUser else { return }
+        let chatVC = NewChatVC(recipientUser: recipientUser)
         
         
 //        chatVC.recepientUser = chathingWith

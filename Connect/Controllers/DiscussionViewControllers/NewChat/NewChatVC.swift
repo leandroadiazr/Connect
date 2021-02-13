@@ -16,11 +16,22 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     let containerView = UIView()
     var messageManager = MessagesManager.shared
     
-    var user: UserProfile?
+    var recipientUser: UserProfile?
+//    var user: UserProfile?
     let separator = UIView()
     let inputTextField = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "New cMessage...")
     let sendBtn = CustomGenericButton(backgroundColor: .link, title: "Send")
     let cameraBtn = CustomMainButton(backgroundColor: .red, title: "", textColor: .label, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.camera)
+    
+    init(recipientUser: UserProfile) {
+        self.recipientUser = recipientUser
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +40,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         configureNavigationBar()
         setupInputComponents()
         inputTextField.delegate = self
-        print("user Received on newchat ", user)
+        print("user Received on newchat ", recipientUser)
     }
     
     private func configureNavigationBar() {
