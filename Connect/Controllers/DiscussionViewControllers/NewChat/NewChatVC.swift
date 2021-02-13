@@ -9,15 +9,17 @@ import UIKit
 import Firebase
 
 class NewChatVC: UIViewController, UITextFieldDelegate {
-    
+    var isNewConversation = false
     var tableView: UITableView?
     var generics = [String]()
     var conversation = [Conversations]()
+    var conversationToBe = [Messages]()
     let containerView = UIView()
     var messageManager = MessagesManager.shared
-    
+
     var recipientUser: UserProfile?
-//    var user: UserProfile?
+    var sender = UserManager.shared.currentUserProfile
+    
     let separator = UIView()
     let inputTextField = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "New cMessage...")
     let sendBtn = CustomGenericButton(backgroundColor: .link, title: "Send")
@@ -33,6 +35,8 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     }
     
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .purple
@@ -43,15 +47,25 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         print("user Received on newchat ", recipientUser)
     }
     
+    private func updateConversations() {
+        if conversationToBe.isEmpty {
+            print("nothingToShow")
+        } else {
+            DispatchQueue.main.async {
+                self.tableView?.reloadData()
+            }
+        }
+    }
+    
     private func configureNavigationBar() {
-        //        let titleImageView = UIImageView(image: Images.like)
+//        let titleImageView = UIImageView.sd_setImage(recipientUser?.profileImage)
         //        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         //        titleImageView.contentMode = .scaleAspectFit
         //        titleImageView.tintColor = .blue
-        //        navigationItem.titleView = titleImageView
+//                navigationItem.titleView = titleImageView
+        self.navigationItem.title = recipientUser?.name
+        print(recipientUser?.name)
         
-        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissVC))
-        navigationItem.leftBarButtonItem = cancel
     }
     
     private func setupInputComponents() {
@@ -83,12 +97,34 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func sendMessage() {
-        guard let text = inputTextField.text else { return  }
-        print(text)
+        guard let textMessage = inputTextField.text else { return  }
+        print(textMessage)
         
         let ref = Database.database().reference().child("messages").childByAutoId()
-        let values = ["text": text]
-        ref.updateChildValues(values)
+        guard let sender = sender else { return}
+        print("sender :", sender)
+        
+        guard let recipient = recipientUser else { return }
+        print("recipient :", recipient)
+        
+        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+        print("timestamp :" , timeStamp)
+        
+        let isRead = false
+
+        let newMessage: [String: Any] = [
+            "senderID": sender.userID,
+            "senderName": sender.name,
+            "senderProfileImage": sender.profileImage,
+            "recipientID": recipient.userID,
+            "recipientName": recipient.name,
+            "recipientProfileImage": recipient.profileImage,
+            "textMessage": textMessage,
+            "timeStamp": timeStamp,
+            "isRead": isRead.description
+        ]
+        
+        ref.updateChildValues(newMessage)
         
     }
     
@@ -105,14 +141,14 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
 
 extension NewChatVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return generics.count
+        return conversationToBe.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let item = generics[indexPath.row]
+        let item = conversationToBe[indexPath.row]
         
-        cell.textLabel?.text = item
+        cell.textLabel?.text = item.textMessage
         return cell
     }
 }

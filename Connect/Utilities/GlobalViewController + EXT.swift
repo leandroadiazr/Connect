@@ -144,6 +144,7 @@ extension String {
         let dateFormatter           = DateFormatter()
         dateFormatter.dateFormat    = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.locale        = Locale(identifier: "en_US_POSIX")
+        
         dateFormatter.timeZone      = .current
         return dateFormatter.date(from: self)
     }
@@ -154,6 +155,14 @@ extension String {
         }
         return date.convertToMonthYearFormat()
     }
+    
+    
+    func converToTimeInterval(string: String) -> Date? {
+        let input = Double(string)
+       let time = Date(timeInterval: input!, since: Date())
+        return time
+    }
+    
     
     func safeEmail(emailAddress: String) -> String {
           var safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")
@@ -171,5 +180,7 @@ extension Date {
         
         return dateFormatter.string(from: self)
     }
+    
+    
 }
 

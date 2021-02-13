@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 struct Conversations {
     var userID: String
@@ -26,16 +27,20 @@ struct LatestMessage {
     var isRead: Bool
 }
 
+
+
 class DiscussionViewController: UIViewController {
     var messagesManager = MessagesManager.shared
+    var usersManager = UserManager.shared
     var tableView: UITableView?
     var discussions = [UserProfile]()
     var user: UserProfile?
-    var chathingWith: UserProfile?
+    var chathingWith = [UserProfile]()
     var recipientUser: UserProfile?
     var persistenceManager = PersistenceManager.shared
     
     var conversations = [Conversations]()
+    var conversationsToBe = [Messages]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,11 +51,11 @@ class DiscussionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let user = user else { return }
-        if !discussions.contains(user) {
-            discussions.append(user)
-        }
-        self.tableView?.reloadData()
+//        updateConversations()
+//        guard let recipientUser = recipientUser else { return }
+//        if !discussions.contains(recipientUser) {
+//            discussions.append(recipientUser)
+//        }
     }
     private func configureNavigationBar() {
         let addChat = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewChat))
@@ -59,9 +64,9 @@ class DiscussionViewController: UIViewController {
     
     @objc private func createNewChat() {
         let createVC = CreateChatViewController()
-        createVC.completion = {[weak self] user in
-            print(user)
-            self?.createNewConversation(recipientUser: user)
+        createVC.completion = {[weak self] receivedUserFromCreateChat in
+            print("receivedUserFromCreateChat :", receivedUserFromCreateChat)
+            self?.createNewConversation(recipientUser: receivedUserFromCreateChat)
         }
         
         let navVC = UINavigationController(rootViewController: createVC)
@@ -77,25 +82,14 @@ class DiscussionViewController: UIViewController {
         persistenceManager.saveUserToDeviceCache(user: self.recipientUser) { result in
             print(result)
         }
-        
-        
-        
-//        guard let name = recepientUser?.name, let recepient = recepientUser else { return }
-//        let chatVC = ChatViewController(with: recepient.userID, id: recepient.userID)
-        
-        
-//        chatVC.user = recepientUser
-//        chatVC.isNewConversation = true
-//        chatVC.title = name
-        let navVC = UINavigationController(rootViewController: newChat)
-        navVC.modalPresentationStyle = .fullScreen
-        present(navVC, animated: true, completion: nil)
+        newChat.isNewConversation = true
+        self.navigationController?.pushViewController(newChat, animated: true)
     }
     
     private func configureTableView() {
         tableView = UITableView(frame: .zero, style: .plain)
         tableView?.frame = view.bounds
-        tableView?.rowHeight = 80
+        tableView?.rowHeight = 60
         tableView?.register(DiscussionsViewCell.self, forCellReuseIdentifier: DiscussionsViewCell.reuseID)
         tableView?.delegate = self
         tableView?.dataSource = self
@@ -107,23 +101,44 @@ class DiscussionViewController: UIViewController {
     }
     
     private func updateConversations() {
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-        messagesManager.retreivedAllUsersMessages(userID: userID) { [weak self] result in
-            guard let self = self else { return }
+       
+        let ref = Database.database().reference().child("messages")
+        ref.observe( .childAdded) { snapshot in
+            guard let data = snapshot.value else {
+                print("unable to fetch message please change to error messages")
+                return }
             
-            switch result {
-            case .success(let conversations):
-                guard !conversations.isEmpty else {
-                    return
+           guard let dictionary = data as? [String: Any],
+              let senderID              = dictionary["senderID"] as? String,
+              let senderName            = dictionary["senderName"] as? String,
+              let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+              let recipientID           = dictionary["recipientID"] as? String,
+              let recipientName         = dictionary["recipientName"] as? String,
+              let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+              let textMessage           = dictionary["textMessage"] as? String,
+              let timeStamp             = dictionary["timeStamp"] as? NSNumber,
+              let isRead                = dictionary["isRead"] as? String else { return }
+              
+            let dateformatter = DateFormatter()
+            
+//            let date = dateformatter.date(from: timeStamp)
+        
+            print(timeStamp)
+                let readed: Bool = isRead == "false" ? false : true
+ 
+            let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+                self.conversationsToBe.append(newMessage)
+            
+            self.messagesManager.observeRecipientUserProfile(userID: recipientID) { result in
+                switch result {
+                case .success(let recipientReceived):
+                    self.chathingWith.append(recipientReceived)
+                case .failure(let error):
+                    print(error.localizedDescription)
                 }
-                self.conversations.append(contentsOf: conversations)
-
-                
-                DispatchQueue.main.async {
-                    self.tableView?.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
+            }
+            DispatchQueue.main.async {
+                self.tableView?.reloadData()
             }
         }
     }
@@ -133,12 +148,12 @@ class DiscussionViewController: UIViewController {
 //MARK:- TABLEVIEW DELEGATES
 extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return conversations.count
+        return conversationsToBe.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DiscussionsViewCell.reuseID, for: indexPath) as! DiscussionsViewCell
-        let conversation =    conversations[indexPath.row]
+        let conversation =    conversationsToBe[indexPath.row]
         cell.accessoryType = .disclosureIndicator
         cell.configureCell(with: conversation)
         return cell
@@ -146,20 +161,21 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let currentDiscusion = conversations[indexPath.row]
+        let currentDiscusion = conversationsToBe[indexPath.row]
 
-
+        
         print("when click did selected row this is the user that is here :", currentDiscusion.recipientID)
-//        let chatVC = ChatViewController(with: currentDiscusion.recipientID, id: currentDiscusion.messageId)
-        guard let recipientUser = self.recipientUser else { return }
-        let chatVC = NewChatVC(recipientUser: recipientUser)
-        
-        
-//        chatVC.recepientUser = chathingWith
-        chatVC.conversation.append(currentDiscusion)
-//        let navVC = UINavigationController(rootViewController: chatVC)
-//        navVC.modalPresentationStyle = .fullScreen
-//        present(navVC, animated: true, completion: nil)
-        self.navigationController?.pushViewController(chatVC, animated: true)
+
+        for user in chathingWith {
+            if user.userID == currentDiscusion.recipientID {
+                let chatVC = NewChatVC(recipientUser: user)
+
+                chatVC.conversationToBe.append(currentDiscusion)
+                print(currentDiscusion)
+
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
+       
     }
 }

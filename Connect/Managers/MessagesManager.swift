@@ -20,19 +20,28 @@ class MessagesManager {
     }
     
     
-    func getAllUsers(completiong: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
-        database.child("users").observe( .childAdded) { snapshot in
+    func getRecipient(userID: String, completion: @escaping (Result<[UserProfile], ErrorMessages>) -> Void) {
+        database.child("users").child(userID).observeSingleEvent(of: .value) { snapshot in
+            var userProfile = [UserProfile]()
             guard let value = snapshot.value as? [String: Any] else {
-                completiong(.failure(.unableToFindUser))
+                completion(.failure(.unableToFindUser))
                 return
             }
-            print(snapshot)
+            print(value)
+            let dictionary = value
+            guard let email = dictionary["email"] as? String,
+                  let name = dictionary["name"] as? String,
+                  let profileImage = dictionary["profileImage"] as? String,
+                  let userID = dictionary["userID"] as? String else { return }
+            let currentUser = UserProfile(id: "", userID: userID, name: name, handler: "@\(name)", email: email, profileImage: profileImage, userLocation: "", userBio: "", userStatus: "")
+            userProfile.append(currentUser)
+            completion(.success(userProfile))
         }
     }
     
-    func observeRecipientUserProfile(userID: String, completion: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
+    func observeRecipientUserProfile(userID: String, completion: @escaping (Result<UserProfile, ErrorMessages>) -> Void) {
         database.child("users").child(userID).observeSingleEvent(of: .value) { snapshot in
-            var userProfile: UserProfile?
+            var userProfile: UserProfile
             guard let value = snapshot.value as? [String: Any] else {
                 completion(.failure(.unableToFindUser))
                 return

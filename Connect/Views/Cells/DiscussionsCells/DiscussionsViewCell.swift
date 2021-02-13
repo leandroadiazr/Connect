@@ -28,16 +28,22 @@ class DiscussionsViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureCell(with: Conversations) {
-        if !with.userProfileImage.isEmpty {
+    func configureCell(with: Messages) {
+        //ONLY NEED THE RECIPIENT HERE
+        if !with.recipientProfileImage.isEmpty {
             profileImage.cacheImage(from: with.recipientProfileImage)     //downloadImage(from: with.userProfileImage)
         } else {
             profileImage.image = UIImage(named: Images.Avatar)
         }
         
+        let seconds = with.timeStamp.doubleValue
+        let timeStampDate = NSDate(timeIntervalSince1970: seconds)
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "hh:mm:ss a"
+            
         userNameLabel.text = with.recipientName
-        receivedLabel.text = with.date
-        messagesLabel.text = with.latestMessage.message
+        receivedLabel.text =  dateformatter.string(from: timeStampDate as Date)
+        messagesLabel.text = with.textMessage
 
     }
     
@@ -57,7 +63,7 @@ class DiscussionsViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
     
-            profileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
+            profileImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
             profileImage.widthAnchor.constraint(equalToConstant: 40),
             profileImage.heightAnchor.constraint(equalToConstant: 40),
@@ -65,16 +71,15 @@ class DiscussionsViewCell: UITableViewCell {
             userNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
             userNameLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: padding),
             userNameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
-            userNameLabel.heightAnchor.constraint(equalToConstant: 30),
+            userNameLabel.heightAnchor.constraint(equalToConstant: 12),
             
-            receivedLabel.topAnchor.constraint(equalTo: userNameLabel.topAnchor, constant: 5),
-            receivedLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
+            receivedLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: padding),
+            receivedLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding * 3),
             
             messagesLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 2),
             messagesLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: padding),
             messagesLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
-            
-           
+
         ])
         
     }
