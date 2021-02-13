@@ -28,13 +28,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if user != nil && user?.uid == Auth.auth().currentUser?.uid {
                 guard (auth.currentUser?.uid) != nil else { return }
                 self.userManager.observeSingleUserProfile(user!.uid) { result in
-                    print("current logged ", user!.uid)
-                    print("Current user data: ", user)
+//                    print("current logged ", user!.uid)
+//                    print("Current user data: ", user)
                     switch result {
                     case .success(let user):
-                        print(self.userManager.currentUserProfile as Any)
+//                        print(self.userManager.currentUserProfile as Any)
                         guard let uuid = user?.userID else { return }
-                        print("User ID Found in SceneDelegate :********", uuid)
+//                        print("User ID Found in SceneDelegate :********", uuid)
                         self.userManager.currentUserProfile = user
                     case .failure(let error):
                         print(error.localizedDescription)

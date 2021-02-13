@@ -28,6 +28,7 @@ enum Images {
     static let editUser             = UIImage(systemName: "highlighter")
     static let shareUser            = UIImage(systemName: "paperplane")
     static let saveUserChanges      = UIImage(systemName: "square.and.arrow.down.on.square")
+    static let camera      = UIImage(systemName: "camera")
     
     
     //MARK:- BACKGROUND IMAGES

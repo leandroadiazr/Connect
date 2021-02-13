@@ -24,6 +24,8 @@ class CreateChatViewController: UIViewController {
         configureUI()
         configureNavigationBar()
         view.backgroundColor = .systemRed
+        tableView?.delegate = self
+        tableView?.dataSource = self
     }
     
     private func configureNavigationBar() {
@@ -58,8 +60,7 @@ class CreateChatViewController: UIViewController {
         tableView = UITableView(frame: .zero, style: .plain)
         tableView?.frame = view.bounds
         tableView?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView?.delegate = self
-        tableView?.dataSource = self
+        tableView?.allowsSelection = true
         tableView?.removeEmptyCells()
         
         guard let tableView = tableView else { return}
@@ -103,7 +104,7 @@ extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedUser = filteredUsers[indexPath.row]
-        
+        print("selected")
         self.dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             self.completion?(selectedUser)

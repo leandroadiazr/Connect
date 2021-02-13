@@ -24,7 +24,7 @@ struct Sender: SenderType {
 
 class ChatViewController: MessagesViewController {
     public var isNewConversation = false
-    public var recepientUser: UserProfile?
+    public var recipientID: String?
     public var conversationID: String?
     
     var messagesManager = MessagesManager.shared
@@ -32,6 +32,7 @@ class ChatViewController: MessagesViewController {
     var userProfile = [UserProfile]()
     var conversation = [Conversations]()
     var user: UserProfile?
+    var recepient: UserProfile?
     
     
     var userManager = UserManager.shared
@@ -42,15 +43,23 @@ class ChatViewController: MessagesViewController {
         return Sender(senderId: userID, displayName: name, photoURL: Images.Avatar)
     }
     
-    init(with recepientUser: UserProfile?, id: String) {
-        self.recepientUser = recepientUser
+    init(with recipientID: String?, id: String) {
+        self.recipientID = recipientID
         self.conversationID = id
         super.init(nibName: nil, bundle: nil)
        
-        if let conversationID = conversationID, let userID = user?.userID {
+        if let conversationID = conversationID, let recepientID = recipientID {
 
-            observeMessages(userID: userID, with: conversationID)
+//
+           
             print(conversationID)
+            print(recepientID)
+            print(self.recepient)
+            getRecipient(recipientID: recepientID)
+            observeMessages(recipientID: recepientID, with: conversationID)
+//       self.messagesManager.getOldMessages(for: recepientID, with: conversationID) { result in
+//            print(result)
+//        }
         }
     }
     
@@ -62,9 +71,9 @@ class ChatViewController: MessagesViewController {
         super.viewDidLoad()
         configureNavigationBar()
         configureViewController()
-//        guard let id = conversationID else { return }
-//        observeMessages(with: id)
-//        print(id)
+        guard let  recipientID = recipientID, let id = conversationID else { return }
+        observeMessages(recipientID: recipientID, with: id)
+        print(id)
     }
     
     private func configureViewController() {
@@ -94,22 +103,37 @@ class ChatViewController: MessagesViewController {
     }
 }
 
+
+
+
 extension ChatViewController {
-    
-    func getOldMessages(for messageID: String) {
-        
+    private func getRecipient(recipientID: String) {
+        print("outside the if: ", recipientID)
+        self.messagesManager.observeRecipientUserProfile(userID: recipientID) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let receivedUser):
+                self.recepient = receivedUser
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
     
-    func observeMessages(userID: String, with id: String) {
-        self.messagesManager.usersMessages(userID: userID, messageID: id) { [weak self] result in
+    func observeMessages(recipientID: String, with id: String) {
+        print("message id required: ", id)
+        self.messagesManager.usersMessages(userID: recipientID, messageID: id) { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let message):
                 guard !message.isEmpty else {
                     return
                 }
-                print(message)
+                for message in message{
+                    print(message.messageId)
+                }
                 self.messages.append(contentsOf: message)
+                
                 DispatchQueue.main.async {
                     self.messagesCollectionView.reloadData()
                 }
@@ -127,16 +151,18 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty, let sender = self.sender else { return }
         print(text)
         guard let user = user else { return }
-        
+        print(user)
+        guard let recepient = recepient else { return }
+        print(recepient)
         
         if isNewConversation {
             let message = Message(sender: sender, messageId: UUID().uuidString, sentDate: Date(), kind: .text(text))
-            self.messagesManager.createMessage(from: user, with: message, for: recepientUser) { suscess in
+            self.messagesManager.createMessage(from: user, with: message, for: recepient) { suscess in
                 print(suscess)
             }
         } else {
             let message = Message(sender: sender, messageId: UUID().uuidString, sentDate: Date(), kind: .text(text))
-            self.messagesManager.createMessage(from: user, with: message, for: recepientUser) { suscess in
+            self.messagesManager.createMessage(from: user, with: message, for: recepient) { suscess in
                 print(suscess)
             }
             

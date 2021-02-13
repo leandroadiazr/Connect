@@ -59,8 +59,6 @@ class DiscussionViewController: UIViewController {
         let createVC = CreateChatViewController()
         createVC.completion = {[weak self] user in
             print(user)
-           
-            
             self?.createNewConversation(recepientUser: user)
         }
         
@@ -71,8 +69,8 @@ class DiscussionViewController: UIViewController {
     
     private func createNewConversation(recepientUser: UserProfile?) {
         self.chathingWith = recepientUser
-        guard let name = recepientUser?.name, let recepientID = recepientUser else { return }
-        let chatVC = ChatViewController(with: recepientID, id: recepientID.userID)
+        guard let name = recepientUser?.name, let recepient = recepientUser else { return }
+        let chatVC = ChatViewController(with: recepient.userID, id: recepient.userID)
         chatVC.user = recepientUser
         chatVC.isNewConversation = true
         chatVC.title = name
@@ -136,16 +134,18 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currentDiscusion = conversations[indexPath.row]
+
+
+        print("when click did selected row this is the user that is here :", currentDiscusion.recipientID)
+//        let chatVC = ChatViewController(with: currentDiscusion.recipientID, id: currentDiscusion.messageId)
+        let chatVC = NewChatVC()
         
-       
-        print(user?.userID)
-        let chatVC = ChatViewController(with: user, id: currentDiscusion.messageId)
         
 //        chatVC.recepientUser = chathingWith
         chatVC.conversation.append(currentDiscusion)
-        let navVC = UINavigationController(rootViewController: chatVC)
-        navVC.modalPresentationStyle = .fullScreen
-        present(navVC, animated: true, completion: nil)
-        
+//        let navVC = UINavigationController(rootViewController: chatVC)
+//        navVC.modalPresentationStyle = .fullScreen
+//        present(navVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }

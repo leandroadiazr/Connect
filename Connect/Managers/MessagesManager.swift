@@ -27,9 +27,29 @@ class MessagesManager {
                 return
             }
             print(snapshot)
-
         }
     }
+    
+    func observeRecipientUserProfile(userID: String, completion: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
+        database.child("users").child(userID).observeSingleEvent(of: .value) { snapshot in
+            var userProfile: UserProfile?
+            guard let value = snapshot.value as? [String: Any] else {
+                completion(.failure(.unableToFindUser))
+                return
+            }
+            print(value)
+            let dictionary = value
+            guard let email = dictionary["email"] as? String,
+                  let name = dictionary["name"] as? String,
+                  let profileImage = dictionary["profileImage"] as? String,
+                  let userID = dictionary["userID"] as? String else { return }
+            userProfile = UserProfile(id: "", userID: userID, name: name, handler: "@\(name)", email: email, profileImage: profileImage, userLocation: "", userBio: "", userStatus: "")
+            
+            completion(.success(userProfile))
+        }
+    }
+    
+    
     
     
     func getChatUsers(completion: @escaping (Result<[UserProfile]?, ErrorMessages>) -> Void) {
@@ -56,8 +76,9 @@ class MessagesManager {
         guard let userProfile = currentUser else { return }
         guard let recipientUser = recipientUser else { return }
         
-        let ref = database.child("messages").child(userProfile.userID).childByAutoId()
-        ref.observeSingleEvent(of: .value) { snapshot in
+        //save for sender
+        let sender = database.child("messages").child(userProfile.userID)
+        sender.observeSingleEvent(of: .value) { snapshot in
             
             guard let userNode = snapshot.value else {
                 completion(false)
@@ -107,8 +128,9 @@ class MessagesManager {
                     "isRead": false
                 ]
             ]
+            
             if message.messageId.isEmpty {
-                ref.updateChildValues(newConversation) { error, _ in
+                sender.updateChildValues(newConversation) { error, _ in
                     guard error == nil else {
                         completion(false)
                         return
@@ -117,7 +139,7 @@ class MessagesManager {
                 }
                 
             }else {
-                ref.setValue(newConversation) { error, _ in
+                sender.setValue(newConversation) { error, _ in
                     guard error == nil else {
                         completion(false)
                         return
@@ -126,7 +148,82 @@ class MessagesManager {
                 }
             }
         }
-        
+        completion(true)
+      
+        /**************/
+//        
+//        //save for sender
+//        let ref = database.child("messages").child(recipientUser.userID).childByAutoId()
+//        ref.observeSingleEvent(of: .value) { snapshot in
+//            
+//            guard let userNode = snapshot.value else {
+//                completion(false)
+//                print("user not found")
+//                return
+//            }
+//            print(userNode)
+//            
+//            var contentMessage = ""
+//            
+//            switch message.kind {
+//            case .text(let messageText):
+//                contentMessage = messageText
+//            case .attributedText(_):
+//                break
+//            case .photo(_):
+//                break
+//            case .video(_):
+//                break
+//            case .location(_):
+//                break
+//            case .emoji(_):
+//                break
+//            case .audio(_):
+//                break
+//            case .contact(_):
+//                break
+//            case .custom(_):
+//                break
+//            case .linkPreview(_):
+//                break
+//            }
+//            
+//            
+//            let recipientConversation: [String: Any] = [
+//                "userID": recipientUser.userID,
+//                "userProfileImage": recipientUser.profileImage,
+//                "name": recipientUser.name,
+//                "email": recipientUser.email,
+//                "messageID": message.messageId,
+//                "recipientID": userProfile.userID,
+//                "recipientName": userProfile.name,
+//                "recipientProfileImage": userProfile.profileImage,
+//                "date": message.sentDate.convertToMonthYearFormat(),
+//                "latestMessage": [
+//                    "dateReceived": message.sentDate.convertToMonthYearFormat(),
+//                    "message": contentMessage,
+//                    "isRead": false
+//                ]
+//            ]
+//            if message.messageId.isEmpty {
+//                ref.updateChildValues(recipientConversation) { error, _ in
+//                    guard error == nil else {
+//                        completion(false)
+//                        return
+//                    }
+//                    completion(true)
+//                }
+//                
+//            }else {
+//                ref.setValue(recipientConversation) { error, _ in
+//                    guard error == nil else {
+//                        completion(false)
+//                        return
+//                    }
+//                    completion(true)
+//                }
+//            }
+//        }
     }
     
     func appendMessages(userEmail: String, message: Message, completion: @escaping (Result<Bool, ErrorMessages>)-> Void) {
@@ -139,6 +236,7 @@ class MessagesManager {
                 completion(.failure(.failedToFechFromDatabase))
                 return}
             
+//            print(snapshot)
             var messages = [Message]()
             let dictionary = value
             guard let userID         = dictionary["userID"] as? String,
@@ -155,7 +253,7 @@ class MessagesManager {
                   let message        = latestMessage["message"] as? String,
                   let isRead         = latestMessage["isRead"] as? Bool else { return }
             
-            
+            print(recipientID)
             let sender = Sender(senderId: userID, displayName: name, photoURL: userProfileImage)
             
             let dateFormatterPrint = DateFormatter()
@@ -170,6 +268,18 @@ class MessagesManager {
             print(messages)
             completion(.success(messages))
         }
+    }
+    
+    func getOldMessages(for userID: String, with messageID: String, completiong: @escaping (Result<[Message], ErrorMessages>) -> Void) {
+        print(userID)
+        database.child("messages").observe( .value) { snapshot in
+            guard let value = snapshot.value as? [String: Any] else {
+                completiong(.failure(.unableToFindUser))
+                return
+            }
+            print(value)
+        }
+//        completiong()
     }
     
     func retreivedAllUsersMessages(userID: String, completion: @escaping (Result<[Conversations], ErrorMessages>)-> Void) {

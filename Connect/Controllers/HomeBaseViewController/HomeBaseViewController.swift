@@ -45,7 +45,7 @@ class HomeBaseViewController: UIViewController {
                 guard let self = self else { return }
                 if let values = snapShot.value as? [String: Any]{
                     self.updateTitle = values["name"] as! String
-                    print(self.updateTitle)
+//                    print(self.updateTitle)
                 }
             } withCancel: { (error) in
             }
