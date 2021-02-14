@@ -98,33 +98,74 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     
     @objc private func sendMessage() {
         guard let textMessage = inputTextField.text else { return  }
-        print(textMessage)
-        
-        let ref = Database.database().reference().child("messages").childByAutoId()
         guard let sender = sender else { return}
-        print("sender :", sender)
-        
-        guard let recipient = recipientUser else { return }
-        print("recipient :", recipient)
-        
-        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
-        print("timestamp :" , timeStamp)
-        
-        let isRead = false
 
-        let newMessage: [String: Any] = [
-            "senderID": sender.userID,
-            "senderName": sender.name,
-            "senderProfileImage": sender.profileImage,
-            "recipientID": recipient.userID,
-            "recipientName": recipient.name,
-            "recipientProfileImage": recipient.profileImage,
-            "textMessage": textMessage,
-            "timeStamp": timeStamp,
-            "isRead": isRead.description
-        ]
+        guard let recipient = recipientUser else { return }
+        self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: textMessage) { result in
+            switch result {
+            case .success(let newMessage):
+                //                guard let messageSent = Messages(dictionary: newMessage) else { return }
+                self.conversationToBe.append(newMessage)
+                self.conversationToBe.sort { (message1, message2) -> Bool in
+                    return message1.timeStamp.intValue > message2.timeStamp.intValue
+                }
+                print("newMessage :", newMessage)
+                DispatchQueue.main.async {
+                    self.tableView?.reloadData()
+                }
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
         
-        ref.updateChildValues(newMessage)
+        //        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+        //        print("timestamp :" , timeStamp)
+        //
+        //        let isRead = false
+
+        //        let newMessage: [String: Any] = [
+        //            "senderID": sender.userID,
+        //            "senderName": sender.name,
+        //            "senderProfileImage": sender.profileImage,
+        //            "recipientID": recipient.userID,
+        //            "recipientName": recipient.name,
+        //            "recipientProfileImage": recipient.profileImage,
+        //            "textMessage": textMessage,
+        //            "timeStamp": timeStamp,
+        //            "isRead": isRead.description
+        //        ]
+                
+        //        ref.updateChildValues(newMessage)
+                
+        //        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+        //        print("timestamp :" , timeStamp)
+        //
+        //        let isRead = false
+        
+        //        let newMessage: [String: Any] = [
+        //            "senderID": sender.userID,
+        //            "senderName": sender.name,
+        //            "senderProfileImage": sender.profileImage,
+        //            "recipientID": recipient.userID,
+        //            "recipientName": recipient.name,
+        //            "recipientProfileImage": recipient.profileImage,
+        //            "textMessage": textMessage,
+        //            "timeStamp": timeStamp,
+        //            "isRead": isRead.description
+        //        ]
+        
+        //        ref.updateChildValues(newMessage)
+        
+        //        guard let messageSent = Messages(dictionary: newMessage) else { return }
+        //        self.conversationToBe.append(messageSent)
+        //        self.conversationToBe.sort { (message1, message2) -> Bool in
+        //            return message1.timeStamp.intValue > message2.timeStamp.intValue
+        //        }
+        //
+        //        DispatchQueue.main.async {
+        //            self.tableView?.reloadData()
+        //        }
         
     }
     

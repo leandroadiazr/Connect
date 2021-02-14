@@ -291,37 +291,103 @@ class MessagesManager {
 //        completiong()
     }
     
-    func retreivedAllUsersMessages(userID: String, completion: @escaping (Result<[Conversations], ErrorMessages>)-> Void) {
-        database.child("messages").child(userID).observe(.childAdded) { snapshot in
-            guard let value = snapshot.value as? [String: Any] else {
-                completion(.failure(.failedToFechFromDatabase))
-                return}
-            
-            var conversations = [Conversations]()
-            let dictionary = value
-            guard let userID         = dictionary["userID"] as? String,
-                  let userProfileImage = dictionary["userProfileImage"] as? String,
-                  let name           = dictionary["name"] as? String,
-                  let email          = dictionary["email"] as? String,
-                  let messageID      = dictionary["messageID"] as? String,
-                  let recipientID      = dictionary["recipientID"] as? String,
-                  let recipientName  = dictionary["recipientName"] as? String,
-                  let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
-                  let date           = dictionary["date"] as? String,
-                  let latestMessage  = dictionary["latestMessage"] as? [String: Any],
-                  let dateReceived   = latestMessage["dateReceived"] as? String,
-                  let message        = latestMessage["message"] as? String,
-                  let isRead         = latestMessage["isRead"] as? Bool else { return }
-            
-            let latestMessageOBJ        = LatestMessage(dateReceived: dateReceived, message: message, isRead: isRead)
-            let singleConversation      = Conversations(userID: userID, userProfileImage: userProfileImage, messageId: messageID, name: name, email: email, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, date: date, latestMessage: latestMessageOBJ)
-            conversations.append(singleConversation)
-            
-            print(conversations)
-            completion(.success(conversations))
+    
+    //MARK:- CREATE NEW MESSAGE FROM NEW CHAT VIEW CONTROLLER WORKING PERFECTLY
+    func createNewMessage(sender: UserProfile?, recipient: UserProfile?, textMessage: String, completion: @escaping (Result<Messages, ErrorMessages>) -> Void) {
+        guard let sender = sender else { return }
+        guard let recipient = recipient else { return }
+//        guard !message.isEmpty else { return }
+        
+        let ref = database.child("messages").childByAutoId()
+        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+        let isRead = false
+        let newMessage: [String: Any] = [
+            "senderID": sender.userID,
+            "senderName": sender.name,
+            "senderProfileImage": sender.profileImage,
+            "recipientID": recipient.userID,
+            "recipientName": recipient.name,
+            "recipientProfileImage": recipient.profileImage,
+            "textMessage": textMessage,
+            "timeStamp": timeStamp,
+            "isRead": isRead.description
+        ]
+    
+        ref.updateChildValues(newMessage) { error, _ in
+            if let error = error {
+                completion(.failure(.unableToSave))
+                print(error.localizedDescription)
+                return
+            }
+            guard let sentMessage = Messages(dictionary: newMessage) else { return }
+            completion(.success(sentMessage))
         }
     }
     
     
-    
+//    MARK:- GET ALL MESSAGES IN DISCUSSION VIEW CONTROLLER WORKING PERFECTLY
+    func retreivedAllUsersMessages(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
+        Database.database().reference().child("messages").observe( .childAdded) { snapshot in
+            var conversations = [Messages]()
+            guard let data = snapshot.value else {
+                completion(.failure(.failedToFechFromDatabase))
+                print("unable to fetch message please change to error messages")
+                return }
+            
+            guard let dictionary = data as? [String: Any],
+                  let senderID              = dictionary["senderID"] as? String,
+                  let senderName            = dictionary["senderName"] as? String,
+                  let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+                  let recipientID           = dictionary["recipientID"] as? String,
+                  let recipientName         = dictionary["recipientName"] as? String,
+                  let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+                  let textMessage           = dictionary["textMessage"] as? String,
+                  let timeStamp             = dictionary["timeStamp"] as? NSNumber,
+                  let isRead                = dictionary["isRead"] as? String else { return }
+            
+            let readed: Bool = isRead == "false" ? false : true
+            
+            let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+            conversations.append(newMessage)
+            completion(.success(conversations))
+        }
+    }
 }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+//        database.child("messages").child(userID).observe(.childAdded) { snapshot in
+//            guard let value = snapshot.value as? [String: Any] else {
+//                completion(.failure(.failedToFechFromDatabase))
+//                return}
+//
+//            var conversations = [Conversations]()
+//            let dictionary = value
+//            guard let userID         = dictionary["userID"] as? String,
+//                  let userProfileImage = dictionary["userProfileImage"] as? String,
+//                  let name           = dictionary["name"] as? String,
+//                  let email          = dictionary["email"] as? String,
+//                  let messageID      = dictionary["messageID"] as? String,
+//                  let recipientID      = dictionary["recipientID"] as? String,
+//                  let recipientName  = dictionary["recipientName"] as? String,
+//                  let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+//                  let date           = dictionary["date"] as? String,
+//                  let latestMessage  = dictionary["latestMessage"] as? [String: Any],
+//                  let dateReceived   = latestMessage["dateReceived"] as? String,
+//                  let message        = latestMessage["message"] as? String,
+//                  let isRead         = latestMessage["isRead"] as? Bool else { return }
+//
+//            let latestMessageOBJ        = LatestMessage(dateReceived: dateReceived, message: message, isRead: isRead)
+//            let singleConversation      = Conversations(userID: userID, userProfileImage: userProfileImage, messageId: messageID, name: name, email: email, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, date: date, latestMessage: latestMessageOBJ)
+//            conversations.append(singleConversation)
+//
+//            print(conversations)
+//            completion(.success(conversations))
+//        }
+

@@ -41,6 +41,7 @@ class DiscussionViewController: UIViewController {
     
     var conversations = [Conversations]()
     var conversationsToBe = [Messages]()
+    var conversationsDictionary = [String: Messages]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,11 +52,11 @@ class DiscussionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        updateConversations()
-//        guard let recipientUser = recipientUser else { return }
-//        if !discussions.contains(recipientUser) {
-//            discussions.append(recipientUser)
-//        }
+        //        updateConversations()
+        //        guard let recipientUser = recipientUser else { return }
+        //        if !discussions.contains(recipientUser) {
+        //            discussions.append(recipientUser)
+        //        }
     }
     private func configureNavigationBar() {
         let addChat = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewChat))
@@ -78,7 +79,7 @@ class DiscussionViewController: UIViewController {
         guard let receivedUser = recipientUser else { return }
         self.recipientUser = receivedUser
         let newChat = NewChatVC(recipientUser: self.recipientUser!)
-//        save user to Cache
+        //        save user to Cache
         persistenceManager.saveUserToDeviceCache(user: self.recipientUser) { result in
             print(result)
         }
@@ -101,46 +102,86 @@ class DiscussionViewController: UIViewController {
     }
     
     private func updateConversations() {
-       
-        let ref = Database.database().reference().child("messages")
-        ref.observe( .childAdded) { snapshot in
-            guard let data = snapshot.value else {
-                print("unable to fetch message please change to error messages")
-                return }
-            
-           guard let dictionary = data as? [String: Any],
-              let senderID              = dictionary["senderID"] as? String,
-              let senderName            = dictionary["senderName"] as? String,
-              let senderProfileImage    = dictionary["senderProfileImage"] as? String,
-              let recipientID           = dictionary["recipientID"] as? String,
-              let recipientName         = dictionary["recipientName"] as? String,
-              let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
-              let textMessage           = dictionary["textMessage"] as? String,
-              let timeStamp             = dictionary["timeStamp"] as? NSNumber,
-              let isRead                = dictionary["isRead"] as? String else { return }
-              
-            let dateformatter = DateFormatter()
-            
-//            let date = dateformatter.date(from: timeStamp)
         
-            print(timeStamp)
-                let readed: Bool = isRead == "false" ? false : true
- 
-            let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
-                self.conversationsToBe.append(newMessage)
-            
-            self.messagesManager.observeRecipientUserProfile(userID: recipientID) { result in
-                switch result {
-                case .success(let recipientReceived):
-                    self.chathingWith.append(recipientReceived)
-                case .failure(let error):
-                    print(error.localizedDescription)
+        self.messagesManager.retreivedAllUsersMessages { result in
+            switch result {
+            case .success(let messages):
+                for newMessage in messages {
+                    let recipient = newMessage
+                    
+                    if recipient.recipientID == newMessage.recipientID {
+                        self.conversationsDictionary[recipient.recipientID] = newMessage
+                        self.conversationsToBe = Array(self.conversationsDictionary.values)
+                        self.conversationsToBe.sort { (message1, message2) -> Bool in
+                            return message1.timeStamp.intValue > message2.timeStamp.intValue
+                        }
+                    }
+              
+                    self.messagesManager.observeRecipientUserProfile(userID: recipient.recipientID) { result in
+                    switch result {
+                    case .success(let recipientReceived):
+                        self.chathingWith.append(recipientReceived)
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
                 }
-            }
-            DispatchQueue.main.async {
-                self.tableView?.reloadData()
+                }
+                DispatchQueue.main.async {
+                               self.tableView?.reloadData()
+                           }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
+        
+//        let ref = Database.database().reference().child("messages")
+//        ref.observe( .childAdded) { snapshot in
+//            guard let data = snapshot.value else {
+//                print("unable to fetch message please change to error messages")
+//                return }
+//
+//            guard let dictionary = data as? [String: Any],
+//                  let senderID              = dictionary["senderID"] as? String,
+//                  let senderName            = dictionary["senderName"] as? String,
+//                  let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+//                  let recipientID           = dictionary["recipientID"] as? String,
+//                  let recipientName         = dictionary["recipientName"] as? String,
+//                  let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+//                  let textMessage           = dictionary["textMessage"] as? String,
+//                  let timeStamp             = dictionary["timeStamp"] as? NSNumber,
+//                  let isRead                = dictionary["isRead"] as? String else { return }
+//
+//            let readed: Bool = isRead == "false" ? false : true
+//
+//            let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+//            self.conversationsToBe.append(newMessage)
+            
+//            let recipient = newMessage
+//            if recipient.recipientID == newMessage.recipientID {
+//                self.conversationsDictionary[recipient.recipientID] = newMessage
+//                self.conversationsToBe = Array(self.conversationsDictionary.values)
+//                self.conversationsToBe.sort { (message1, message2) -> Bool in
+//                    return message1.timeStamp.intValue > message2.timeStamp.intValue
+//                }
+//            }
+//
+//
+//            self.messagesManager.observeRecipientUserProfile(userID: recipientID) { result in
+//                switch result {
+//                case .success(let recipientReceived):
+//                    self.chathingWith.append(recipientReceived)
+//                case .failure(let error):
+//                    print(error.localizedDescription)
+//                }
+//            }
+            
+            
+            
+            
+//            DispatchQueue.main.async {
+//                self.tableView?.reloadData()
+//            }
+//        }
     }
 }
 
@@ -162,20 +203,20 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currentDiscusion = conversationsToBe[indexPath.row]
-
+        
         
         print("when click did selected row this is the user that is here :", currentDiscusion.recipientID)
-
+        
         for user in chathingWith {
             if user.userID == currentDiscusion.recipientID {
                 let chatVC = NewChatVC(recipientUser: user)
-
+                
                 chatVC.conversationToBe.append(currentDiscusion)
                 print(currentDiscusion)
-
+                
                 self.navigationController?.pushViewController(chatVC, animated: true)
             }
         }
-       
+        
     }
 }

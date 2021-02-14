@@ -14,8 +14,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "createNewConversation(recipientUser:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "createNewChat()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "updateConversations()"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "viewWillAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,8 +78,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/NewChat/NewChatVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
             landmarkName = "sendMessage()"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,8 +94,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
             landmarkName = "updateConversations()"
             landmarkType = "7">
          </BreakpointContent>
@@ -104,30 +104,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "2FCCF6FC-53C0-4970-9A4F-5B5AA06AFA7A"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "updateConversations()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "83286057-F5CF-4005-83E0-DCCBA6EC1C34"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
             landmarkName = "updateConversations()"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +126,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +190,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +206,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -232,48 +216,16 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "DF594F5E-FF6C-47BC-8C40-B70756191D6A"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "updateConversations()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "DF594F5E-FF6C-47BC-8C40-B70756191D6A - 3698c4f34d2fc559"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Connect.DiscussionViewController.(updateConversations in _1031746B463781596446FD69CE8F5377)() -&gt; ()"
-                  moduleName = "Connect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/leandrodiaz/Desktop/Swift%20Master%20Folder/Connect.nosync/Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "106"
-                  endingLineNumber = "106"
-                  offsetFromSymbolStart = "228">
-               </Location>
-               <Location
-                  uuid = "DF594F5E-FF6C-47BC-8C40-B70756191D6A - b12cfe258d74dc5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.FIRDataSnapshot) -&gt; () in Connect.DiscussionViewController.(updateConversations in _1031746B463781596446FD69CE8F5377)() -&gt; ()"
-                  moduleName = "Connect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/leandrodiaz/Desktop/Swift%20Master%20Folder/Connect.nosync/Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "107"
-                  endingLineNumber = "107"
-                  offsetFromSymbolStart = "301">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -286,8 +238,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -302,8 +254,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -318,8 +270,8 @@
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "174"
-            endingLineNumber = "174"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -328,32 +280,17 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "DD4CA433-BDF9-4684-AFB4-DD2A4D063455"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "169"
+            endingLineNumber = "169"
             landmarkName = "updateConversations()"
             landmarkType = "7">
             <Locations>
-               <Location
-                  uuid = "DD4CA433-BDF9-4684-AFB4-DD2A4D063455 - b12cfe258d7488c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.FIRDataSnapshot) -&gt; () in Connect.DiscussionViewController.(updateConversations in _1031746B463781596446FD69CE8F5377)() -&gt; ()"
-                  moduleName = "Connect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/leandrodiaz/Desktop/Swift%20Master%20Folder/Connect.nosync/Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "132"
-                  endingLineNumber = "132"
-                  offsetFromSymbolStart = "6206">
-               </Location>
                <Location
                   uuid = "DD4CA433-BDF9-4684-AFB4-DD2A4D063455 - 930d6e4285fabd17"
                   shouldBeEnabled = "Yes"
@@ -369,21 +306,51 @@
                   endingLineNumber = "134"
                   offsetFromSymbolStart = "123">
                </Location>
+               <Location
+                  uuid = "DD4CA433-BDF9-4684-AFB4-DD2A4D063455 - 930d6e4285fabd17"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Connect.UserProfile, Connect.ErrorMessages&gt;) -&gt; () in closure #1 (__C.FIRDataSnapshot) -&gt; () in Connect.DiscussionViewController.(updateConversations in _1031746B463781596446FD69CE8F5377)() -&gt; ()"
+                  moduleName = "Connect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/leandrodiaz/Desktop/Swift%20Master%20Folder/Connect.nosync/Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "134"
+                  endingLineNumber = "134"
+                  offsetFromSymbolStart = "151">
+               </Location>
+               <Location
+                  uuid = "DD4CA433-BDF9-4684-AFB4-DD2A4D063455 - 930d6e4285fabd17"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Connect.UserProfile, Connect.ErrorMessages&gt;) -&gt; () in closure #1 (__C.FIRDataSnapshot) -&gt; () in Connect.DiscussionViewController.(updateConversations in _1031746B463781596446FD69CE8F5377)() -&gt; ()"
+                  moduleName = "Connect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/leandrodiaz/Desktop/Swift%20Master%20Folder/Connect.nosync/Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "134"
+                  endingLineNumber = "134"
+                  offsetFromSymbolStart = "438">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "052CFDA7-D80A-49DF-B452-2C8B12679C87"
+            uuid = "68472D73-6D3C-41CB-8492-D71A87B7521E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Connect/Controllers/DiscussionViewControllers/DiscussionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
             landmarkName = "updateConversations()"
             landmarkType = "7">
          </BreakpointContent>

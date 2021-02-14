@@ -6,7 +6,9 @@
 //
 
 import Foundation
-
+protocol MessagesSerializable {
+    init?(dictionary: [String: Any])
+}
 struct Messages {
     var senderID: String
     var senderName: String
@@ -19,6 +21,26 @@ struct Messages {
     var textMessage: String
     var timeStamp: NSNumber
     var isRead: Bool
+    
+}
+
+
+extension Messages: MessagesSerializable {
+    init?(dictionary: [String : Any]) {
+        
+        guard let senderID              = dictionary["senderID"] as? String,
+              let senderName            = dictionary["senderName"] as? String,
+              let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+              let recipientID           = dictionary["recipientID"] as? String,
+              let recipientName         = dictionary["recipientName"] as? String,
+              let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+              let textMessage           = dictionary["textMessage"] as? String,
+              let timeStamp             = dictionary["timeStamp"] as? NSNumber,
+              let isRead                = dictionary["isRead"] as? String else { return nil }
+              let readed: Bool = isRead == "false" ? false : true
+        self.init(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+    }
+    
     
 }
 
