@@ -10,6 +10,7 @@
 		AA9C06E188B74BE057BD96A2 /* Pods_Connect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B642AE12AC65FFC8A6EC8449 /* Pods_Connect.framework */; };
 		E840557F25D57D4200EFD9B8 /* DiscussionsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E840557E25D57D4200EFD9B8 /* DiscussionsViewCell.swift */; };
 		E841657225C6DFEA0011A237 /* UsersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E841657125C6DFEA0011A237 /* UsersManager.swift */; };
+		E8513A5D25D9884100514E85 /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8513A5C25D9884100514E85 /* KeyboardHelper.swift */; };
 		E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */; };
 		E86B341B25D07357004FD2E9 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341A25D07357004FD2E9 /* ChatViewController.swift */; };
 		E86B341E25D079D4004FD2E9 /* CreateChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */; };
@@ -99,6 +100,7 @@
 		B642AE12AC65FFC8A6EC8449 /* Pods_Connect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Connect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E840557E25D57D4200EFD9B8 /* DiscussionsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionsViewCell.swift; sourceTree = "<group>"; };
 		E841657125C6DFEA0011A237 /* UsersManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersManager.swift; sourceTree = "<group>"; };
+		E8513A5C25D9884100514E85 /* KeyboardHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHelper.swift; sourceTree = "<group>"; };
 		E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
 		E86B341A25D07357004FD2E9 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatViewController.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				E8D6D0AE25C4E94300778209 /* CustomTransition.swift */,
 				E8D6D0AF25C4E94300778209 /* Extension.swift */,
 				E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */,
+				E8513A5C25D9884100514E85 /* KeyboardHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -831,6 +834,7 @@
 				E841657225C6DFEA0011A237 /* UsersManager.swift in Sources */,
 				E8D6D11925C4E95800778209 /* CustomLine.swift in Sources */,
 				E8D6D14825C4E96200778209 /* MainFeedCollectionViewController.swift in Sources */,
+				E8513A5D25D9884100514E85 /* KeyboardHelper.swift in Sources */,
 				E8D6D16E25C4E96B00778209 /* Tweet.swift in Sources */,
 				E8D6D10725C4E95800778209 /* EmptyState.swift in Sources */,
 				E8D6D16225C4E96200778209 /* CustomTabBarController.swift in Sources */,

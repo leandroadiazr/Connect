@@ -82,9 +82,20 @@ extension UIViewController {
     
     //EmptyState
     func showEmptyState(with message: String, in view: UIView){
-        let emptyStateView      = EmptyState(message: message)
-        emptyStateView.frame    = view.bounds
-        view.addSubview(emptyStateView)
+        DispatchQueue.main.async {
+            let emptyStateView      = EmptyState(message: message)
+            emptyStateView.frame    = view.bounds
+            view.addSubview(emptyStateView)
+        }
+    }
+    
+    func removeEmptyState(in view: UIView) {
+        DispatchQueue.main.async {
+            let emptyStateView      = EmptyState()
+            view.willRemoveSubview(emptyStateView)
+//            emptyStateView.removeFromSuperview()
+
+        }
     }
     
    

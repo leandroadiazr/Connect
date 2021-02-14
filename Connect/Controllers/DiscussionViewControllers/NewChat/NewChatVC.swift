@@ -12,11 +12,10 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     var isNewConversation = false
     var tableView: UITableView?
     var generics = [String]()
-    var conversation = [Conversations]()
-    var conversationToBe = [Messages]()
+    var conversations = [Messages]()
     let containerView = UIView()
     var messageManager = MessagesManager.shared
-
+    
     var recipientUser: UserProfile?
     var sender = UserManager.shared.currentUserProfile
     
@@ -24,7 +23,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     let inputTextField = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "New cMessage...")
     let sendBtn = CustomGenericButton(backgroundColor: .link, title: "Send")
     let cameraBtn = CustomMainButton(backgroundColor: .red, title: "", textColor: .label, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.camera)
-    
+    var isMessageEntered: Bool { return !inputTextField.text!.isEmpty }
     init(recipientUser: UserProfile) {
         self.recipientUser = recipientUser
         super.init(nibName: nil, bundle: nil)
@@ -34,12 +33,10 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .purple
+    
         configureTableView()
         configureNavigationBar()
         setupInputComponents()
@@ -47,8 +44,11 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         print("user Received on newchat ", recipientUser)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+      
+    }
     private func updateConversations() {
-        if conversationToBe.isEmpty {
+        if conversations.isEmpty {
             print("nothingToShow")
         } else {
             DispatchQueue.main.async {
@@ -58,11 +58,11 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     }
     
     private func configureNavigationBar() {
-//        let titleImageView = UIImageView.sd_setImage(recipientUser?.profileImage)
+        //        let titleImageView = UIImageView.sd_setImage(recipientUser?.profileImage)
         //        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         //        titleImageView.contentMode = .scaleAspectFit
         //        titleImageView.tintColor = .blue
-//                navigationItem.titleView = titleImageView
+        //                navigationItem.titleView = titleImageView
         self.navigationItem.title = recipientUser?.name
         print(recipientUser?.name)
         
@@ -75,6 +75,8 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(cameraBtn)
         containerView.addSubview(inputTextField)
+        var textFieldConstrait = inputTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        textFieldConstrait = KeyboardLayoutConstraint()
         containerView.addSubview(sendBtn)
         sendBtn.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
         containerView.addSubview(separator)
@@ -90,83 +92,38 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         tableView?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView?.delegate = self
         tableView?.dataSource = self
-//        tableView?.backgroundColor = .systemBlue
-        
+        tableView?.removeEmptyCells()
         guard let tableView = tableView else { return}
         view.addSubview(tableView)
     }
     
     @objc private func sendMessage() {
+        guard isMessageEntered else {
+            showAlert(title: "Empty Field", message: "Please check your input...", buttonTitle: "Ok")
+            return
+        }
         guard let textMessage = inputTextField.text else { return  }
         guard let sender = sender else { return}
-
+        
         guard let recipient = recipientUser else { return }
-        self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: textMessage) { result in
+        self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: textMessage) { [weak self] result in
+            guard let self = self else {return}
             switch result {
             case .success(let newMessage):
-                //                guard let messageSent = Messages(dictionary: newMessage) else { return }
-                self.conversationToBe.append(newMessage)
-                self.conversationToBe.sort { (message1, message2) -> Bool in
+              
+                self.conversations.append(newMessage)
+                self.conversations.sort { (message1, message2) -> Bool in
                     return message1.timeStamp.intValue > message2.timeStamp.intValue
                 }
-                print("newMessage :", newMessage)
                 DispatchQueue.main.async {
                     self.tableView?.reloadData()
                 }
                 
             case .failure(let error):
+                self.showAlert(title: "Unable send message", message: "Ups.. Check your network connection", buttonTitle: "Ok")
                 print(error.localizedDescription)
             }
         }
-        
-        //        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
-        //        print("timestamp :" , timeStamp)
-        //
-        //        let isRead = false
-
-        //        let newMessage: [String: Any] = [
-        //            "senderID": sender.userID,
-        //            "senderName": sender.name,
-        //            "senderProfileImage": sender.profileImage,
-        //            "recipientID": recipient.userID,
-        //            "recipientName": recipient.name,
-        //            "recipientProfileImage": recipient.profileImage,
-        //            "textMessage": textMessage,
-        //            "timeStamp": timeStamp,
-        //            "isRead": isRead.description
-        //        ]
-                
-        //        ref.updateChildValues(newMessage)
-                
-        //        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
-        //        print("timestamp :" , timeStamp)
-        //
-        //        let isRead = false
-        
-        //        let newMessage: [String: Any] = [
-        //            "senderID": sender.userID,
-        //            "senderName": sender.name,
-        //            "senderProfileImage": sender.profileImage,
-        //            "recipientID": recipient.userID,
-        //            "recipientName": recipient.name,
-        //            "recipientProfileImage": recipient.profileImage,
-        //            "textMessage": textMessage,
-        //            "timeStamp": timeStamp,
-        //            "isRead": isRead.description
-        //        ]
-        
-        //        ref.updateChildValues(newMessage)
-        
-        //        guard let messageSent = Messages(dictionary: newMessage) else { return }
-        //        self.conversationToBe.append(messageSent)
-        //        self.conversationToBe.sort { (message1, message2) -> Bool in
-        //            return message1.timeStamp.intValue > message2.timeStamp.intValue
-        //        }
-        //
-        //        DispatchQueue.main.async {
-        //            self.tableView?.reloadData()
-        //        }
-        
     }
     
     
@@ -182,12 +139,12 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
 
 extension NewChatVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return conversationToBe.count
+        return conversations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let item = conversationToBe[indexPath.row]
+        let item = conversations[indexPath.row]
         
         cell.textLabel?.text = item.textMessage
         return cell
@@ -233,4 +190,5 @@ extension NewChatVC {
         
     }
 }
+
 

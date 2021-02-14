@@ -11,6 +11,7 @@ import FirebaseAuth
 
 class MessagesManager {
     static let shared =  MessagesManager()
+    private var userManager = UserManager.shared
     private let database = Database.database().reference()
     
     func safeEmail(emailAddress: String) -> String {
@@ -158,81 +159,81 @@ class MessagesManager {
             }
         }
         completion(true)
-      
+        
         /**************/
-//        
-//        //save for sender
-//        let ref = database.child("messages").child(recipientUser.userID).childByAutoId()
-//        ref.observeSingleEvent(of: .value) { snapshot in
-//            
-//            guard let userNode = snapshot.value else {
-//                completion(false)
-//                print("user not found")
-//                return
-//            }
-//            print(userNode)
-//            
-//            var contentMessage = ""
-//            
-//            switch message.kind {
-//            case .text(let messageText):
-//                contentMessage = messageText
-//            case .attributedText(_):
-//                break
-//            case .photo(_):
-//                break
-//            case .video(_):
-//                break
-//            case .location(_):
-//                break
-//            case .emoji(_):
-//                break
-//            case .audio(_):
-//                break
-//            case .contact(_):
-//                break
-//            case .custom(_):
-//                break
-//            case .linkPreview(_):
-//                break
-//            }
-//            
-//            
-//            let recipientConversation: [String: Any] = [
-//                "userID": recipientUser.userID,
-//                "userProfileImage": recipientUser.profileImage,
-//                "name": recipientUser.name,
-//                "email": recipientUser.email,
-//                "messageID": message.messageId,
-//                "recipientID": userProfile.userID,
-//                "recipientName": userProfile.name,
-//                "recipientProfileImage": userProfile.profileImage,
-//                "date": message.sentDate.convertToMonthYearFormat(),
-//                "latestMessage": [
-//                    "dateReceived": message.sentDate.convertToMonthYearFormat(),
-//                    "message": contentMessage,
-//                    "isRead": false
-//                ]
-//            ]
-//            if message.messageId.isEmpty {
-//                ref.updateChildValues(recipientConversation) { error, _ in
-//                    guard error == nil else {
-//                        completion(false)
-//                        return
-//                    }
-//                    completion(true)
-//                }
-//                
-//            }else {
-//                ref.setValue(recipientConversation) { error, _ in
-//                    guard error == nil else {
-//                        completion(false)
-//                        return
-//                    }
-//                    completion(true)
-//                }
-//            }
-//        }
+        //
+        //        //save for sender
+        //        let ref = database.child("messages").child(recipientUser.userID).childByAutoId()
+        //        ref.observeSingleEvent(of: .value) { snapshot in
+        //
+        //            guard let userNode = snapshot.value else {
+        //                completion(false)
+        //                print("user not found")
+        //                return
+        //            }
+        //            print(userNode)
+        //
+        //            var contentMessage = ""
+        //
+        //            switch message.kind {
+        //            case .text(let messageText):
+        //                contentMessage = messageText
+        //            case .attributedText(_):
+        //                break
+        //            case .photo(_):
+        //                break
+        //            case .video(_):
+        //                break
+        //            case .location(_):
+        //                break
+        //            case .emoji(_):
+        //                break
+        //            case .audio(_):
+        //                break
+        //            case .contact(_):
+        //                break
+        //            case .custom(_):
+        //                break
+        //            case .linkPreview(_):
+        //                break
+        //            }
+        //
+        //
+        //            let recipientConversation: [String: Any] = [
+        //                "userID": recipientUser.userID,
+        //                "userProfileImage": recipientUser.profileImage,
+        //                "name": recipientUser.name,
+        //                "email": recipientUser.email,
+        //                "messageID": message.messageId,
+        //                "recipientID": userProfile.userID,
+        //                "recipientName": userProfile.name,
+        //                "recipientProfileImage": userProfile.profileImage,
+        //                "date": message.sentDate.convertToMonthYearFormat(),
+        //                "latestMessage": [
+        //                    "dateReceived": message.sentDate.convertToMonthYearFormat(),
+        //                    "message": contentMessage,
+        //                    "isRead": false
+        //                ]
+        //            ]
+        //            if message.messageId.isEmpty {
+        //                ref.updateChildValues(recipientConversation) { error, _ in
+        //                    guard error == nil else {
+        //                        completion(false)
+        //                        return
+        //                    }
+        //                    completion(true)
+        //                }
+        //
+        //            }else {
+        //                ref.setValue(recipientConversation) { error, _ in
+        //                    guard error == nil else {
+        //                        completion(false)
+        //                        return
+        //                    }
+        //                    completion(true)
+        //                }
+        //            }
+        //        }
     }
     
     func appendMessages(userEmail: String, message: Message, completion: @escaping (Result<Bool, ErrorMessages>)-> Void) {
@@ -245,7 +246,7 @@ class MessagesManager {
                 completion(.failure(.failedToFechFromDatabase))
                 return}
             
-//            print(snapshot)
+            //            print(snapshot)
             var messages = [Message]()
             let dictionary = value
             guard let userID         = dictionary["userID"] as? String,
@@ -288,7 +289,7 @@ class MessagesManager {
             }
             print(value)
         }
-//        completiong()
+        //        completiong()
     }
     
     
@@ -296,7 +297,7 @@ class MessagesManager {
     func createNewMessage(sender: UserProfile?, recipient: UserProfile?, textMessage: String, completion: @escaping (Result<Messages, ErrorMessages>) -> Void) {
         guard let sender = sender else { return }
         guard let recipient = recipient else { return }
-//        guard !message.isEmpty else { return }
+        //        guard !message.isEmpty else { return }
         
         let ref = database.child("messages").childByAutoId()
         let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
@@ -312,8 +313,8 @@ class MessagesManager {
             "timeStamp": timeStamp,
             "isRead": isRead.description
         ]
-    
-        ref.updateChildValues(newMessage) { error, _ in
+        
+        ref.updateChildValues(newMessage) { error, reference in
             if let error = error {
                 completion(.failure(.unableToSave))
                 print(error.localizedDescription)
@@ -322,12 +323,57 @@ class MessagesManager {
             guard let sentMessage = Messages(dictionary: newMessage) else { return }
             completion(.success(sentMessage))
         }
+        
+        guard let messageID = ref.key else { return }
+        let senderMessagesRef = self.database.child("userMessages").child(sender.userID)
+        senderMessagesRef.updateChildValues([messageID: 1])
+        
+        let recipientMessagesRef = self.database.child("userMessages").child(recipient.userID)
+        recipientMessagesRef.updateChildValues([messageID: 1])
     }
     
     
-//    MARK:- GET ALL MESSAGES IN DISCUSSION VIEW CONTROLLER WORKING PERFECTLY
+    //MARK:- OBSERVE SINGLE USER MESSAGES WORKING
+    func observeSingleUserMessages(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
+        guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
+        var conversations = [Messages]()
+        self.database.child("userMessages").child(currentUserID).observe( .childAdded) { keySnap in
+           
+            guard let _ = keySnap.value else {
+                completion(.failure(.unableToFindUser))
+                return }
+            let messageID = keySnap.key
+            self.database.child("messages").child(messageID).observeSingleEvent(of: .value) { snapshot in
+                
+                guard let data = snapshot.value else {
+                    completion(.failure(.failedToFechFromDatabase))
+                    print("unable to fetch message please change to error messages")
+                    return }
+                
+                guard let dictionary = data as? [String: Any],
+                      let senderID              = dictionary["senderID"] as? String,
+                      let senderName            = dictionary["senderName"] as? String,
+                      let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+                      let recipientID           = dictionary["recipientID"] as? String,
+                      let recipientName         = dictionary["recipientName"] as? String,
+                      let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+                      let textMessage           = dictionary["textMessage"] as? String,
+                      let timeStamp             = dictionary["timeStamp"] as? NSNumber,
+                      let isRead                = dictionary["isRead"] as? String else { return }
+                
+                let readed: Bool = isRead == "false" ? false : true
+                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+                conversations.append(newMessage)
+                completion(.success(conversations))
+            }
+            
+        }
+        completion(.success([]))
+    }
+    
+    //    MARK:- GET ALL MESSAGES IN DISCUSSION FOR CURRENT USER VIEW CONTROLLER WORKING PERFECTLY
     func retreivedAllUsersMessages(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
-        Database.database().reference().child("messages").observe( .childAdded) { snapshot in
+        self.database.child("messages").observe( .childAdded) { snapshot in
             var conversations = [Messages]()
             guard let data = snapshot.value else {
                 completion(.failure(.failedToFechFromDatabase))
@@ -353,15 +399,15 @@ class MessagesManager {
         }
     }
 }
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
 //        database.child("messages").child(userID).observe(.childAdded) { snapshot in
 //            guard let value = snapshot.value as? [String: Any] else {
 //                completion(.failure(.failedToFechFromDatabase))
