@@ -364,6 +364,7 @@ PODS:
   - InputBarAccessoryView (5.2.3):
     - InputBarAccessoryView/Core (= 5.2.3)
   - InputBarAccessoryView/Core (5.2.3)
+  - IQKeyboardManagerSwift (6.5.6)
   - leveldb-library (1.22)
   - MessageKit (3.5.0):
     - InputBarAccessoryView (~> 5.2.1)
@@ -385,6 +386,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Storage
   - GoogleSignIn
+  - IQKeyboardManagerSwift
   - MessageKit
   - SDWebImage
 
@@ -413,6 +415,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - InputBarAccessoryView
+    - IQKeyboardManagerSwift
     - leveldb-library
     - MessageKit
     - nanopb
@@ -443,12 +446,13 @@ SPEC CHECKSUMS:
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   InputBarAccessoryView: f814a0317d47687fafc6bac9e4df6015eaf5b764
+  IQKeyboardManagerSwift: c7df9d2deb356c04522f5c4b7b6e4ce4d8ed94fe
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MessageKit: fb539583599cd914e8e2d41fe7bdceb4bf686565
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
 
-PODFILE CHECKSUM: 67d102c67d0654042b46d35810c252af40c36f1a
+PODFILE CHECKSUM: a96be4f1df56f1af1fb01f17eb599c684e489096
 
 COCOAPODS: 1.10.1

@@ -11,6 +11,7 @@ import Firebase
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
+import IQKeyboardManagerSwift
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     //MARK:- NOTIFICATION CENTER PROPERTIES
@@ -86,9 +87,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.enable = true
+    }
+    
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS
     private func configure() {
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.enable = false
         configureBackgroundImages()
         configureLabels()
         configureButtons()

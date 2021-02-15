@@ -15,6 +15,7 @@ class CreateChatViewController: UIViewController {
     private var hasFetched = false
     private var database = MessagesManager.shared
     private var persistenceManager = PersistenceManager.shared
+    private var userManager = UserManager.shared
     
     private let noResultsLabel = CustomSecondaryTitleLabel(title: "No results for that search", fontSize: 16, textColor: .lightText)
     
@@ -105,9 +106,14 @@ extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedUser = filteredUsers[indexPath.row]
         print("selected")
-        self.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.completion?(selectedUser)
+        if selectedUser.userID == self.userManager.currentUserProfile?.userID {
+            self.showAlert(title: "Wrong User...", message: "Hey, you can't message you self, please choose another recipient", buttonTitle: "Thank you..")
+            return
+        } else {
+            self.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                self.completion?(selectedUser)
+            }
         }
     }
 }
@@ -118,8 +124,8 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
         if let text = searchController.searchBar.text, text.count > 0 {
             let query = text.replacingOccurrences(of: " ", with: "")
             self.filteredUsers.removeAll()
-            self.showLoadingView()
             
+            self.showLoadingView()
             if hasFetched {
                 self.dismissLoadingView()
                 self.filteredUsers = users.filter({
@@ -128,19 +134,15 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
                 })
                 updateOnResults()
             } else {
-                
                 self.database.getChatUsers { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let data):
                         self.dismissLoadingView()
                         self.hasFetched = true
-                        //                        print(data)
                         guard let user = data else { return }
                         self.users.append(contentsOf: user)
-                        
                         self.dismissLoadingView()
-                        
                         for singleUser in user {
                             if !self.filteredUsers.contains(singleUser){
                                 self.filteredUsers = self.users.filter({
@@ -153,7 +155,6 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
                                 print("on filtered array the user ",singleUser)
                             }
                         }
-                        
                         self.updateOnResults()
                     case .failure(let error):
                         self.noResultsLabel.text = error.rawValue

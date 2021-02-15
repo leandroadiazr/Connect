@@ -10,6 +10,7 @@ import AuthenticationServices
 import Firebase
 import FirebaseAuth
 import AVFoundation
+import IQKeyboardManagerSwift
 
 class SignUpViewController: UIViewController, UITextFieldDelegate {
     
@@ -70,6 +71,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS
     private func configure() {
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.enable = false
         configureBackgroundImages()
         configureLabels()
         configureButtons()
@@ -83,6 +86,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.enable = true
     }
     
     private func cameraAccessNeeded() {

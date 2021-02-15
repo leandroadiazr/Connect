@@ -38,6 +38,8 @@ enum Images {
     static let startsYellow         = UIImage(named: "Glitters")
     static let backMedia            = "background"//UIImage(named: "background")
     static let Empty                = UIImage(systemName: "link.icloud.fill")
+    static let senderChatBubble     = UIImage(systemName: "bubble.right.fill")
+    static let recipientChatBubble  = UIImage(systemName: "bubble.left.fill")
     
     //MARK:- TAB BAR ICONS
     static let home                 = UIImage(systemName: "house")

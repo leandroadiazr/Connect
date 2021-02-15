@@ -333,7 +333,8 @@ class MessagesManager {
     }
     
     
-    //MARK:- OBSERVE SINGLE USER MESSAGES WORKING
+    //MARK:- OBSERVE SINGLE USER MESSAGES ON DISCUSSION CONTROLLER WORKING
+    /*THIS WILL LOAD ALL THE CONVERSATIONS THAT THE CURRENT USER IS HAVING WITH EVERY USER*/
     func observeSingleUserMessages(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
         guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
         var conversations = [Messages]()
@@ -371,7 +372,51 @@ class MessagesManager {
         completion(.success([]))
     }
     
+    
+    
+    //MARK:- OBSERVE SINGLE USER CONVERSATION INSIDE CHAT VIEW WORKING
+    /*THIS WILL LOAD A SINGLE CONVERSATION BETWEEN THE CURRENT USE AND THE CURRENT RECIPIENT*/
+    func observeSingleSenderRecipientConversation(for recipient: String, completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
+//        guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
+        var conversation = [Messages]()
+        self.database.child("userMessages").child(recipient).observe( .childAdded) { keySnap in
+           
+            guard let _ = keySnap.value else {
+                completion(.failure(.unableToFindUser))
+                return }
+            let messageID = keySnap.key
+            self.database.child("messages").child(messageID).observeSingleEvent(of: .value) { snapshot in
+                
+                guard let data = snapshot.value else {
+                    completion(.failure(.failedToFechFromDatabase))
+                    print("unable to fetch message please change to error messages")
+                    return }
+                
+                guard let dictionary = data as? [String: Any],
+                      let senderID              = dictionary["senderID"] as? String,
+                      let senderName            = dictionary["senderName"] as? String,
+                      let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+                      let recipientID           = dictionary["recipientID"] as? String,
+                      let recipientName         = dictionary["recipientName"] as? String,
+                      let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+                      let textMessage           = dictionary["textMessage"] as? String,
+                      let timeStamp             = dictionary["timeStamp"] as? NSNumber,
+                      let isRead                = dictionary["isRead"] as? String else { return }
+                
+                let readed: Bool = isRead == "false" ? false : true
+                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+                print(newMessage.recipientID)
+                conversation.append(newMessage)
+                completion(.success(conversation))
+            }
+            
+        }
+        completion(.success([]))
+    }
+    
+    
     //    MARK:- GET ALL MESSAGES IN DISCUSSION FOR CURRENT USER VIEW CONTROLLER WORKING PERFECTLY
+    /*THI ONE WILL LOAD EVERY CONVERSATION AVAILABLE IN THE DISCUSSION FOR EVERY USER, NOT USING AT THE MOMENT*/
     func retreivedAllUsersMessages(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
         self.database.child("messages").observe( .childAdded) { snapshot in
             var conversations = [Messages]()

@@ -113,26 +113,28 @@ class DiscussionViewController: UIViewController {
         
         self.messagesManager.observeSingleUserMessages { [weak self] result in
             guard let self = self else { return }
-
-         
             switch result {
             case .success(let messages):
                     for newMessage in messages {
                         let recipient = newMessage
                     
                         if recipient.recipientID == newMessage.recipientID {
+                            print(recipient.recipientID, recipient)
                             self.conversationsDictionary[recipient.recipientID] = newMessage
                             self.conversations = Array(self.conversationsDictionary.values)
                             self.conversations.sort { (message1, message2) -> Bool in
                                 return message1.timeStamp.intValue > message2.timeStamp.intValue
                             }
                         }
-                        
+                        print(recipient.recipientID)
                         self.messagesManager.observeRecipientUserProfile(userID: recipient.recipientID) { [weak self] result in
                             guard let self = self else { return }
                             switch result {
                             case .success(let recipientReceived):
+                                self.recipientUser = recipientReceived
                                 self.chathingWith.append(recipientReceived)
+                                print(Auth.auth().currentUser?.uid)
+                                print(recipientReceived.userID)
                             case .failure(let error):
                                 self.showAlert(title: "Unable send message", message: error.rawValue, buttonTitle: "Ok")
                                 print(error.localizedDescription)
@@ -174,16 +176,19 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
         
         print("when click did selected row this is the user that is here :", currentDiscusion.recipientID)
         
-        for user in chathingWith {
-            if user.userID == currentDiscusion.recipientID {
-                let chatVC = NewChatVC(recipientUser: user)
-                
-                chatVC.conversations.append(currentDiscusion)
-                print(currentDiscusion)
+//        for user in chathingWith {
+//            if user.userID == currentDiscusion.recipientID {
+        guard let recipient = recipientUser else { return }
+        print(recipient)
+                let chatVC = NewChatVC(recipientUser: recipient)
+                chatVC.recipientID = currentDiscusion.recipientID
+        chatVC.isNewConversation = false
+//                chatVC.conversations.append(currentDiscusion)
+//                print(currentDiscusion)
                 
                 self.navigationController?.pushViewController(chatVC, animated: true)
-            }
-        }
+//            }
+//        }
         
     }
 }

@@ -17,4 +17,5 @@ pod 'MessageKit'
 pod 'GoogleSignIn'
 pod 'FBSDKLoginKit'
 pod 'SDWebImage'
+pod 'IQKeyboardManagerSwift'
 end

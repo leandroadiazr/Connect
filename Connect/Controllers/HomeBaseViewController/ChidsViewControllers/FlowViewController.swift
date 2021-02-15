@@ -99,11 +99,12 @@ class FlowViewController: UIViewController, PresentCommentVC {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemBackground
         collectionView.delegate = self
+        collectionView.register(MainFeedViewCell.self, forCellWithReuseIdentifier: MainFeedViewCell.reuseID)
         view.addSubview(collectionView)
     }
     
     private func registerCell(){
-        collectionView.register(MainFeedViewCell.self, forCellWithReuseIdentifier: MainFeedViewCell.reuseID)
+        
     }
     
     private func configureDataSource() {
