@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        userManager.handleLogout()
+//        userManager.handleLogout()
         
         Auth.auth().addStateDidChangeListener( { auth, user in
             
@@ -34,10 +34,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     case .success(let user):
                         self.userManager.currentUserProfile = user
 //                        print(self.userManager.currentUserProfile as Any)
-                        guard let uuid = user?.userID else { return }
+//                        guard let uuid = user?.userID else { return }
 //                        print("User ID Found in SceneDelegate :********", uuid)
                         
-                        print(self.userManager.currentUserProfile)
+                        print(self.userManager.currentUserProfile as Any)
                     case .failure(let error):
                         print(error.localizedDescription)
                     }

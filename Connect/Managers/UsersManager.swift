@@ -66,41 +66,6 @@ class UserManager {
     }
     
     
-    // 1.- USER MANAGER RELATED
-    //MARK:- GET USERS IN DATABASE***
-    func getCurrentUsers(userID: String, completion: @escaping ([UserProfile]?) -> Void) {
-        database.collection("users").getDocuments  { (querySnapshot, error) in
-            var users = [UserProfile]()
-            
-            if let unwrappedError = error {
-                print(unwrappedError.localizedDescription)
-            } else {
-                guard let documents = querySnapshot?.documents else {
-                    print(error!.localizedDescription)
-                    return
-                }
-                
-                for document in documents {
-                    let dictionary = document.data()
-                    guard let userID              = dictionary["userID"] as? String,
-                          let name                = dictionary["name"] as? String,
-                          let handler             = dictionary["handler"] as? String,
-                          let email               = dictionary["email"] as? String,
-                          let profileImage        = dictionary["profileImage"] as? String,
-                          let userLocation        = dictionary["location"] as? String,
-                          let userBio             = dictionary["bio"] as? String,
-                          let userStatus          = dictionary["userStatus"] as? String
-                    else {
-                        continue
-                    }
-                    let loadedUser = UserProfile(userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
-                    users.append(loadedUser)
-                }
-            }
-            completion(users)
-        }
-    }
-    
     //MARK:- GET SINGLE USER ON LOGIN SCENE DELEGATE NEEDED BUT CAN BE REFACTORED LATER***
     func observeSingleUserProfile(_ userID: String, completion: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
         guard let uid = auth.currentUser?.uid else { return }
@@ -150,8 +115,6 @@ class UserManager {
             } else {
                 print("Saved with Id :", self.refId?.documentID ?? "SAVED")
                 
-                
-                
                 //MARK:- REALTIME DATABASE
                 //Save users to message users collection for the chat functionality
                 self.databaseRef.child("users").observeSingleEvent(of: .value) { snapshot in
@@ -197,9 +160,51 @@ class UserManager {
     func handleLogout() {
         do {
             try auth.signOut()
+            
         } catch let logoutError {
             print(logoutError.localizedDescription)
         }
+        logoutFromFacebook()
+        logoutFromGoogle()
     }
 }
 
+
+
+//MARK:- NOT USING BUT REUSABE
+
+
+// 1.- USER MANAGER RELATED
+//    //MARK:- GET USERS IN DATABASE***
+//    func getCurrentUsers(userID: String, completion: @escaping ([UserProfile]?) -> Void) {
+//        database.collection("users").getDocuments  { (querySnapshot, error) in
+//            var users = [UserProfile]()
+//
+//            if let unwrappedError = error {
+//                print(unwrappedError.localizedDescription)
+//            } else {
+//                guard let documents = querySnapshot?.documents else {
+//                    print(error!.localizedDescription)
+//                    return
+//                }
+//
+//                for document in documents {
+//                    let dictionary = document.data()
+//                    guard let userID              = dictionary["userID"] as? String,
+//                          let name                = dictionary["name"] as? String,
+//                          let handler             = dictionary["handler"] as? String,
+//                          let email               = dictionary["email"] as? String,
+//                          let profileImage        = dictionary["profileImage"] as? String,
+//                          let userLocation        = dictionary["location"] as? String,
+//                          let userBio             = dictionary["bio"] as? String,
+//                          let userStatus          = dictionary["userStatus"] as? String
+//                    else {
+//                        continue
+//                    }
+//                    let loadedUser = UserProfile(userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
+//                    users.append(loadedUser)
+//                }
+//            }
+//            completion(users)
+//        }
+//    }

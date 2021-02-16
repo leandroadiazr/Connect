@@ -34,7 +34,7 @@ class PersistenceManager {
             let userBio             = dictionary["userBio"] as? String,
             let userStatus              = dictionary["userStatus"] as? String else {return }
             
-            currentUser = UserProfile(dictionary: dictionary)
+            currentUser = UserProfile(userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
         }
         completion(.success(currentUser))
     }

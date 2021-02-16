@@ -4,7 +4,7 @@
 //
 //  Created by Leandro Diaz on 2/7/21.
 //
-
+/*
 import UIKit
 import MessageKit
 import InputBarAccessoryView
@@ -50,16 +50,8 @@ class ChatViewController: MessagesViewController {
        
         if let conversationID = conversationID, let recepientID = recipientID {
 
-//
-           
-            print(conversationID)
-            print(recepientID)
-            print(self.recepient)
             getRecipient(recipientID: recepientID)
             observeMessages(recipientID: recepientID, with: conversationID)
-//       self.messagesManager.getOldMessages(for: recepientID, with: conversationID) { result in
-//            print(result)
-//        }
         }
     }
     
@@ -184,3 +176,4 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         messages.count
     }
 }
+*/

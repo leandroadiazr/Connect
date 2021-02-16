@@ -356,14 +356,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
                         switch result {
                         case .success(let saved):
                             print(saved)
-                            
                             self.userManager.currentUserProfile = saveThisUser
-                            print("Saved suscessfully into firebase database need an alert :", self.userManager.currentUserProfile )
+                            print("Saved suscessfully into firebase database need an alert :", self.userManager.currentUserProfile as Any )
                             self.navigationController?.popViewController(animated: true)
                             let customTabVC = CustomTabBarController()
                             customTabVC.modalPresentationStyle = .custom
                             self.present(customTabVC, animated: true, completion: nil)
                         case .failure(let error):
+                            self.showAlert(title: "Not Saved", message: error.rawValue, buttonTitle: "Return")
+                            self.userManager.handleLogout()
                             print(error.rawValue)
                         }
                             

@@ -97,7 +97,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     }
     
     private func configureCollectionView() {
-        var layout = UICollectionViewFlowLayout()
+        let layout = UICollectionViewFlowLayout()
 
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
@@ -193,7 +193,7 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
 extension NewChatVC {
     
     private func setupConstraints() {
-        let padding: CGFloat = 10
+//        let padding: CGFloat = 10
         
         NSLayoutConstraint.activate([
             separator.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 1),

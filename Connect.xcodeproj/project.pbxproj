@@ -219,6 +219,15 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		E83AE8FA25DC8B35005A8B93 /* NOT USING */ = {
+			isa = PBXGroup;
+			children = (
+				E8D6D12E25C4E96200778209 /* PostViewControllers */,
+				E86B341A25D07357004FD2E9 /* ChatViewController.swift */,
+			);
+			path = "NOT USING";
+			sourceTree = "<group>";
+		};
 		E840558125D57D4900EFD9B8 /* DiscussionsCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,6 +310,7 @@
 		E8D6D0AA25C4E94300778209 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E83AE8FA25DC8B35005A8B93 /* NOT USING */,
 				E8D6D0AB25C4E94300778209 /* Constants.swift */,
 				E8D6D0AC25C4E94300778209 /* GlobalViewController + EXT.swift */,
 				E8D6D0AD25C4E94300778209 /* BackupCells.swift */,
@@ -493,7 +503,6 @@
 				E8D6D12025C4E96200778209 /* HomeBaseViewController */,
 				E8FBC08925CB4C3100AB9F90 /* DetailsViewController */,
 				E8D6D12C25C4E96200778209 /* UserProfileViewControllers */,
-				E8D6D12E25C4E96200778209 /* PostViewControllers */,
 				E8D6D13125C4E96200778209 /* AlertViewControllers */,
 				E8D6D13625C4E96200778209 /* TweetsViewController */,
 				E8D6D13825C4E96200778209 /* DiscussionViewControllers */,
@@ -535,8 +544,8 @@
 		E8D6D12E25C4E96200778209 /* PostViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				E8D6D12F25C4E96200778209 /* SavedPostsViewController.swift */,
 				E8D6D13025C4E96200778209 /* PostViewController.swift */,
+				E8D6D12F25C4E96200778209 /* SavedPostsViewController.swift */,
 			);
 			path = PostViewControllers;
 			sourceTree = "<group>";
@@ -565,7 +574,6 @@
 			children = (
 				E8D6D13A25C4E96200778209 /* DiscussionViewController.swift */,
 				E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */,
-				E86B341A25D07357004FD2E9 /* ChatViewController.swift */,
 				E8C0A1CD25D331E2004603B7 /* NewChat */,
 			);
 			path = DiscussionViewControllers;
