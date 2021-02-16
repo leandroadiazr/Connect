@@ -157,7 +157,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
     @objc private func saveNewPost() {
         print("Clicked Save Btn 'Done'")
         self.dismisVC()
-        guard let userProfile = self.userProfile else { return }
+        guard let userProfile = self.usersManager.currentUserProfile else { return }
         createNewPost(userProfile: userProfile)
     }
     

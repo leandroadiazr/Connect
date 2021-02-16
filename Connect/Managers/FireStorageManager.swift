@@ -52,6 +52,7 @@ class FireStorageManager {
                         print(unwrappedDownloadError)
                     } else if let unwrappedUrl = url {
                         completion(unwrappedUrl.absoluteString)
+                        print(unwrappedUrl.absoluteString)
                     }
                 }
             }

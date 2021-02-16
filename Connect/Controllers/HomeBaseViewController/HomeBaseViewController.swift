@@ -22,12 +22,7 @@ class HomeBaseViewController: UIViewController, CLLocationManagerDelegate {
     var userLocation: String?
     
     let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
-//    let profilePic = CustomAvatarImage(frame: .zero)
     let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
-    
-    
-//    let containerView = UIView()
-//    var profileView = CustomProfileView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +39,7 @@ class HomeBaseViewController: UIViewController, CLLocationManagerDelegate {
         super.viewDidAppear(animated)
         
         print("dismissCAlled on homebased")
-//        self.dismissLoadingView()
+        //        self.dismissLoadingView()
     }
     
     
@@ -58,7 +53,6 @@ class HomeBaseViewController: UIViewController, CLLocationManagerDelegate {
                 guard let self = self else { return }
                 if let values = snapShot.value as? [String: Any]{
                     self.updateTitle = values["name"] as! String
-//                    print(self.updateTitle)
                 }
             } withCancel: { (error) in
             }
@@ -79,13 +73,13 @@ class HomeBaseViewController: UIViewController, CLLocationManagerDelegate {
     
     private func configureNavigationBar() {
         if CLLocationManager.locationServicesEnabled() {
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-        
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestAlwaysAuthorization()
+            locationManager.startUpdatingLocation()
+            
         }
         
-    guard let currentUser = usersManager.currentUserProfile else { return }
+        guard let currentUser = usersManager.currentUserProfile else { return }
         let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         containerView.translatesAutoresizingMaskIntoConstraints = false

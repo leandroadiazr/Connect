@@ -37,9 +37,6 @@ class DiscussionViewController: UIViewController {
     var chathingWith = [UserProfile]()
     var recipientUser: UserProfile?
     var persistenceManager = PersistenceManager.shared
-//    let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
-//    let profilePic = CustomAvatarImage(frame: .zero)
-//    let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
     
     var conversations = [Messages]()
     var conversationsDictionary = [String: Messages]()
@@ -55,7 +52,7 @@ class DiscussionViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.showLoadingView()
-//        updateConversations()
+        updateConversations()
     }
     
     private func cleanUpOnLoad() {
@@ -97,6 +94,7 @@ class DiscussionViewController: UIViewController {
         guard let receivedUser = recipientUser else { return }
         self.chathingWith.append(receivedUser)
         let newChat = NewChatVC(recipientUser: receivedUser)
+        newChat.title = receivedUser.name
         newChat.isNewConversation = true
         self.navigationController?.pushViewController(newChat, animated: true)
     }

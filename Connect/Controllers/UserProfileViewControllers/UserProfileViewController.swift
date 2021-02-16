@@ -41,12 +41,14 @@ class UserProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
     }
     
     private func fetchUserProfile() {
         guard let userProfile = usersManager.currentUserProfile else { return }
         self.currentLoggedUser.append(userProfile)
         self.title = userProfile.name
+        
         DispatchQueue.main.async {
             self.reloadData(with: self.currentLoggedUser)
         }

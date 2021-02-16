@@ -25,9 +25,6 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     let inputTextField = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "New cMessage...")
     let sendBtn = CustomGenericButton(backgroundColor: .link, title: "Send")
     let cameraBtn = CustomMainButton(backgroundColor: .red, title: "", textColor: .label, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.camera)
-//    let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
-//    let profilePic = CustomAvatarImage(frame: .zero)
-//    let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
     var isMessageEntered: Bool { return !inputTextField.text!.isEmpty }
     
     init(recipientUser: UserProfile) {
@@ -83,12 +80,6 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
-
-
-
-    
-
     
     private func setupInputComponents() {
         containerView.backgroundColor = .systemGray6

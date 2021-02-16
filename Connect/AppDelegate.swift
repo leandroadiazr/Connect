@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         GIDSignIn.sharedInstance()?.clientID = FirebaseApp.app()?.options.clientID
         GIDSignIn.sharedInstance()?.delegate = self
         IQKeyboardManager.shared.enable = true
-//        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.keyboardDistanceFromTextField = -150
         
         return true

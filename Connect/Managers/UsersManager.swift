@@ -172,21 +172,22 @@ class UserManager {
                             completion(.success(true))
                         }
                     }
-//                    else {
-//                        //else Create new
-//                        let newCollection: [String: Any] = ["userID": user.userID,
-//                                                            "name": user.name,
-//                                                            "email": user.email,
-//                                                            "profileImage": user.profileImage]
-//                        
-//                        self.databaseRef.child("users").child(userID).setValue(newCollection) { (error, _) in
-//                            if let unwrappedError = error  {
-//                                completion(.failure(.unableToSaveProfile))
-//                                print("Error saving the document :", unwrappedError.localizedDescription)
-//                            }
-//                            completion(.success(true))
-//                        }
-//                    }
+                    else {
+                        //else Create new
+                        let newCollection: [String: Any] = ["userID": user.userID,
+                                                            "name": user.name,
+                                                            "email": user.email,
+                                                            "location": user.userLocation,
+                                                            "profileImage": user.profileImage]
+                        
+                        self.databaseRef.child("users").child(userID).setValue(newCollection) { (error, _) in
+                            if let unwrappedError = error  {
+                                completion(.failure(.unableToSaveProfile))
+                                print("Error saving the document :", unwrappedError.localizedDescription)
+                            }
+                            completion(.success(true))
+                        }
+                    }
                 }
             }
         }
