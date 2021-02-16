@@ -38,7 +38,7 @@ class TweetsViewController: UIViewController {
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(profileView)
-        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -50).isActive = true
         self.navigationItem.titleView = containerView
        
         

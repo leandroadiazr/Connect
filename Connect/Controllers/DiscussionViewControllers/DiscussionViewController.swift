@@ -78,16 +78,13 @@ class DiscussionViewController: UIViewController {
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(profileView)
-        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -50).isActive = true
         self.navigationItem.titleView = containerView
     }
-    
-  
-    
+
     @objc private func createNewChat() {
         let createVC = CreateChatViewController()
         createVC.completion = {[weak self] receivedUserFromCreateChat in
-//            print("receivedUserFromCreateChat :", receivedUserFromCreateChat)
             self?.createNewConversation(recipientUser: receivedUserFromCreateChat)
         }
         
@@ -111,7 +108,6 @@ class DiscussionViewController: UIViewController {
         tableView?.register(DiscussionsViewCell.self, forCellReuseIdentifier: DiscussionsViewCell.reuseID)
         tableView?.delegate = self
         tableView?.dataSource = self
-//        tableView?.backgroundColor = .systemBlue
         tableView?.removeEmptyCells()
         
         guard let tableView = tableView else { return}
@@ -137,13 +133,11 @@ class DiscussionViewController: UIViewController {
                             }
                         }
 
-                        
                         self.messagesManager.observeRecipientUserProfile(userID: newMessage.recipientID) { [weak self] result in
                             guard let self = self else { return }
                             switch result {
                             case .success(let recipientReceived):
                                 self.chathingWith.append(recipientReceived)
-//                                print("each user id retreived: ",recipientReceived.userID)
                             case .failure(let error):
                                 self.showAlert(title: "Unable send message", message: error.rawValue, buttonTitle: "Ok")
                                 print(error.localizedDescription)
@@ -156,7 +150,6 @@ class DiscussionViewController: UIViewController {
                 }
                 
             case .failure(let error):
-                
                 print(error.localizedDescription)
             }
         }

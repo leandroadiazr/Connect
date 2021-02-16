@@ -17,9 +17,6 @@ class MainFeedCollectionViewController: UIViewController {
         view.backgroundColor = .systemBackground
         self.edgesForExtendedLayout = UIRectEdge.bottom
         self.edgesForExtendedLayout = UIRectEdge.top
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
     }
     // MARK: UICollectionViewDataSource
     
@@ -31,9 +28,6 @@ class MainFeedCollectionViewController: UIViewController {
         
         //MARK:- MENU COLLECTION VIEW
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        //            collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        
-        //            collectionView?.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 400)
         collectionView?.frame = view.bounds
         collectionView?.delegate = self
         collectionView?.dataSource = self

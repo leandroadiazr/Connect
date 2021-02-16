@@ -75,17 +75,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS
     private func configure() {
-        
-        
         locationManager.delegate = self
         if CLLocationManager.locationServicesEnabled() {
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-        
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestAlwaysAuthorization()
+            locationManager.startUpdatingLocation()
         }
-        
-        
         
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.enable = false
@@ -118,8 +113,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
         let coordinates = CLGeocoder()
         coordinates.reverseGeocodeLocation(location) { (address, error) in
             if let placemark = address?.first {
-                self.userLocation = placemark.locality
-//                print(self.userLocation)
+                self.userLocation = "\(placemark.locality!), \(placemark.administrativeArea!)"
             }
         }
     }

@@ -53,7 +53,8 @@ class UserProfileViewCell: UICollectionViewCell {
     }
     
     
-    func setCell(with user: UserProfile){
+    func setCell(with userProfile: UserProfile?){
+        guard let user = userProfile else { return }
         userProfileImage.cacheImage(from: user.profileImage)
         userNameLabel.text = user.name
         statusLabel.text = user.userStatus
@@ -112,8 +113,6 @@ class UserProfileViewCell: UICollectionViewCell {
     private func setupConstraints() {
         let padding: CGFloat = 10
         let bottomPadding: CGFloat = 20
-//        let mediaHeight: CGFloat = contentView.frame.height / 3
-//        let mediaWidth: CGFloat = contentView.frame.width / 2.05
         
         //ProfileImage
         NSLayoutConstraint.activate([

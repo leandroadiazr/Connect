@@ -81,7 +81,6 @@ class MainFeedViewCell: UICollectionViewCell, UINavigationControllerDelegate {
     }
 
     private func configure() {
-        
         likesLabel.text = "Likes: "
         commentsLabel.text = "Comments: "
         viewsLabel.text = "Views: "

@@ -47,7 +47,7 @@ class CustomProfileView: UIView {
         
         userNameLabel.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 10),
         userNameLabel.centerYAnchor.constraint(equalTo: profilePic.centerYAnchor),
-        userNameLabel.widthAnchor.constraint(equalToConstant: 55),
+//        userNameLabel.widthAnchor.constraint(equalToConstant: 55),
         userNameLabel.heightAnchor.constraint(equalToConstant: 40),
         ])
 

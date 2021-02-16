@@ -71,7 +71,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
             let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
             containerView.translatesAutoresizingMaskIntoConstraints = false
             containerView.addSubview(profileView)
-            profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+            profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -50).isActive = true
             self.navigationItem.titleView = containerView
         
     }
@@ -109,10 +109,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
     }
     
     private func fetchUserProfile() {
-        
         guard let userProfile = usersManager.currentUserProfile else { return }
-
-        print("userProfile on create new :", userProfile)
                 self.title = userProfile.name
                 DispatchQueue.main.async {
                     self.configure(with: userProfile)
@@ -159,9 +156,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
     
     @objc private func saveNewPost() {
         print("Clicked Save Btn 'Done'")
-        
-        
-        
         self.dismisVC()
         guard let userProfile = self.userProfile else { return }
         createNewPost(userProfile: userProfile)
@@ -214,11 +208,9 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
                     "views": views
                 ]
                 self.firestore.savePost(post: newPost) { (result) in
-                    print("result: ", result)
                     switch result {
                     case .success(true):
                         print("")
-                        
                     case .success(false):
                         self.showAlert(title: "Ups... Something is wrong", message: "Please check your network connection and try again", buttonTitle: "Okay")
                     case .failure(_):
@@ -255,7 +247,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
 extension CreateNewPostViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.originalImage] as? UIImage else { return }
-        print(image)
         picker.dismiss(animated: true) {
             self.currentButton!.setImage(image, for: .normal)
         }

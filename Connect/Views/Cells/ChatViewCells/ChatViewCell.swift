@@ -17,9 +17,7 @@ class ChatViewCell: UICollectionViewCell {
     
     var senderBubbleWidthAnchor: NSLayoutConstraint?
     let senderBubbleView = UIView()
-    
-    
- 
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -33,13 +31,6 @@ class ChatViewCell: UICollectionViewCell {
         recipientTextArea.text = chat.textMessage
     }
     private func configure() {
-//        backgroundColor = .blue
-    
-//        layer.borderWidth = 2
-//        senderTextArea.layer.borderWidth = 1
-//        senderTextArea.layer.borderColor = UIColor.blue.cgColor
-//        addSubview(senderTextArea)
-        
         addSubview(recipientBubbleView)
         recipientBubbleView.translatesAutoresizingMaskIntoConstraints = false
         recipientBubbleView.backgroundColor = .systemBlue//  = Images.recipientChatBubble
@@ -66,9 +57,6 @@ class ChatViewCell: UICollectionViewCell {
         senderBubbleWidthAnchor?.isActive = true
         senderTextArea.layer.borderColor = UIColor.red.cgColor
         addSubview(senderTextArea)
-        
-
-        
         setupConstraints()
     }
     
@@ -105,9 +93,7 @@ class ChatViewCell: UICollectionViewCell {
             recipientBubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5),
             recipientBubbleView.heightAnchor.constraint(equalTo: self.heightAnchor,constant: -areaPading)
         ])
-        
-        
-        
+ 
     }
     
 }
