@@ -14,6 +14,7 @@
 		E8564C9625C7ABC100AFCE0D /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */; };
 		E86B341B25D07357004FD2E9 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341A25D07357004FD2E9 /* ChatViewController.swift */; };
 		E86B341E25D079D4004FD2E9 /* CreateChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */; };
+		E87B10A125DC143200ABB7C2 /* CustomProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B10A025DC143200ABB7C2 /* CustomProfileView.swift */; };
 		E8967E5725C89B4D00AB571B /* LoginConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */; };
 		E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */; };
 		E8AE047925CC6C49005383A8 /* CreateViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AE047825CC6C49005383A8 /* CreateViewCell.swift */; };
@@ -105,6 +106,7 @@
 		E8564C9525C7ABC100AFCE0D /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
 		E86B341A25D07357004FD2E9 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatViewController.swift; sourceTree = "<group>"; };
+		E87B10A025DC143200ABB7C2 /* CustomProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProfileView.swift; sourceTree = "<group>"; };
 		E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConstraintExtension.swift; sourceTree = "<group>"; };
 		E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpConstraintExtension.swift; sourceTree = "<group>"; };
 		E8AE047825CC6C49005383A8 /* CreateViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewCell.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				E8D6D0EC25C4E95800778209 /* CustomLine.swift */,
 				E8D6D0ED25C4E95800778209 /* TextViews */,
 				E8D6D0F025C4E95800778209 /* ImageViews */,
+				E87B10A025DC143200ABB7C2 /* CustomProfileView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -810,6 +813,7 @@
 				E8D6D10125C4E95800778209 /* SecondaryCollectionViewCell.swift in Sources */,
 				E8B93B4725DA944A0084AA75 /* ChatViewCell.swift in Sources */,
 				E8D6D11625C4E95800778209 /* CustomTitleLabel.swift in Sources */,
+				E87B10A125DC143200ABB7C2 /* CustomProfileView.swift in Sources */,
 				E8D6D15425C4E96200778209 /* PostViewController.swift in Sources */,
 				E86B341E25D079D4004FD2E9 /* CreateChatViewController.swift in Sources */,
 				E8E55CA225C901EB0029D7BC /* ImageCacheManager.swift in Sources */,

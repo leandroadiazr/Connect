@@ -17,13 +17,18 @@ class UserProfileViewController: UIViewController {
     let logoutButton    = CustomGenericButton(backgroundColor: .systemRed, title: "Logout")
     let firestore       = FireStoreManager.shared
     var ref             : DatabaseReference!
-    var userManager     = UserManager.shared
+    var usersManager     = UserManager.shared
     let sections        = Section.self
     var collectionView  : UICollectionView!
     var dataSource      : UICollectionViewDiffableDataSource<Section, UserProfile>!
     var feeds           = testingData
     var loggedUser      = [User]()
     var currentLoggedUser = [UserProfile]()
+    
+    let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
+    let profilePic = CustomAvatarImage(frame: .zero)
+    let profileView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+    let containerView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,23 +44,19 @@ class UserProfileViewController: UIViewController {
     }
     
     private func fetchUserProfile() {
-        guard let userProfile = userManager.currentUserProfile else { return }
-        print(userProfile)
+        guard let userProfile = usersManager.currentUserProfile else { return }
         self.currentLoggedUser.append(userProfile)
-        print("user on profile :", userProfile.userID)
         self.title = userProfile.name
-        print(self.currentLoggedUser)
         DispatchQueue.main.async {
             self.reloadData(with: self.currentLoggedUser)
         }
-        
     }
     
     @objc private func handleLogout() {
         print("Logut")
-        userManager.handleLogout()
-        userManager.logoutFromFacebook()
-        userManager.logoutFromGoogle()
+        usersManager.handleLogout()
+        usersManager.logoutFromFacebook()
+        usersManager.logoutFromGoogle()
         showLoadingView()
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .custom
@@ -64,10 +65,14 @@ class UserProfileViewController: UIViewController {
     }
     
     private func configureNavigationBar() {
-        let titleImageView = UIImageView(image: Images.like)
-        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-        titleImageView.contentMode = .scaleAspectFit
-        titleImageView.tintColor = .blue
+    guard let currentUser = usersManager.currentUserProfile else { return }
+        let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(profileView)
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+        self.navigationItem.titleView = containerView
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoutButton)
         logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
         setupConstraints()
@@ -122,14 +127,7 @@ class UserProfileViewController: UIViewController {
     }
 }
 
-extension UserProfileViewController {
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            logoutButton.heightAnchor.constraint(equalToConstant: 25),
-            logoutButton.widthAnchor.constraint(equalToConstant: 80)
-        ])
-    }
-}
+
 
 extension UserProfileViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -142,5 +140,14 @@ extension UserProfileViewController: UIViewControllerTransitioningDelegate {
         let customTransition = CustomTransition()
         customTransition.isPresenting = false
         return customTransition
+    }
+}
+
+extension UserProfileViewController {
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            logoutButton.heightAnchor.constraint(equalToConstant: 25),
+            logoutButton.widthAnchor.constraint(equalToConstant: 80)
+        ])
     }
 }

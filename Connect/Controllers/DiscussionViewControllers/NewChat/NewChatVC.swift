@@ -25,6 +25,9 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     let inputTextField = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "New cMessage...")
     let sendBtn = CustomGenericButton(backgroundColor: .link, title: "Send")
     let cameraBtn = CustomMainButton(backgroundColor: .red, title: "", textColor: .label, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.camera)
+//    let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
+//    let profilePic = CustomAvatarImage(frame: .zero)
+//    let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
     var isMessageEntered: Bool { return !inputTextField.text!.isEmpty }
     
     init(recipientUser: UserProfile) {
@@ -38,13 +41,14 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("user Received on newchat ", recipientUser)
+        
         view.backgroundColor = .purple
         if !isNewConversation {
         updateConversations(for: recipientID)
+            configureNavigationBar()
         }
         configureCollectionView()
-        configureNavigationBar()
+//
         setupInputComponents()
         inputTextField.delegate = self
         
@@ -54,30 +58,37 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
       
     }
     
-    private func updateConversations(for recipientID: String ) {
-            self.messageManager.observeSingleSenderRecipientConversation(for: recipientID) { result in
-                switch result {
-                case .success(let messages):
-                    self.conversations.append(contentsOf: messages)
-                    DispatchQueue.main.async {
-                        self.collectionView?.reloadData()
-                    }
-                case .failure(let error):
-                    self.showAlert(title: "There is an Error", message: error.rawValue, buttonTitle: "Ok")
-                }
-            }
+    private func configureNavigationBar() {
+        guard let recipient = self.recipientUser else { return }
+        let profileView = CustomProfileView(frame: .zero, profilePic: recipient.profileImage, userName: recipient.name)
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(profileView)
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+        self.navigationItem.titleView = containerView
     }
     
-    private func configureNavigationBar() {
-        //        let titleImageView = UIImageView.sd_setImage(recipientUser?.profileImage)
-        //        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-        //        titleImageView.contentMode = .scaleAspectFit
-        //        titleImageView.tintColor = .blue
-        //                navigationItem.titleView = titleImageView
-        self.navigationItem.title = recipientUser?.name
-        print(recipientUser?.name)
-        
+    
+    private func updateConversations(for recipientID: String ) {
+        self.messageManager.observeSingleSenderRecipientConversation(for: recipientID) { result in
+            self.conversations.removeAll()
+            switch result {
+            case .success(let messages):
+                self.conversations.append(contentsOf: messages)
+                DispatchQueue.main.async {
+                    self.collectionView?.reloadData()
+                }
+            case .failure(let error):
+                self.showAlert(title: "There is an Error", message: error.rawValue, buttonTitle: "Ok")
+            }
+        }
     }
+    
+
+
+
+    
+
     
     private func setupInputComponents() {
         containerView.backgroundColor = .systemGray6
@@ -104,6 +115,8 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.register(ChatViewCell.self, forCellWithReuseIdentifier:ChatViewCell.reuseID)
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 50, right: 0)
+        collectionView?.alwaysBounceVertical = true
         guard let collectionView = collectionView else { return }
         view.addSubview(collectionView)
     }
@@ -120,9 +133,12 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         guard let recipient = recipientUser else { return }
         self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: textMessage) { [weak self] result in
             guard let self = self else {return}
+         
             switch result {
             case .success(let newMessage):
-              
+                self.conversations.removeAll { (id) -> Bool in
+                    newMessage.messageID == id.messageID
+                }
                 self.conversations.append(newMessage)
                 self.conversations.sort { (message1, message2) -> Bool in
                     return message1.timeStamp.intValue > message2.timeStamp.intValue
@@ -222,6 +238,21 @@ extension NewChatVC {
         ])
         
     }
+    
+//    private func setupNavConstraints() {
+//        NSLayoutConstraint.activate([
+//            profilePic.centerXAnchor.constraint(equalTo: titleView.centerXAnchor, constant: 5),
+//            profilePic.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
+//            profilePic.widthAnchor.constraint(equalToConstant: 40),
+//            profilePic.heightAnchor.constraint(equalToConstant: 40),
+//
+//            usernameLabel.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 5),
+//            usernameLabel.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
+//            usernameLabel.widthAnchor.constraint(equalToConstant: 55),
+//            usernameLabel.heightAnchor.constraint(equalToConstant: 40),
+//
+//        ])
+//    }
 }
 
 

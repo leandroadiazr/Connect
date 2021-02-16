@@ -160,6 +160,7 @@ class UserManager {
                         let newCollection = ["userID": user.userID,
                                              "name": user.name,
                                              "email": user.email,
+                                             "location": user.userLocation,
                                              "profileImage": user.profileImage]
                         usersCollection = newCollection
                         

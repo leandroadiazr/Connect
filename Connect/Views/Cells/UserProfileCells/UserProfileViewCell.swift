@@ -59,6 +59,7 @@ class UserProfileViewCell: UICollectionViewCell {
         statusLabel.text = user.userStatus
         postedLabel.text = user.userStatus
         titleLabel.text = user.userBio
+        locationLabel.text = user.userLocation
     }
     
     

@@ -37,6 +37,9 @@ class DiscussionViewController: UIViewController {
     var chathingWith = [UserProfile]()
     var recipientUser: UserProfile?
     var persistenceManager = PersistenceManager.shared
+//    let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
+//    let profilePic = CustomAvatarImage(frame: .zero)
+//    let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
     
     var conversations = [Messages]()
     var conversationsDictionary = [String: Messages]()
@@ -52,7 +55,7 @@ class DiscussionViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.showLoadingView()
-        updateConversations()
+//        updateConversations()
     }
     
     private func cleanUpOnLoad() {
@@ -69,12 +72,22 @@ class DiscussionViewController: UIViewController {
     private func configureNavigationBar() {
         let addChat = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewChat))
         navigationItem.rightBarButtonItem = addChat
+
+        guard let currentUser = usersManager.currentUserProfile else { return }
+        let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(profileView)
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+        self.navigationItem.titleView = containerView
     }
+    
+  
     
     @objc private func createNewChat() {
         let createVC = CreateChatViewController()
         createVC.completion = {[weak self] receivedUserFromCreateChat in
-            print("receivedUserFromCreateChat :", receivedUserFromCreateChat)
+//            print("receivedUserFromCreateChat :", receivedUserFromCreateChat)
             self?.createNewConversation(recipientUser: receivedUserFromCreateChat)
         }
         
@@ -85,12 +98,8 @@ class DiscussionViewController: UIViewController {
     
     private func createNewConversation(recipientUser: UserProfile?) {
         guard let receivedUser = recipientUser else { return }
-        self.recipientUser = receivedUser
-        let newChat = NewChatVC(recipientUser: self.recipientUser!)
-        //        save user to Cache
-        persistenceManager.saveUserToDeviceCache(user: self.recipientUser) { result in
-            print(result)
-        }
+        self.chathingWith.append(receivedUser)
+        let newChat = NewChatVC(recipientUser: receivedUser)
         newChat.isNewConversation = true
         self.navigationController?.pushViewController(newChat, animated: true)
     }
@@ -115,26 +124,26 @@ class DiscussionViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let messages):
+                
                     for newMessage in messages {
                         let recipient = newMessage
                     
                         if recipient.recipientID == newMessage.recipientID {
-                            print(recipient.recipientID, recipient)
+//                            print(recipient.recipientID, recipient)
                             self.conversationsDictionary[recipient.recipientID] = newMessage
                             self.conversations = Array(self.conversationsDictionary.values)
                             self.conversations.sort { (message1, message2) -> Bool in
                                 return message1.timeStamp.intValue > message2.timeStamp.intValue
                             }
                         }
-                        print(recipient.recipientID)
-                        self.messagesManager.observeRecipientUserProfile(userID: recipient.recipientID) { [weak self] result in
+
+                        
+                        self.messagesManager.observeRecipientUserProfile(userID: newMessage.recipientID) { [weak self] result in
                             guard let self = self else { return }
                             switch result {
                             case .success(let recipientReceived):
-                                self.recipientUser = recipientReceived
                                 self.chathingWith.append(recipientReceived)
-                                print(Auth.auth().currentUser?.uid)
-                                print(recipientReceived.userID)
+//                                print("each user id retreived: ",recipientReceived.userID)
                             case .failure(let error):
                                 self.showAlert(title: "Unable send message", message: error.rawValue, buttonTitle: "Ok")
                                 print(error.localizedDescription)
@@ -172,23 +181,38 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currentDiscusion = conversations[indexPath.row]
+        print("discussion with :", currentDiscusion.recipientID)
+  
+        for recipient in chathingWith {
+            if recipient.userID == currentDiscusion.recipientID {
+                print("recipient at indexpath :", recipient.userID)
+                self.recipientUser = recipient
+            }
+        }
         
-        
-        print("when click did selected row this is the user that is here :", currentDiscusion.recipientID)
-        
-//        for user in chathingWith {
-//            if user.userID == currentDiscusion.recipientID {
-        guard let recipient = recipientUser else { return }
-        print(recipient)
-                let chatVC = NewChatVC(recipientUser: recipient)
-                chatVC.recipientID = currentDiscusion.recipientID
+        guard let currentRecipient = self.recipientUser else { return }
+        let chatVC = NewChatVC(recipientUser: currentRecipient)
         chatVC.isNewConversation = false
-//                chatVC.conversations.append(currentDiscusion)
-//                print(currentDiscusion)
-                
-                self.navigationController?.pushViewController(chatVC, animated: true)
-//            }
-//        }
-        
+        chatVC.recipientID = currentDiscusion.recipientID
+        self.navigationController?.pushViewController(chatVC, animated: true)
+
     }
 }
+
+
+//extension DiscussionViewController {
+//    private func setupNavConstraints() {
+//        NSLayoutConstraint.activate([
+//            profilePic.leadingAnchor.constraint(equalTo: titleView.centerXAnchor, constant: -50),
+//            profilePic.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
+//            profilePic.widthAnchor.constraint(equalToConstant: 40),
+//            profilePic.heightAnchor.constraint(equalToConstant: 40),
+//
+//            usernameLabel.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 5),
+//            usernameLabel.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
+//            usernameLabel.widthAnchor.constraint(equalToConstant: 55),
+//            usernameLabel.heightAnchor.constraint(equalToConstant: 40),
+//
+//        ])
+//    }
+//}

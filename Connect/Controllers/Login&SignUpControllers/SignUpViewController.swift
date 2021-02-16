@@ -11,8 +11,9 @@ import Firebase
 import FirebaseAuth
 import AVFoundation
 import IQKeyboardManagerSwift
+import CoreLocation
 
-class SignUpViewController: UIViewController, UITextFieldDelegate {
+class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationManagerDelegate {
     
     //MARK:- UI ELELMENTS
     //MARK:- IMAGES
@@ -61,16 +62,31 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     var userManager     = UserManager.shared
     let firestore       = FireStoreManager.shared
     let storage         = FireStorageManager.shared
+    let locationManager = CLLocationManager()
+    var userLocation: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
         view.backgroundColor = .systemBackground
+        
     }
     
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS
     private func configure() {
+        
+        
+        locationManager.delegate = self
+        if CLLocationManager.locationServicesEnabled() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        }
+        
+        
+        
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.enable = false
         configureBackgroundImages()
@@ -95,6 +111,17 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     private func cameraAccessNeeded() {
         self.showAlert(title: "Camera Access Needed", message: "We need access to your camera", buttonTitle: "Ok")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location: CLLocation = locationManager.location else { return }
+        let coordinates = CLGeocoder()
+        coordinates.reverseGeocodeLocation(location) { (address, error) in
+            if let placemark = address?.first {
+                self.userLocation = placemark.locality
+//                print(self.userLocation)
+            }
+        }
     }
     
     //MARK:- LABELS & TEXT FIELDS
@@ -324,9 +351,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 }
                 
                 guard let uuid = authResult?.user.uid else { return }
-                
+                guard let currentLocation = self.userLocation else { return }
                 self.storage.uploadSingleImage(userProfile) { (imageURL) in
-                    newUser = UserProfile(id: uuid, userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: "Florida", userBio: "Aqui", userStatus: "Active")
+                    newUser = UserProfile(id: uuid, userID: uuid, name: name, handler: "@\(name)", email: email, profileImage: imageURL, userLocation: currentLocation, userBio: "Aqui", userStatus: "Active")
                     
                     guard let saveThisUser = newUser else { return}
                     

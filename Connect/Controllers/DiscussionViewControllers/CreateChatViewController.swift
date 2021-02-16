@@ -15,7 +15,7 @@ class CreateChatViewController: UIViewController {
     private var hasFetched = false
     private var database = MessagesManager.shared
     private var persistenceManager = PersistenceManager.shared
-    private var userManager = UserManager.shared
+    private var usersManager = UserManager.shared
     
     private let noResultsLabel = CustomSecondaryTitleLabel(title: "No results for that search", fontSize: 16, textColor: .lightText)
     
@@ -32,6 +32,15 @@ class CreateChatViewController: UIViewController {
     private func configureNavigationBar() {
         let cancelBtn = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissVC))
         navigationItem.leftBarButtonItem = cancelBtn
+    
+        guard let currentUser = usersManager.currentUserProfile else { return }
+            let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
+            let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(profileView)
+            profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+            self.navigationItem.titleView = containerView
+        
         filterSearch()
     }
     
@@ -106,7 +115,7 @@ extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedUser = filteredUsers[indexPath.row]
         print("selected")
-        if selectedUser.userID == self.userManager.currentUserProfile?.userID {
+        if selectedUser.userID == self.usersManager.currentUserProfile?.userID {
             self.showAlert(title: "Wrong User...", message: "Hey, you can't message you self, please choose another recipient", buttonTitle: "Thank you..")
             return
         } else {

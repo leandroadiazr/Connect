@@ -38,6 +38,7 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.viewControllers = [createHomeBaseViewController(), createTweetsViewController(), createPostViewController(), createDiscussionViewController(), createProfileViewController()]
     }
     
+    
     func createHomeBaseViewController() -> UINavigationController {
         let baseCon             = HomeBaseViewController()
 
@@ -95,7 +96,7 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
     }
 }
 
-extension CustomTabBarController: UIViewControllerTransitioningDelegate {
+extension CustomTabBarController: UIViewControllerTransitioningDelegate, UIAdaptivePresentationControllerDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let customTransition = CustomTransition()
         customTransition.isPresenting = true
@@ -106,6 +107,10 @@ extension CustomTabBarController: UIViewControllerTransitioningDelegate {
         let customTransition = CustomTransition()
         customTransition.isPresenting = false
         return customTransition
+    }
+    
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return false
     }
 }
 

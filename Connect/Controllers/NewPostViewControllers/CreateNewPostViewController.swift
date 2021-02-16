@@ -7,9 +7,10 @@
 
 import UIKit
 import FirebaseAuth
+import IQKeyboardManagerSwift
 
 
-class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
+class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdaptivePresentationControllerDelegate {
     
     let userProfileImageView    = CustomAvatarImage(frame: .zero)
     let mainImageViewArea       = CustomMainButton(backgroundColor: .lightGray, title: "", textColor: .white, borderWidth: 0.5, borderColor: CustomColors.CustomGreenLightBright.cgColor, buttonImage: Images.greenPlus)
@@ -32,7 +33,7 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     
     let storage                 = FireStorageManager.shared
     let firestore               = FireStoreManager.shared
-    let userManager             = UserManager.shared
+    let usersManager             = UserManager.shared
     var userProfile             : UserProfile?
     
     let imagePicker = UIImagePickerController()
@@ -51,14 +52,33 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.enable = true
+    }
     private func configureNavigationBar() {
         let cancelBtn = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(backToMainVC))
         navigationItem.leftBarButtonItem = cancelBtn
+        
+        
+        
         let saveBtn = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveNewPost))
         navigationItem.rightBarButtonItem = saveBtn
+
+        guard let currentUser = usersManager.currentUserProfile else { return }
+            let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
+            let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(profileView)
+            profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+            self.navigationItem.titleView = containerView
+        
     }
     
     private func configureUI() {
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.enable = false
         self.view.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
         view.addSubview(userProfileImageView)
         mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false
@@ -72,6 +92,10 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
         setupActionButtons()
         setupConstraints()
         fetchUserProfile()
+        
+        isModalInPresentation = true
+        navigationController?.presentationController?.delegate = self
+        
     }
     
     @objc private func backToMainVC() {
@@ -80,11 +104,13 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
             self.dismiss(animated: true, completion: nil)
             tabCon.selectedIndex = 0
         }
+        
+        
     }
     
     private func fetchUserProfile() {
         
-        guard let userProfile = userManager.currentUserProfile else { return }
+        guard let userProfile = usersManager.currentUserProfile else { return }
 
         print("userProfile on create new :", userProfile)
                 self.title = userProfile.name
@@ -133,6 +159,9 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate {
     
     @objc private func saveNewPost() {
         print("Clicked Save Btn 'Done'")
+        
+        
+        
         self.dismisVC()
         guard let userProfile = self.userProfile else { return }
         createNewPost(userProfile: userProfile)
@@ -379,4 +408,9 @@ extension CreateNewPostViewController: UIViewControllerTransitioningDelegate {
         customTransition.isPresenting = false
         return customTransition
     }
+    
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return false
+    }
+    
 }

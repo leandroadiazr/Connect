@@ -13,6 +13,11 @@ class TweetsViewController: UIViewController {
     var collectionView: UICollectionView?
     var test = testingData
     var tweets = tweetsData
+    var usersManager     = UserManager.shared
+    
+    let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
+    let profilePic = CustomAvatarImage(frame: .zero)
+    let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,11 +33,14 @@ class TweetsViewController: UIViewController {
     
     //MARK:- NAV&ITEM BAR CONFIGURATION
     private func configureNavigationBar() {
-        let titleImageView = UIImageView(image: Images.like)
-        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-        titleImageView.contentMode = .scaleAspectFit
-        titleImageView.tintColor = CustomColors.CustomGreen
-        navigationItem.titleView = titleImageView
+    guard let currentUser = usersManager.currentUserProfile else { return }
+        let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(profileView)
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+        self.navigationItem.titleView = containerView
+       
         
         let leftBtn = UIButton(type: .system)
         leftBtn.setImage(Images.like, for: .normal)
@@ -50,6 +58,7 @@ class TweetsViewController: UIViewController {
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: newTweet), UIBarButtonItem(customView: searchBtn)]
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//        setupNavConstraints()
     }
     
     //MARK:- CONFIGURE COLLECTION VIEW
@@ -169,3 +178,5 @@ extension TweetsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         return CGSize(width: view.frame.width, height: 64)
     }
 }
+
+

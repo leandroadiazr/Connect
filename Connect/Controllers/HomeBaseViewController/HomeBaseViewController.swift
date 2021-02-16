@@ -8,28 +8,41 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import CoreLocation
 
-
-class HomeBaseViewController: UIViewController {
+class HomeBaseViewController: UIViewController, CLLocationManagerDelegate {
     
     var storyView       = UIView()
     var menuView        = UIView()
     var mainFeedView    = UIView()
     var ref: DatabaseReference!
+    var usersManager    = UserManager.shared
     var updateTitle     = ""
+    let locationManager = CLLocationManager()
+    var userLocation: String?
+    
+    let usernameLabel = CustomTitleLabel(title: "", textAlignment: .center, fontSize: 18)
+//    let profilePic = CustomAvatarImage(frame: .zero)
+    let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+    
+    
+//    let containerView = UIView()
+//    var profileView = CustomProfileView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationManager.delegate = self
         view.backgroundColor = CustomColors.CustomGreen
         configureChildViewControllers()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        configureNavigationBar()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        configureNavigationBar()
+        
         print("dismissCAlled on homebased")
 //        self.dismissLoadingView()
     }
@@ -65,14 +78,32 @@ class HomeBaseViewController: UIViewController {
     }
     
     private func configureNavigationBar() {
-        let titleImageView = UIImageView(image: Images.like)
-        titleImageView.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-        titleImageView.contentMode = .scaleAspectFit
-        titleImageView.tintColor = .blue
-        navigationItem.title = updateTitle
+        if CLLocationManager.locationServicesEnabled() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        }
+        
+    guard let currentUser = usersManager.currentUserProfile else { return }
+        let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(profileView)
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -20).isActive = true
+        self.navigationItem.titleView = containerView
     }
     
-    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location: CLLocation = locationManager.location else { return }
+        let coordinates = CLGeocoder()
+        coordinates.reverseGeocodeLocation(location) { (address, error) in
+            if let placemark = address?.first {
+                self.userLocation = placemark.locality
+//                print(self.userLocation)
+            }
+        }
+    }
     func add(childVC: UIViewController, to containerView: UIView) {
         addChild(childVC)
         containerView.addSubview(childVC.view)

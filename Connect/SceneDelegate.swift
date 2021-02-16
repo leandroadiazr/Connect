@@ -32,10 +32,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //                    print("Current user data: ", user)
                     switch result {
                     case .success(let user):
+                        self.userManager.currentUserProfile = user
 //                        print(self.userManager.currentUserProfile as Any)
                         guard let uuid = user?.userID else { return }
 //                        print("User ID Found in SceneDelegate :********", uuid)
-                        self.userManager.currentUserProfile = user
+                        
+                        print(self.userManager.currentUserProfile)
                     case .failure(let error):
                         print(error.localizedDescription)
                     }

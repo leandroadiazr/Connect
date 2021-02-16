@@ -47,7 +47,7 @@ class MessagesManager {
                 completion(.failure(.unableToFindUser))
                 return
             }
-            print(value)
+    
             let dictionary = value
             guard let email = dictionary["email"] as? String,
                   let name = dictionary["name"] as? String,
@@ -279,18 +279,18 @@ class MessagesManager {
             completion(.success(messages))
         }
     }
-    
-    func getOldMessages(for userID: String, with messageID: String, completiong: @escaping (Result<[Message], ErrorMessages>) -> Void) {
-        print(userID)
-        database.child("messages").observe( .value) { snapshot in
-            guard let value = snapshot.value as? [String: Any] else {
-                completiong(.failure(.unableToFindUser))
-                return
-            }
-            print(value)
-        }
-        //        completiong()
-    }
+//
+//    func getOldMessages(for userID: String, with messageID: String, completiong: @escaping (Result<[Message], ErrorMessages>) -> Void) {
+//        print(userID)
+//        database.child("messages").observe( .value) { snapshot in
+//            guard let value = snapshot.value as? [String: Any] else {
+//                completiong(.failure(.unableToFindUser))
+//                return
+//            }
+//            print(value)
+//        }
+//        //        completiong()
+//    }
     
     
     //MARK:- CREATE NEW MESSAGE FROM NEW CHAT VIEW CONTROLLER WORKING PERFECTLY
@@ -311,7 +311,8 @@ class MessagesManager {
             "recipientProfileImage": recipient.profileImage,
             "textMessage": textMessage,
             "timeStamp": timeStamp,
-            "isRead": isRead.description
+            "isRead": isRead.description,
+            "messageID": ref.key?.description ?? ""
         ]
         
         ref.updateChildValues(newMessage) { error, reference in
@@ -333,7 +334,7 @@ class MessagesManager {
     }
     
     
-    //MARK:- OBSERVE SINGLE USER MESSAGES ON DISCUSSION CONTROLLER WORKING
+    //MARK:- OBSERVE SINGLE USER MESSAGES ON DISCUSSION CONTROLLER WORKING  1.- DISCUSSION VIEW CONTROLLER
     /*THIS WILL LOAD ALL THE CONVERSATIONS THAT THE CURRENT USER IS HAVING WITH EVERY USER*/
     func observeSingleUserMessages(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
         guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
@@ -360,10 +361,11 @@ class MessagesManager {
                       let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
                       let textMessage           = dictionary["textMessage"] as? String,
                       let timeStamp             = dictionary["timeStamp"] as? NSNumber,
-                      let isRead                = dictionary["isRead"] as? String else { return }
+                      let isRead                = dictionary["isRead"] as? String,
+                      let messageID             = dictionary["messageID"] as? String else { return }
                 
                 let readed: Bool = isRead == "false" ? false : true
-                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed, messageID: messageID)
                 conversations.append(newMessage)
                 completion(.success(conversations))
             }
@@ -385,6 +387,7 @@ class MessagesManager {
                 completion(.failure(.unableToFindUser))
                 return }
             let messageID = keySnap.key
+            
             self.database.child("messages").child(messageID).observeSingleEvent(of: .value) { snapshot in
                 
                 guard let data = snapshot.value else {
@@ -401,11 +404,14 @@ class MessagesManager {
                       let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
                       let textMessage           = dictionary["textMessage"] as? String,
                       let timeStamp             = dictionary["timeStamp"] as? NSNumber,
-                      let isRead                = dictionary["isRead"] as? String else { return }
+                      let isRead                = dictionary["isRead"] as? String,
+                      let messageID             = dictionary["messageID"] as? String else { return }
                 
                 let readed: Bool = isRead == "false" ? false : true
-                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed, messageID: messageID)
                 print(newMessage.recipientID)
+                
+                
                 conversation.append(newMessage)
                 completion(.success(conversation))
             }
@@ -434,11 +440,12 @@ class MessagesManager {
                   let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
                   let textMessage           = dictionary["textMessage"] as? String,
                   let timeStamp             = dictionary["timeStamp"] as? NSNumber,
-                  let isRead                = dictionary["isRead"] as? String else { return }
+                  let isRead                = dictionary["isRead"] as? String,
+                  let messageID             = dictionary["messageID"] as? String else { return }
             
             let readed: Bool = isRead == "false" ? false : true
             
-            let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed)
+            let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed, messageID: messageID)
             conversations.append(newMessage)
             completion(.success(conversations))
         }
