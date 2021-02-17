@@ -33,7 +33,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
         configureCollectionView()
         registerCell()
         configureDataSource()
-        realTime()
+        realTimeUsersPosts()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,8 +68,8 @@ class FlowViewController: UIViewController, PresentCommentVC {
 //        }
 //    }
     
-    func realTime() {
-        firestore.realtimeUpdates {  (result) in
+    func realTimeUsersPosts() {
+        firestore.realtimeUsersUpdates {  (result) in
             
             switch result {
             case .success(let feed):

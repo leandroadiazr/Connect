@@ -16,13 +16,14 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     var conversations = [Messages]()
     let containerView = UIView()
     var messageManager = MessagesManager.shared
+    var usersManager    = UserManager.shared
     
     var recipientUser: UserProfile?
     var recipientID: String!
     var sender = UserManager.shared.currentUserProfile
     
     let separator = UIView()
-    let inputTextField = CustomTextField(textAlignment: .left, fontSize: 14, placeholder: "New cMessage...")
+    let inputTextField = CustomTextField(textAlignment: .left, fontSize: 16, placeholder: "New cMessage...")
     let sendBtn = CustomGenericButton(backgroundColor: .link, title: "Send")
     let cameraBtn = CustomMainButton(backgroundColor: .red, title: "", textColor: .label, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.camera)
     var isMessageEntered: Bool { return !inputTextField.text!.isEmpty }
@@ -41,11 +42,11 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         
         view.backgroundColor = .purple
         if !isNewConversation {
-        updateConversations(for: recipientID)
+            updateConversations(for: recipientID)
             configureNavigationBar()
         }
         configureCollectionView()
-//
+        //
         setupInputComponents()
         inputTextField.delegate = self
         
@@ -99,7 +100,6 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     private func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
 
-        
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView?.autoresizingMask = [.flexibleHeight]
         collectionView?.backgroundColor = .systemBackground
@@ -127,22 +127,27 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
          
             switch result {
             case .success(let newMessage):
-                self.conversations.removeAll { (id) -> Bool in
-                    newMessage.messageID == id.messageID
-                }
+//                self.conversations.removeAll { (id) -> Bool in
+//                    newMessage.messageID == id.messageID
+//                }
                 self.conversations.append(newMessage)
                 self.conversations.sort { (message1, message2) -> Bool in
-                    return message1.timeStamp.intValue > message2.timeStamp.intValue
+                    return message1.timeStamp.intValue < message2.timeStamp.intValue
                 }
-                DispatchQueue.main.async {
-                    self.inputTextField.text = ""
-                    self.collectionView?.reloadData()
-                }
+              
+                Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.reloadTableView), userInfo: nil, repeats: false)
                 
             case .failure(let error):
                 self.showAlert(title: "Unable send message", message: "Ups.. Check your network connection", buttonTitle: "Ok")
                 print(error.localizedDescription)
             }
+        }
+    }
+    
+    @objc private func reloadTableView() {
+        DispatchQueue.main.async {
+            self.inputTextField.text = ""
+            self.collectionView?.reloadData()
         }
     }
     
@@ -163,30 +168,50 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let grid = collectionView.dequeueReusableCell(withReuseIdentifier: ChatViewCell.reuseID, for: indexPath) as! ChatViewCell
-        let item = conversations[indexPath.item]
-        grid.configureGrid(with: item)
-        grid.recipientBubbleWidthAnchor?.constant = estimatedFrameSize(string: item.textMessage).width + 20
+        let message = conversations[indexPath.item]
+        setupCell(grid: grid, message: message)
+        grid.configureGrid(with: message)
+        
+        
+        
+        grid.senderBubbleWidthAnchor?.constant = estimatedFrameSize(string: message.textMessage).width + 30
         return grid
+    }
+    
+    private func setupCell(grid: ChatViewCell, message: Messages) {
+        if message.senderID == usersManager.currentUserProfile?.userID {
+            grid.senderBubbleView.backgroundColor = .systemBlue
+            grid.senderTextArea.textColor = .white
+            grid.profileImage.isHidden = true
+        } else if message.senderID != usersManager.currentUserProfile?.userID {
+            grid.senderBubbleView.backgroundColor = CustomColors.CustomGreen
+            grid.senderRightTextAreaAligment?.isActive = false
+            grid.bubbleRightAligment?.isActive = false
+            grid.profileImage.isHidden = false
+            grid.senderTextArea.textColor = .white
+            
+            
+            grid.senderLeftTextAreaAligment?.isActive = true
+            grid.bubbleLeftAligment?.isActive = true
+            
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let height = estimatedFrameSize(string: conversations[indexPath.item].textMessage).height
        
-        return CGSize(width: view.frame.width, height: height + 25)
+        return CGSize(width: view.frame.width, height: height + 35)
         
     }
  
     private func estimatedFrameSize(string: String) -> CGRect{
-        let approximateWidth = view.frame.width - 180
+        let approximateWidth = view.frame.width / 1.8
         let size = CGSize(width: approximateWidth, height: 600)
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
-        return NSString(string: string).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-    
+        return NSString(string: string).boundingRect(with: size, options: .usesFontLeading, attributes: attributes, context: nil)
     }
-
-    
-    
 }
 
 

@@ -21,7 +21,7 @@ class CustomTextField: UITextField {
     convenience init(textAlignment: NSTextAlignment, fontSize: CGFloat, placeholder: String) {
         self.init(frame: .zero)
         self.textAlignment = textAlignment
-        self.font = UIFont.systemFont(ofSize: fontSize, weight: .thin)
+        self.font = UIFont.systemFont(ofSize: fontSize, weight: .black)
         self.placeholder = placeholder
     }
     

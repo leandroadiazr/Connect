@@ -157,7 +157,7 @@ extension SignUpViewController {
             backToSignInBtn.bottomAnchor.constraint(equalTo: signUpWEmailBtn.topAnchor, constant: -lastButtonBottomConstraints),
             backToSignInBtn.leadingAnchor.constraint(equalTo: firstTimeLabel.trailingAnchor, constant: padding),
             backToSignInBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            backToSignInBtn.heightAnchor.constraint(equalToConstant: 35)
+            backToSignInBtn.heightAnchor.constraint(equalToConstant: 20)
             
         ])
         

@@ -9,14 +9,19 @@ import UIKit
 
 class ChatViewCell: UICollectionViewCell {
     static let reuseID = "ChatViewCell"
-    
-    let senderTextArea = CustomTextView(textAlignment: .right, fontSize: 12)
+    let profileImage    = CustomAvatarImage(frame: .zero)
+//    let senderTextArea = CustomTextView(textAlignment: .right, fontSize: 12)
+    let senderTextArea = CustomSecondaryTitleLabel(title: "", fontSize: 12, textColor: .white)
     let recipientTextArea = CustomTextView(textAlignment: .left, fontSize: 12)
-    var recipientBubbleWidthAnchor: NSLayoutConstraint?
     let recipientBubbleView = UIView()
     
     var senderBubbleWidthAnchor: NSLayoutConstraint?
+    var senderRightTextAreaAligment: NSLayoutConstraint?
+    var senderLeftTextAreaAligment: NSLayoutConstraint?
+    var bubbleRightAligment: NSLayoutConstraint?
+    var bubbleLeftAligment: NSLayoutConstraint?
     let senderBubbleView = UIView()
+    var usersManager = UserManager.shared
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,72 +33,72 @@ class ChatViewCell: UICollectionViewCell {
     }
     func configureGrid(with chat: Messages) {
         senderTextArea.text = chat.textMessage
-        recipientTextArea.text = chat.textMessage
+        
+        if chat.senderID == usersManager.currentUserProfile?.userID {
+        profileImage.cacheImage(from: chat.senderProfileImage)
+        } else {
+            profileImage.cacheImage(from: chat.recipientProfileImage)
+        }
     }
     private func configure() {
-        addSubview(recipientBubbleView)
-        recipientBubbleView.translatesAutoresizingMaskIntoConstraints = false
-        recipientBubbleView.backgroundColor = .systemBlue//  = Images.recipientChatBubble
-        recipientBubbleView.layer.cornerRadius = 20
-        recipientTextArea.textColor = .white
-        recipientTextArea.layer.borderWidth = 0
-        recipientTextArea.backgroundColor = .clear
-    
-        recipientBubbleWidthAnchor = recipientBubbleView.widthAnchor.constraint(equalToConstant: 200)
-        recipientBubbleWidthAnchor?.isActive = true
-        recipientTextArea.layer.borderColor = UIColor.red.cgColor
-        addSubview(recipientTextArea)
-        
+
         //MARK:-SENDER
         addSubview(senderBubbleView)
         senderBubbleView.translatesAutoresizingMaskIntoConstraints = false
-        senderBubbleView.backgroundColor = .systemGreen//  = Images.recipientChatBubble
+//        senderBubbleView.backgroundColor = .systemGreen//  = Images.recipientChatBubble
         senderBubbleView.layer.cornerRadius = 20
+        senderBubbleView.addSubview(senderTextArea)
         senderTextArea.textColor = .white
+        senderTextArea.lineBreakMode = .byWordWrapping
+        senderTextArea.numberOfLines = 0
         senderTextArea.layer.borderWidth = 0
         senderTextArea.backgroundColor = .clear
+        senderTextArea.textAlignment = .center
     
         senderBubbleWidthAnchor = senderBubbleView.widthAnchor.constraint(equalToConstant: 200)
         senderBubbleWidthAnchor?.isActive = true
+        
         senderTextArea.layer.borderColor = UIColor.red.cgColor
-        addSubview(senderTextArea)
+//        addSubview(senderTextArea)
+        
+        profileImage.layer.cornerRadius = 15
+        profileImage.layer.borderWidth = 2
+        addSubview(profileImage)
         setupConstraints()
+        let padding: CGFloat = 10
+        bubbleRightAligment = senderBubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5)
+//        senderRightTextAreaAligment = senderTextArea.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding)
+        
+//        senderRightTextAreaAligment?.isActive = true
+        bubbleRightAligment?.isActive = true
+        
+        bubbleLeftAligment = senderBubbleView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 5)
+//        senderLeftTextAreaAligment = senderTextArea.trailingAnchor.constraint(equalTo: senderBubbleView.trailingAnchor, constant: -20)
+//        senderLeftTextAreaAligment?.isActive = true
     }
     
     private func setupConstraints() {
         let padding: CGFloat = 10
         let areaPading: CGFloat = 2
         
-        NSLayoutConstraint.activate([
-            senderTextArea.topAnchor.constraint(equalTo: self.topAnchor, constant: areaPading),
-            senderTextArea.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
-            senderTextArea.widthAnchor.constraint(equalToConstant: 260),
-            senderTextArea.heightAnchor.constraint(equalTo: self.heightAnchor ,constant: -areaPading)
-        ])
         
         NSLayoutConstraint.activate([
+            profileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: areaPading),
+            profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
+            profileImage.widthAnchor.constraint(equalToConstant: 30),
+            profileImage.heightAnchor.constraint(equalToConstant: 30)
+        ])
+ 
+        NSLayoutConstraint.activate([
             senderBubbleView.topAnchor.constraint(equalTo: self.topAnchor,constant: areaPading),
-            senderBubbleView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
             senderBubbleView.heightAnchor.constraint(equalTo: self.heightAnchor,constant: -areaPading)
         ])
         NSLayoutConstraint.activate([
-            contentView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            contentView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            senderTextArea.topAnchor.constraint(equalTo: senderBubbleView.topAnchor, constant: areaPading),
+           senderTextArea.widthAnchor.constraint(equalTo: senderBubbleView.widthAnchor),
+            senderTextArea.heightAnchor.constraint(equalTo: senderBubbleView.heightAnchor ,constant: -areaPading)
         ])
-        
-        NSLayoutConstraint.activate([
-            recipientTextArea.topAnchor.constraint(equalTo: self.topAnchor, constant: areaPading),
-            recipientTextArea.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-            recipientTextArea.widthAnchor.constraint(equalToConstant: 260),
-            recipientTextArea.heightAnchor.constraint(equalTo: self.heightAnchor ,constant: -areaPading)
-        ])
-        
-        NSLayoutConstraint.activate([
-            recipientBubbleView.topAnchor.constraint(equalTo: self.topAnchor,constant: areaPading),
-            recipientBubbleView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5),
-            recipientBubbleView.heightAnchor.constraint(equalTo: self.heightAnchor,constant: -areaPading)
-        ])
- 
+
     }
     
 }

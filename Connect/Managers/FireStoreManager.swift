@@ -78,7 +78,7 @@ class FireStoreManager {
         }
     }
     
-    func realtimeUpdates(completion: @escaping (Result<[Feed], ErrorMessages>)-> Void) {
+    func realtimeUsersUpdates(completion: @escaping (Result<[Feed], ErrorMessages>)-> Void) {
         let postRef = database.collection("userPost")
         var post = [Feed]()
         

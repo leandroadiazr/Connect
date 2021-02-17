@@ -47,7 +47,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
     let wrongPassLabel = CustomSecondaryTitleLabel(title: "Something went wrong...", fontSize: 13, textColor: .systemRed)
     
     //MARK:- Buttons
-    let backToSignInBtn = CustomGenericButton(backgroundColor: .link, title: "Sign In")
+    let backToSignInBtn = CustomGenericButton(backgroundColor: .clear, title: "Go back to Sign In")
     let signUpWEmailBtn = CustomMainButton(backgroundColor: .clear, title: "Sign Up with email", textColor: .white, borderWidth: 0.3, borderColor: CustomColors.CustomGreen.cgColor, buttonImage: nil)
     var appleIDBtn      = ASAuthorizationAppleIDButton()
     let facebookBtn     = CustomGenericButton()
@@ -161,6 +161,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
             button.clipsToBounds = true
             view.addSubview(button)
         }
+        backToSignInBtn.setTitleColor(.link, for: .normal)
         
         addProfileImage.addTarget(self, action: #selector(addProfileImageAction), for: .touchUpInside)
         

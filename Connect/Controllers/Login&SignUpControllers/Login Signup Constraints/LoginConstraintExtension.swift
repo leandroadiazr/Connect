@@ -116,7 +116,7 @@ extension LoginViewController {
             goToSignUpBtn.topAnchor.constraint(equalTo: passwordLine.bottomAnchor, constant: textPadding),
             goToSignUpBtn.leadingAnchor.constraint(equalTo: firstTimeLabel.trailingAnchor, constant: 2),
             goToSignUpBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            goToSignUpBtn.heightAnchor.constraint(equalToConstant: 35)
+            goToSignUpBtn.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         //SIGNWITH EMAIL

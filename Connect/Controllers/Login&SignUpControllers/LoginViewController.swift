@@ -40,7 +40,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- Buttons
     let forgotPasswordBtn = CustomGenericButton(backgroundColor: .systemRed, title: "Forgot Password?")
-    let goToSignUpBtn =  CustomGenericButton(backgroundColor: .link, title: "Sign Up")
+    let goToSignUpBtn =  CustomGenericButton(backgroundColor: .clear, title: "Click here to Sign Up")
     let signInWEmailBtn =  CustomMainButton(backgroundColor: .clear, title: "Sign In", textColor: .white, borderWidth: 0.3, borderColor: CustomColors.CustomGreen.cgColor, buttonImage: nil)
     var appleIDBtn = ASAuthorizationAppleIDButton()
     let FBloginButton = FBLoginButton()
@@ -151,6 +151,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             button.clipsToBounds = true
             view.addSubview(button)
         }
+        goToSignUpBtn.setTitleColor(.link, for: .normal)
+        
         //FORGOT BTN
         forgotPasswordBtn.addTarget(self, action: #selector(forgotPassword), for: .touchUpInside)
         forgotPasswordBtn.titleLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
