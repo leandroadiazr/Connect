@@ -93,7 +93,9 @@ class DiscussionViewController: UIViewController {
     private func createNewConversation(recipientUser: UserProfile?) {
         guard let receivedUser = recipientUser else { return }
         self.chathingWith.append(receivedUser)
+        //MARK:-
         let newChat = NewChatVC(recipientUser: receivedUser)
+//        let newChat = ChatViewController(recipientUser: receivedUser)
         newChat.title = receivedUser.name
         newChat.isNewConversation = true
         self.navigationController?.pushViewController(newChat, animated: true)
@@ -182,7 +184,9 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         guard let currentRecipient = self.recipientUser else { return }
+        //MARK:-
         let chatVC = NewChatVC(recipientUser: currentRecipient)
+//        let chatVC = ChatViewController(recipientUser: currentRecipient)
         chatVC.isNewConversation = false
         chatVC.recipientID = currentDiscusion.recipientID
         self.navigationController?.pushViewController(chatVC, animated: true)
@@ -191,19 +195,3 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 
-//extension DiscussionViewController {
-//    private func setupNavConstraints() {
-//        NSLayoutConstraint.activate([
-//            profilePic.leadingAnchor.constraint(equalTo: titleView.centerXAnchor, constant: -50),
-//            profilePic.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
-//            profilePic.widthAnchor.constraint(equalToConstant: 40),
-//            profilePic.heightAnchor.constraint(equalToConstant: 40),
-//
-//            usernameLabel.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 5),
-//            usernameLabel.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
-//            usernameLabel.widthAnchor.constraint(equalToConstant: 55),
-//            usernameLabel.heightAnchor.constraint(equalToConstant: 40),
-//
-//        ])
-//    }
-//}

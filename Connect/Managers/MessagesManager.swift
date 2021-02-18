@@ -177,6 +177,159 @@ class MessagesManager {
         }
         completion(.success([]))
     }
+    
+    
+    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    
+    //MARK:- MODIFIED FOR THE TRY    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    //MARK:- MODIFIED FOR THE TRY
+    
+    
+    //THIS ONE IS THE ONE ON CHATVIEWCONTROLLER
+    //MARK:- CREATE NEW MESSAGE FROM NEW CHAT VIEW CONTROLLER WORKING PERFECTLY
+    func letsCreateNewMessage(sender: Sender, message: Message, recipient: UserProfile?, textMessage: String, completion: @escaping (Result<Message, ErrorMessages>) -> Void) {
+//        guard let sender = sender else { return }
+        guard let recipient = recipient else { return }
+        //        guard !message.isEmpty else { return }
+        
+        let ref = database.child("messages").childByAutoId()
+        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+        let nonUsingDate = Date()
+        let isRead = false
+        let newMessage: [String: Any] = [
+            "senderID": sender.senderId,
+            "senderName": sender.displayName,
+            "senderProfileImage": sender.photoURL,
+            "recipientID": recipient.userID,
+            "recipientName": recipient.name,
+            "recipientProfileImage": recipient.profileImage,
+            "textMessage": textMessage,
+            "timeStamp": timeStamp,
+            "isRead": isRead.description,
+            "messageID": ref.key?.description ?? ""
+        ]
+        guard let messageID = ref.key else { return }
+        ref.updateChildValues(newMessage) { error, reference in
+            if let error = error {
+                completion(.failure(.unableToSave))
+                print(error.localizedDescription)
+                return
+            }
+            let sent = Message(sender: sender, messageId: messageID, sentDate: nonUsingDate, kind: .text(textMessage), recipient: recipient, isRead: isRead)
+//            guard let sentMessage = Messages(dictionary: newMessage) else { return }
+            completion(.success(sent))
+        }
+        
+        
+        let senderMessagesRef = self.database.child("userMessages").child(sender.senderId)
+        senderMessagesRef.updateChildValues([messageID: 1])
+        
+        let recipientMessagesRef = self.database.child("userMessages").child(recipient.userID)
+        recipientMessagesRef.updateChildValues([messageID: 1])
+    }
+    
+    
+    //THIS ONE IS THE ONE ON CHATVIEWCONTROLLER
+    func letsObserveSingleSenderRecipientConversation(for recipient: String, completion: @escaping (Result<[Message], ErrorMessages>)-> Void) {
+//        guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
+        var conversation = [Message]()
+        self.database.child("userMessages").child(recipient).observe( .childAdded) { keySnap in
+           
+            guard let _ = keySnap.value else {
+                completion(.failure(.unableToFindUser))
+                return }
+            let messageID = keySnap.key
+            
+            self.database.child("messages").child(messageID).observeSingleEvent(of: .value) { snapshot in
+                
+                guard let data = snapshot.value else {
+                    completion(.failure(.failedToFechFromDatabase))
+                    print("unable to fetch message please change to error messages")
+                    return }
+                
+                guard let dictionary = data as? [String: Any],
+                      let senderID              = dictionary["senderID"] as? String,
+                      let senderName            = dictionary["senderName"] as? String,
+                      let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+                      let recipientID           = dictionary["recipientID"] as? String,
+                      let recipientName         = dictionary["recipientName"] as? String,
+                      let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+                      let textMessage           = dictionary["textMessage"] as? String,
+                      let timeStamp             = dictionary["timeStamp"] as? Date,
+                      let isRead                = dictionary["isRead"] as? String,
+                      let messageID             = dictionary["messageID"] as? String else { return }
+                
+                let readed: Bool = isRead == "false" ? false : true
+                let sender = Sender(senderId: senderID, displayName: senderName, photoURL: senderProfileImage)
+                let recipient = UserProfile(id: "", userID: recipientID, name: recipientName, handler: "", email: "", profileImage: recipientProfileImage, userLocation: "", userBio: "", userStatus: "")
+                let receivedMessage = Message(sender: sender, messageId: messageID, sentDate: timeStamp, kind: .text(textMessage), recipient: recipient, isRead: readed)
+
+                conversation.append(receivedMessage)
+                completion(.success(conversation))
+            }
+        }
+        completion(.success([]))
+    }
+    
+    //THIS ONE IS THE ONE ON DISCUSSIONVC
+    /*THIS WILL LOAD ALL THE CONVERSATIONS THAT THE CURRENT USER IS HAVING WITH EVERY USER*/
+    func letsObserveSingleUserMessages(completion: @escaping (Result<[Message], ErrorMessages>)-> Void) {
+        guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
+        var conversations = [Message]()
+        self.database.child("userMessages").child(currentUserID).observe( .childAdded) { keySnap in
+           
+            guard let _ = keySnap.value else {
+                completion(.failure(.unableToFindUser))
+                return }
+            let messageID = keySnap.key
+            self.database.child("messages").child(messageID).observeSingleEvent(of: .value) { snapshot in
+                
+                guard let data = snapshot.value else {
+                    completion(.failure(.failedToFechFromDatabase))
+                    print("unable to fetch message please change to error messages")
+                    return }
+                
+                guard let dictionary = data as? [String: Any],
+                      let senderID              = dictionary["senderID"] as? String,
+                      let senderName            = dictionary["senderName"] as? String,
+                      let senderProfileImage    = dictionary["senderProfileImage"] as? String,
+                      let recipientID           = dictionary["recipientID"] as? String,
+                      let recipientName         = dictionary["recipientName"] as? String,
+                      let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
+                      let textMessage           = dictionary["textMessage"] as? String,
+                      let timeStamp             = dictionary["timeStamp"] as? Date,
+                      let isRead                = dictionary["isRead"] as? String,
+                      let messageID             = dictionary["messageID"] as? String else { return }
+                
+                let readed: Bool = isRead == "false" ? false : true
+                let sender = Sender(senderId: senderID, displayName: senderName, photoURL: senderProfileImage)
+                let recipient = UserProfile(id: "", userID: recipientID, name: recipientName, handler: "", email: "", profileImage: recipientProfileImage, userLocation: "", userBio: "", userStatus: "")
+                let newMessage = Message(sender: sender, messageId: messageID, sentDate: timeStamp, kind: .text(textMessage), recipient: recipient, isRead: readed)
+//                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed, messageID: messageID)
+                conversations.append(newMessage)
+                completion(.success(conversations))
+            }
+            
+        }
+        completion(.success([]))
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 
@@ -498,3 +651,8 @@ func safeEmail(emailAddress: String) -> String {
 //    }
 
 */
+
+
+
+
+

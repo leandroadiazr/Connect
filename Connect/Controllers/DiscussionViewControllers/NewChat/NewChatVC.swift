@@ -87,13 +87,17 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         containerView.layer.borderWidth = 0.3
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(cameraBtn)
+
         containerView.addSubview(inputTextField)
+        containerView.bringSubviewToFront(inputTextField)
         containerView.addSubview(sendBtn)
         sendBtn.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
         containerView.addSubview(separator)
         separator.backgroundColor = .blue
         separator.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(containerView)
+        view.bringSubviewToFront(containerView)
         setupConstraints()
     }
     
@@ -127,9 +131,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
          
             switch result {
             case .success(let newMessage):
-//                self.conversations.removeAll { (id) -> Bool in
-//                    newMessage.messageID == id.messageID
-//                }
+
                 self.conversations.append(newMessage)
                 self.conversations.sort { (message1, message2) -> Bool in
                     return message1.timeStamp.intValue < message2.timeStamp.intValue
@@ -243,7 +245,7 @@ extension NewChatVC {
             inputTextField.trailingAnchor.constraint(equalTo: sendBtn.leadingAnchor, constant: -3),
             inputTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
             inputTextField.widthAnchor.constraint(equalToConstant: 250),
-            inputTextField.heightAnchor.constraint(equalToConstant: 45)
+//            inputTextField.heightAnchor.constraint(equalToConstant: 45)
         ])
         
         NSLayoutConstraint.activate([

@@ -4,7 +4,7 @@
 //
 //  Created by Leandro Diaz on 2/7/21.
 //
-/*
+
 import UIKit
 import MessageKit
 import InputBarAccessoryView
@@ -14,6 +14,9 @@ struct Message: MessageType {
     var messageId: String
     var sentDate: Date
     var kind: MessageKind
+    var recipient: UserProfile
+    var isRead: Bool
+    
 }
 
 struct Sender: SenderType {
@@ -22,37 +25,38 @@ struct Sender: SenderType {
     var photoURL: String
 }
 
+
+
 class ChatViewController: MessagesViewController {
     public var isNewConversation = false
-    public var recipientID: String?
     public var conversationID: String?
-    
     var messagesManager = MessagesManager.shared
-    var messages = [Message]()
+    var usersManager = UserManager.shared
+    var conversations = [Message]()
+    
+    var recipientUser: UserProfile?
+    var recipientID: String!
+    
     var userProfile = [UserProfile]()
-    var conversation = [Conversations]()
+  
     var user: UserProfile?
     var recepient: UserProfile?
     
     
     var userManager = UserManager.shared
     
+//    var isMessageEntered: Bool { return !inputTextField.text!.isEmpty }
+    
     private var sender: Sender? {
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return nil}
-        guard let name = UserDefaults.standard.value(forKey: "name") as? String else { return nil}
-        return Sender(senderId: userID, displayName: name, photoURL: Images.Avatar)
+        guard let userID = userManager.currentUserProfile?.userID else { return nil}
+        guard let name = userManager.currentUserProfile?.name else { return nil}
+        guard let photo = userManager.currentUserProfile?.profileImage  else { return nil}
+        return Sender(senderId: userID, displayName: name, photoURL: photo)
     }
     
-    init(with recipientID: String?, id: String) {
-        self.recipientID = recipientID
-        self.conversationID = id
+    init(recipientUser: UserProfile) {
+        self.recipientUser = recipientUser
         super.init(nibName: nil, bundle: nil)
-       
-        if let conversationID = conversationID, let recepientID = recipientID {
-
-            getRecipient(recipientID: recepientID)
-            observeMessages(recipientID: recepientID, with: conversationID)
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -61,11 +65,14 @@ class ChatViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavigationBar()
         configureViewController()
-        guard let  recipientID = recipientID, let id = conversationID else { return }
-        observeMessages(recipientID: recipientID, with: id)
-        print(id)
+        if !isNewConversation {
+            updateConversations(for: recipientID)
+            configureNavigationBar()
+        }
+        
+        print("RECIPIENT WENT ENTER THE CHAT VC :",recipientUser)
+
     }
     
     private func configureViewController() {
@@ -83,9 +90,13 @@ class ChatViewController: MessagesViewController {
     }
     
     private func configureNavigationBar() {
-        
-        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissVC))
-        navigationItem.leftBarButtonItem = cancelBtn
+        guard let recipient = self.recipientUser else { return }
+        let profileView = CustomProfileView(frame: .zero, profilePic: recipient.profileImage, userName: recipient.name)
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(profileView)
+        profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -50).isActive = true
+        self.navigationItem.titleView = containerView
     }
     
     @objc private func dismissVC() {
@@ -112,26 +123,22 @@ extension ChatViewController {
         }
     }
     
-    func observeMessages(recipientID: String, with id: String) {
-        print("message id required: ", id)
-        self.messagesManager.usersMessages(userID: recipientID, messageID: id) { [weak self] result in
-            guard let self = self else {return}
+    private func updateConversations(for recipientID: String ) {
+        self.messagesManager.letsObserveSingleSenderRecipientConversation(for: recipientID) { result in
+            self.conversations.removeAll()
             switch result {
-            case .success(let message):
-                guard !message.isEmpty else {
+            case .success(let messages):
+                guard !messages.isEmpty else {
                     return
                 }
-                for message in message{
-                    print(message.messageId)
-                }
-                self.messages.append(contentsOf: message)
-                
+                self.conversations.append(contentsOf:  messages)
+              
                 DispatchQueue.main.async {
                     self.messagesCollectionView.reloadData()
                 }
                 
             case .failure(let error):
-                print("failed to get messages : ",error.localizedDescription)
+                self.showAlert(title: "There is an Error", message: error.rawValue, buttonTitle: "Ok")
             }
         }
     }
@@ -142,22 +149,25 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty, let sender = self.sender else { return }
         print(text)
-        guard let user = user else { return }
-        print(user)
-        guard let recepient = recepient else { return }
-        print(recepient)
+//        guard let user = user else { return }
+
+        guard let recipient = recipientUser else { return }
+        print("recipient on sending new message :", recepient)
         
         if isNewConversation {
-            let message = Message(sender: sender, messageId: UUID().uuidString, sentDate: Date(), kind: .text(text))
-            self.messagesManager.createMessage(from: user, with: message, for: recepient) { suscess in
-                print(suscess)
+            let newMessage = Message(sender: sender, messageId: UUID().uuidString, sentDate: Date(), kind: .text(text), recipient: recipient, isRead: false)
+            
+            self.messagesManager.letsCreateNewMessage(sender: sender, message: newMessage, recipient: recipient, textMessage: text) {  result in
+//                guard let self = self else {return}
+                print(result)
             }
         } else {
-            let message = Message(sender: sender, messageId: UUID().uuidString, sentDate: Date(), kind: .text(text))
-            self.messagesManager.createMessage(from: user, with: message, for: recepient) { suscess in
-                print(suscess)
-            }
+            let newMessage = Message(sender: sender, messageId: UUID().uuidString, sentDate: Date(), kind: .text(text), recipient: recipient, isRead: false)
             
+            self.messagesManager.letsCreateNewMessage(sender: sender, message: newMessage, recipient: recipient, textMessage: text) {  result in
+//                guard let self = self else {return}
+                print(result)
+            }
         }
         
     }
@@ -169,11 +179,11 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return messages[indexPath.section]
+        return conversations[indexPath.section]
     }
     
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        messages.count
+        conversations.count
     }
 }
-*/
+

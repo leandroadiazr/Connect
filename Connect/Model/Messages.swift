@@ -10,14 +10,17 @@ protocol MessagesSerializable {
     init?(dictionary: [String: Any])
 }
 struct Messages {
+    //sender
     var senderID: String
     var senderName: String
     var senderProfileImage: String
     
+    //recipient
     var recipientID: String
     var recipientName: String
     var recipientProfileImage: String
     
+    //message
     var textMessage: String
     var timeStamp: NSNumber
     var isRead: Bool
