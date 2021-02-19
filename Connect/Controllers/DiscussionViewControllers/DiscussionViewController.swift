@@ -64,12 +64,13 @@ class DiscussionViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-                self.dismissLoadingView()
+        self.dismissLoadingView()
     }
+    
     private func configureNavigationBar() {
         let addChat = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNewChat))
         navigationItem.rightBarButtonItem = addChat
-
+        
         guard let currentUser = usersManager.currentUserProfile else { return }
         let profileView = CustomProfileView(frame: .zero, profilePic: currentUser.profileImage, userName: currentUser.name)
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
@@ -78,7 +79,7 @@ class DiscussionViewController: UIViewController {
         profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -50).isActive = true
         self.navigationItem.titleView = containerView
     }
-
+    
     @objc private func createNewChat() {
         let createVC = CreateChatViewController()
         createVC.completion = {[weak self] receivedUserFromCreateChat in
@@ -93,12 +94,10 @@ class DiscussionViewController: UIViewController {
     private func createNewConversation(recipientUser: UserProfile?) {
         guard let receivedUser = recipientUser else { return }
         self.chathingWith.append(receivedUser)
-        //MARK:-
+  
         let newChat = NewChatVC(recipientUser: receivedUser)
-//        let newChat = ChatViewController(recipientUser: receivedUser)
         newChat.title = receivedUser.name
         newChat.isNewConversation = true
-        
         self.navigationController?.pushViewController(newChat, animated: true)
     }
     
@@ -110,48 +109,45 @@ class DiscussionViewController: UIViewController {
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView?.removeEmptyCells()
-        
         guard let tableView = tableView else { return}
         view.addSubview(tableView)
     }
     
     private func updateConversations() {
-        
         self.messagesManager.observeDiscussions { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let messages):
-                
-                    for newMessage in messages {
-                        let recipient = newMessage
-                    
-                        if recipient.recipientID == newMessage.recipientID {
-                            self.conversationsDictionary[recipient.recipientID] = newMessage
-                            self.conversations = Array(self.conversationsDictionary.values)
-                            self.conversations.sort { (message1, message2) -> Bool in
-                                return message1.timeStamp.intValue > message2.timeStamp.intValue
-                            }
-                        }
-
-                        self.messagesManager.observeRecipientUserProfile(userID: newMessage.recipientID) { [weak self] result in
-                            guard let self = self else { return }
-                            switch result {
-                            case .success(let recipientReceived):
-                                self.chathingWith.append(recipientReceived)
-                            case .failure(let error):
-                                self.showAlert(title: "Unable send message", message: error.rawValue, buttonTitle: "Ok")
-                                print(error.localizedDescription)
-                            }
-                        }
-                     
-                    DispatchQueue.main.async {
-                        self.tableView?.reloadData()
+                for newMessage in messages {
+                    let recipient = newMessage
+                    if recipient.recipientID == newMessage.recipientID {
+                        self.conversationsDictionary[recipient.recipientID] = newMessage
+                        self.conversations = Array(self.conversationsDictionary.values)
                     }
+                    self.messagesManager.observeRecipientUserProfile(userID: newMessage.recipientID) { [weak self] result in
+                        guard let self = self else { return }
+                        switch result {
+                        case .success(let recipientReceived):
+                            self.chathingWith.append(recipientReceived)
+                        case .failure(let error):
+                            self.showAlert(title: "Unable send message", message: error.rawValue, buttonTitle: "Ok")
+                            print(error.localizedDescription)
+                        }
+                    }
+                    self.handleReloadTableView()
                 }
-                
             case .failure(let error):
                 print(error.localizedDescription)
             }
+        }
+    }
+    
+    private func handleReloadTableView() {
+        self.conversations.sort { (message1, message2) -> Bool in
+            return message1.timeStamp.intValue > message2.timeStamp.intValue
+        }
+        DispatchQueue.main.async {
+            self.tableView?.reloadData()
         }
     }
 }
@@ -174,8 +170,7 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currentDiscusion = conversations[indexPath.row]
-        print("discussion with :", currentDiscusion.recipientID)
-  
+        
         for recipient in chathingWith {
             if recipient.userID == currentDiscusion.recipientID {
                 self.recipientUser = recipient
@@ -183,14 +178,11 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         guard let currentRecipient = self.recipientUser else { return }
-        print("recipient at indexpath :", currentRecipient.userID)
         //MARK:-
         let chatVC = NewChatVC(recipientUser: currentRecipient)
-//        let chatVC = ChatViewController(recipientUser: currentRecipient)
         chatVC.isNewConversation = false
         chatVC.recipientID = currentDiscusion.recipientID
         self.navigationController?.pushViewController(chatVC, animated: true)
-
     }
 }
 

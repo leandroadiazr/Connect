@@ -35,9 +35,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         containerView.backgroundColor = .systemBackground
         containerView.addSubview(inputTextField)
         inputTextField.returnKeyType = .send
-//        containerView.addSubview(sendBtn)
         containerView.addSubview(cameraBtn)
-
         return containerView
     }()
     
@@ -55,9 +53,6 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         return true
     }
     
-   
-    
-    
     init(recipientUser: UserProfile) {
         self.recipientUser = recipientUser
         super.init(nibName: nil, bundle: nil)
@@ -69,21 +64,17 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupKeyboardObserver()
         view.backgroundColor = .purple
         if !isNewConversation {
             updateConversations(for: recipientID)
             configureNavigationBar()
         }
         configureCollectionView()
-        //
-//        setupInputComponents()
         inputTextField.delegate = self
         
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-       
         setupConstraints()
     }
     
@@ -168,15 +159,8 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
             guard let self = self else {return}
          
             switch result {
-            case .success(let newMessage):
-
-//                self.conversations.append(newMessage)
-//                self.conversations.sort { (message1, message2) -> Bool in
-//                    return message1.timeStamp.intValue < message2.timeStamp.intValue
-//                }
-              
+            case .success(_):
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.reloadTableView), userInfo: nil, repeats: false)
-                
             case .failure(let error):
                 self.showAlert(title: "Unable send message", message: "Ups.. Check your network connection", buttonTitle: "Ok")
                 print(error.localizedDescription)
@@ -185,6 +169,9 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func reloadTableView() {
+        self.conversations.sort { (message1, message2) -> Bool in
+            return message1.timeStamp.intValue < message2.timeStamp.intValue
+        }
         DispatchQueue.main.async {
             self.inputTextField.text = ""
             self.collectionView?.reloadData()
