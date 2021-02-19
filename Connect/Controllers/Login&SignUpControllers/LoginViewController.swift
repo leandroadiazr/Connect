@@ -219,7 +219,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     //MARK:- TEXT FIELDS ACTIONS
     @objc private func textFieldAction(_ textField: UITextField) {
-        print("typed")
+
         textField.resignFirstResponder()
         signInWithEmail()
     }
@@ -355,7 +355,6 @@ extension LoginViewController: LoginButtonDelegate {
                     return
                 }
                 guard let uuid = Auth.auth().currentUser?.uid else { return }
-                print(name, email, imageURL, uuid)
                 self.userManager.globalSignInWith(userID: uuid, email: email, name: name, imageURL: imageURL)
             }
             

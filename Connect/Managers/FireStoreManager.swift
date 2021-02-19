@@ -46,7 +46,6 @@ class FireStoreManager {
             
             for documents in data {
                 let dictionary = documents.data()
-                print(dictionary)
                 guard  let documentId          = dictionary["customDocumentId"] as? String,
                        let author             = dictionary["author"] as? [String: Any],
                        let userID              = author["userID"] as? String,
@@ -184,7 +183,6 @@ class FireStoreManager {
                 completion(.failure(.unableToCreate))
                 print(unwrappedError.localizedDescription)
             } else {
-                print("Saved Suscessfully")
                 completion(.success(true))
             }
         })

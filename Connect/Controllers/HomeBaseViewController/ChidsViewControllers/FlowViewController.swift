@@ -150,10 +150,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
     }
     
     private func showSettingsMenu(_ sender: UIButton) {
-        print("called")
-        
         let settinsVC = MenuOptionsViewController()
-        
         self.add(childVC: settinsVC, to: optionsView)
         let width: CGFloat = 250
         let x = view.frame.width - width
@@ -185,9 +182,7 @@ class FlowViewController: UIViewController, PresentCommentVC {
 
 extension FlowViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.item)
         let items = feeds[indexPath.item]
-        
         let detailsVC = DetailsViewController()
         detailsVC.detailsString = items.documentId
         let navVC = UINavigationController(rootViewController: detailsVC)

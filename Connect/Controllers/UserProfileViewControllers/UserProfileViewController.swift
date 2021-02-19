@@ -55,7 +55,6 @@ class UserProfileViewController: UIViewController {
     }
     
     @objc private func handleLogout() {
-        print("Logut")
         usersManager.handleLogout()
         usersManager.logoutFromFacebook()
         usersManager.logoutFromGoogle()

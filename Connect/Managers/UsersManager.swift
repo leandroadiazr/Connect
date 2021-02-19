@@ -69,7 +69,6 @@ class UserManager {
     //MARK:- GET SINGLE USER ON LOGIN SCENE DELEGATE NEEDED BUT CAN BE REFACTORED LATER***
     func observeSingleUserProfile(_ userID: String, completion: @escaping (Result<UserProfile?, ErrorMessages>) -> Void) {
         guard let uid = auth.currentUser?.uid else { return }
-        print(uid)
         let userRef = database.collection("users").document(uid)
         userRef.getDocument { (snapshot, error) in
             var userProfile: UserProfile?
@@ -90,7 +89,6 @@ class UserManager {
                       let userLocation        = dictionary["location"] as? String,
                       let userBio             = dictionary["bio"] as? String,
                       let userStatus          = dictionary["userStatus"] as? String else { return }
-                print("do they match :?", uid, userID)
                 userProfile = UserProfile( userID: userID, name: name, handler: handler, email: email, profileImage: profileImage, userLocation: userLocation, userBio: userBio, userStatus: userStatus)
             }
             self.currentUserProfile = userProfile

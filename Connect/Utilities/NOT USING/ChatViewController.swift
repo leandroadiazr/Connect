@@ -4,7 +4,7 @@
 //
 //  Created by Leandro Diaz on 2/7/21.
 //
-
+/*
 import UIKit
 import MessageKit
 import InputBarAccessoryView
@@ -187,3 +187,4 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
 }
 
+*/

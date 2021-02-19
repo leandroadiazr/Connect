@@ -117,7 +117,7 @@ class DiscussionViewController: UIViewController {
     
     private func updateConversations() {
         
-        self.messagesManager.observeSingleUserMessages { [weak self] result in
+        self.messagesManager.observeDiscussions { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let messages):
@@ -126,7 +126,6 @@ class DiscussionViewController: UIViewController {
                         let recipient = newMessage
                     
                         if recipient.recipientID == newMessage.recipientID {
-//                            print(recipient.recipientID, recipient)
                             self.conversationsDictionary[recipient.recipientID] = newMessage
                             self.conversations = Array(self.conversationsDictionary.values)
                             self.conversations.sort { (message1, message2) -> Bool in

@@ -114,7 +114,6 @@ extension CreateChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedUser = filteredUsers[indexPath.row]
-        print("selected")
         if selectedUser.userID == self.usersManager.currentUserProfile?.userID {
             self.showAlert(title: "Wrong User...", message: "Hey, you can't message you self, please choose another recipient", buttonTitle: "Thank you..")
             return
@@ -160,7 +159,6 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
                                 })
                             }
                             self.persistenceManager.saveUserToDeviceCache(user: singleUser) { result in
-                                print(result)
                                 print("on filtered array the user ",singleUser)
                             }
                         }
@@ -186,7 +184,6 @@ extension CreateChatViewController: UISearchResultsUpdating, UISearchControllerD
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("ajaaaa")
     }
 }
 

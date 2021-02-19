@@ -34,7 +34,8 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 105)
         containerView.backgroundColor = .systemBackground
         containerView.addSubview(inputTextField)
-        containerView.addSubview(sendBtn)
+        inputTextField.returnKeyType = .send
+//        containerView.addSubview(sendBtn)
         containerView.addSubview(cameraBtn)
 
         return containerView
@@ -47,6 +48,10 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     }
     
     override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    override var canResignFirstResponder: Bool {
         return true
     }
     
@@ -286,18 +291,19 @@ extension NewChatVC {
     private func setupConstraints() {
         let padding: CGFloat = 5
         //Button
-        NSLayoutConstraint.activate([
-            sendBtn.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
-            sendBtn.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor, constant: -padding),
-            sendBtn.widthAnchor.constraint(equalToConstant: 90),
-            sendBtn.heightAnchor.constraint(equalToConstant: 35)
-        ])
+//        NSLayoutConstraint.activate([
+//            sendBtn.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
+//            sendBtn.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor, constant: -padding),
+//            sendBtn.widthAnchor.constraint(equalToConstant: 90),
+//            sendBtn.heightAnchor.constraint(equalToConstant: 35)
+//        ])
 
         NSLayoutConstraint.activate([
-            inputTextField.trailingAnchor.constraint(equalTo: sendBtn.leadingAnchor, constant: -padding),
+            
+            inputTextField.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor, constant: -8),
             inputTextField.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
-            inputTextField.widthAnchor.constraint(equalToConstant: 250),
-            inputTextField.heightAnchor.constraint(equalToConstant: 35)
+            inputTextField.leadingAnchor.constraint(equalTo: cameraBtn.trailingAnchor, constant: padding),
+            inputTextField.heightAnchor.constraint(equalToConstant: 75)
         ])
 
         NSLayoutConstraint.activate([
@@ -313,6 +319,7 @@ extension NewChatVC {
 
 extension NewChatVC {
     @objc private func dismissKeyboard() {
+        textFieldContainerView.resignFirstResponder()
         inputTextField.resignFirstResponder()
     }
 }

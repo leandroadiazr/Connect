@@ -13,7 +13,6 @@ class PersistenceManager {
     func saveUserToDeviceCache(user: UserProfile?, completion: @escaping (Result<String, ErrorMessages>) -> Void) {
         if let userProfile = user {
             UserDefaults.standard.setValuesForKeys(userProfile.userDictionary)
-            print("this is th user saved ",userProfile)
             completion(.success("Saved"))
         } else {
             completion(.failure(.unableToSave))
@@ -24,7 +23,6 @@ class PersistenceManager {
         var currentUser: UserProfile?
         if userID == UserDefaults.standard.value(forKey: "userID") as? String {
             let dictionary = UserDefaults.standard.dictionaryRepresentation()
-            print(dictionary)
            guard let userID         = dictionary["userID"]           as? String,
             let name                = dictionary["name"]             as? String,
             let handler             = dictionary["handler"]          as? String,

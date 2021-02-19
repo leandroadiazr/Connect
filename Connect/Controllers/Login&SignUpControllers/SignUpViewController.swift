@@ -215,7 +215,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
     
     //MARK:- TEXT FIELDS ACTIONS
     @objc private func textFieldAction(_ textField: UITextField) {
-        print("typed")
         textField.resignFirstResponder()
         signUpWithEmail()
     }
@@ -427,7 +426,6 @@ extension SignUpViewController: UIViewControllerTransitioningDelegate {
 extension SignUpViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else { return }
-        print(image)
         picker.dismiss(animated: true) {
             self.bubbleImageView.image = image
         }

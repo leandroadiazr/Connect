@@ -99,13 +99,10 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
     }
     
     @objc private func backToMainVC() {
-        print("tapped")
         if let tabCon = self.presentingViewController as? CustomTabBarController {
             self.dismiss(animated: true, completion: nil)
             tabCon.selectedIndex = 0
         }
-        
-        
     }
     
     private func fetchUserProfile() {
@@ -155,7 +152,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
     }
     
     @objc private func saveNewPost() {
-        print("Clicked Save Btn 'Done'")
         self.dismisVC()
         guard let userProfile = self.usersManager.currentUserProfile else { return }
         createNewPost(userProfile: userProfile)
@@ -177,7 +173,6 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
                 let imgTwo           = urlPath[2]
                 let imgThree         = urlPath[3]
                 let otherImagesPaths = [imgOne, imgTwo, imgThree]
-                print("urlPath :", urlPath)
                 let postedOn        = "timestamp"
                 let likes           = 0
                 let comments        = 0

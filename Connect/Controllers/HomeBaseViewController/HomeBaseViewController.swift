@@ -37,9 +37,7 @@ class HomeBaseViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        print("dismissCAlled on homebased")
-        //        self.dismissLoadingView()
+
     }
     
     
@@ -60,13 +58,11 @@ class HomeBaseViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @objc private func handleLogout() {
-        print("Logut")
         do {
             try Auth.auth().signOut()
         } catch let logoutError {
             print(logoutError.localizedDescription)
         }
-        
         let logingVC = LoginViewController()
         present(logingVC, animated: true, completion: nil)
     }
