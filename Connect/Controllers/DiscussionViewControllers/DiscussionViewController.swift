@@ -43,10 +43,10 @@ class DiscussionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         cleanUpOnLoad()
         configureNavigationBar()
         configureTableView()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,6 +98,7 @@ class DiscussionViewController: UIViewController {
 //        let newChat = ChatViewController(recipientUser: receivedUser)
         newChat.title = receivedUser.name
         newChat.isNewConversation = true
+        
         self.navigationController?.pushViewController(newChat, animated: true)
     }
     
@@ -178,12 +179,12 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
   
         for recipient in chathingWith {
             if recipient.userID == currentDiscusion.recipientID {
-                print("recipient at indexpath :", recipient.userID)
                 self.recipientUser = recipient
             }
         }
         
         guard let currentRecipient = self.recipientUser else { return }
+        print("recipient at indexpath :", currentRecipient.userID)
         //MARK:-
         let chatVC = NewChatVC(recipientUser: currentRecipient)
 //        let chatVC = ChatViewController(recipientUser: currentRecipient)
@@ -193,5 +194,7 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
 
     }
 }
+
+
 
 

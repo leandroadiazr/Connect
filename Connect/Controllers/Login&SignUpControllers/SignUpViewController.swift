@@ -10,7 +10,7 @@ import AuthenticationServices
 import Firebase
 import FirebaseAuth
 import AVFoundation
-import IQKeyboardManagerSwift
+//import IQKeyboardManagerSwift
 import CoreLocation
 
 class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationManagerDelegate {
@@ -82,8 +82,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
             locationManager.startUpdatingLocation()
         }
         
-        IQKeyboardManager.shared.enableAutoToolbar = false
-        IQKeyboardManager.shared.enable = false
+//        IQKeyboardManager.shared.enableAutoToolbar = false
+//        IQKeyboardManager.shared.enable = false
         configureBackgroundImages()
         configureLabels()
         configureButtons()
@@ -100,8 +100,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, CLLocationMan
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        IQKeyboardManager.shared.enableAutoToolbar = true
-        IQKeyboardManager.shared.enable = true
+//        IQKeyboardManager.shared.enableAutoToolbar = true
+//        IQKeyboardManager.shared.enable = true
     }
     
     private func cameraAccessNeeded() {

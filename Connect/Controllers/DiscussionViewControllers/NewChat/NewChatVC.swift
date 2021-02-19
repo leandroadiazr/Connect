@@ -15,6 +15,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     var generics = [String]()
     var conversations = [Messages]()
     let containerView = UIView()
+    var bottom: NSLayoutConstraint!
     var messageManager = MessagesManager.shared
     var usersManager    = UserManager.shared
     
@@ -28,6 +29,30 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     let cameraBtn = CustomMainButton(backgroundColor: .red, title: "", textColor: .label, borderWidth: 0, borderColor: UIColor.clear.cgColor, buttonImage: Images.camera)
     var isMessageEntered: Bool { return !inputTextField.text!.isEmpty }
     
+    lazy var textFieldContainerView: UIView = {
+        let containerView = UIView()
+        containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 105)
+        containerView.backgroundColor = .systemBackground
+        containerView.addSubview(inputTextField)
+        containerView.addSubview(sendBtn)
+        containerView.addSubview(cameraBtn)
+
+        return containerView
+    }()
+    
+    override var inputAccessoryView: UIView? {
+        get {
+            return textFieldContainerView
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+   
+    
+    
     init(recipientUser: UserProfile) {
         self.recipientUser = recipientUser
         super.init(nibName: nil, bundle: nil)
@@ -39,7 +64,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+//        setupKeyboardObserver()
         view.backgroundColor = .purple
         if !isNewConversation {
             updateConversations(for: recipientID)
@@ -47,15 +72,21 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         }
         configureCollectionView()
         //
-        setupInputComponents()
+//        setupInputComponents()
         inputTextField.delegate = self
         
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-      
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+       
+        setupConstraints()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+  
     private func configureNavigationBar() {
         guard let recipient = self.recipientUser else { return }
         let profileView = CustomProfileView(frame: .zero, profilePic: recipient.profileImage, userName: recipient.name)
@@ -82,36 +113,38 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         }
     }
     
-    private func setupInputComponents() {
-        containerView.backgroundColor = .systemGray6
-        containerView.layer.borderWidth = 0.3
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(cameraBtn)
-
-        containerView.addSubview(inputTextField)
-        containerView.bringSubviewToFront(inputTextField)
-        containerView.addSubview(sendBtn)
-        sendBtn.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
-        containerView.addSubview(separator)
-        separator.backgroundColor = .blue
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(containerView)
-        view.bringSubviewToFront(containerView)
-        setupConstraints()
-    }
+//    private func setupInputComponents() {
+//        containerView.backgroundColor = .systemGray6
+//        containerView.layer.borderWidth = 0.3
+//        containerView.translatesAutoresizingMaskIntoConstraints = false
+//        containerView.addSubview(cameraBtn)
+//
+//        containerView.addSubview(inputTextField)
+//        containerView.bringSubviewToFront(inputTextField)
+//        containerView.addSubview(sendBtn)
+//        sendBtn.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
+//        containerView.addSubview(separator)
+//        separator.backgroundColor = .blue
+//        separator.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        view.addSubview(containerView)
+//        view.bringSubviewToFront(containerView)
+//        setupConstraints()
+//    }
     
     private func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
-
+        collectionView?.keyboardDismissMode = .interactive
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView?.autoresizingMask = [.flexibleHeight]
         collectionView?.backgroundColor = .systemBackground
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.register(ChatViewCell.self, forCellWithReuseIdentifier:ChatViewCell.reuseID)
-        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 50, right: 0)
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 88, right: 0)
         collectionView?.alwaysBounceVertical = true
+        collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+        
         guard let collectionView = collectionView else { return }
         view.addSubview(collectionView)
     }
@@ -132,10 +165,10 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
             switch result {
             case .success(let newMessage):
 
-                self.conversations.append(newMessage)
-                self.conversations.sort { (message1, message2) -> Bool in
-                    return message1.timeStamp.intValue < message2.timeStamp.intValue
-                }
+//                self.conversations.append(newMessage)
+//                self.conversations.sort { (message1, message2) -> Bool in
+//                    return message1.timeStamp.intValue < message2.timeStamp.intValue
+//                }
               
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.reloadTableView), userInfo: nil, repeats: false)
                 
@@ -218,59 +251,68 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
 
 
 extension NewChatVC {
-    
+//    func setupKeyboardObserver() {
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+//    }
+//
+//    @objc func keyboardWillShow(notification: Notification) {
+//        let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+//        guard let frame = keyboardFrame?.cgRectValue else { return }
+//        let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSValue
+//
+//        bottom = containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+//        bottom.isActive = true
+//        bottom.constant = -frame.height + 78
+//
+//        UIView.animate(withDuration: keyboardDuration!.timeValue.seconds) {
+//            self.view.layoutIfNeeded()
+//        }
+//
+//    }
+//
+//    @objc func keyboardWillHide(notification: Notification) {
+////        bottom = containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+////        bottom.isActive = true
+//
+//
+//        let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSValue
+//        UIView.animate(withDuration: keyboardDuration!.timeValue.seconds) {
+//            self.view.layoutIfNeeded()
+//        }
+//        bottom?.constant = 0
+//    }
+//
     private func setupConstraints() {
-//        let padding: CGFloat = 10
-        
-        NSLayoutConstraint.activate([
-            separator.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 1),
-            separator.heightAnchor.constraint(equalToConstant: 3),
-            
-            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 55)
-        ])
-        
+        let padding: CGFloat = 5
         //Button
         NSLayoutConstraint.activate([
-            sendBtn.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            sendBtn.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -3),
+            sendBtn.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
+            sendBtn.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor, constant: -padding),
             sendBtn.widthAnchor.constraint(equalToConstant: 90),
             sendBtn.heightAnchor.constraint(equalToConstant: 35)
         ])
-        
+
         NSLayoutConstraint.activate([
-            inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            inputTextField.trailingAnchor.constraint(equalTo: sendBtn.leadingAnchor, constant: -3),
-            inputTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            inputTextField.trailingAnchor.constraint(equalTo: sendBtn.leadingAnchor, constant: -padding),
+            inputTextField.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
             inputTextField.widthAnchor.constraint(equalToConstant: 250),
-//            inputTextField.heightAnchor.constraint(equalToConstant: 45)
+            inputTextField.heightAnchor.constraint(equalToConstant: 35)
         ])
-        
+
         NSLayoutConstraint.activate([
-            cameraBtn.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            cameraBtn.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 5),
+            cameraBtn.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
+            cameraBtn.leadingAnchor.constraint(equalTo: textFieldContainerView.leadingAnchor, constant: padding),
             cameraBtn.widthAnchor.constraint(equalToConstant: 70),
             cameraBtn.heightAnchor.constraint(equalToConstant: 35)
         ])
-        
+
     }
-    
-//    private func setupNavConstraints() {
-//        NSLayoutConstraint.activate([
-//            profilePic.centerXAnchor.constraint(equalTo: titleView.centerXAnchor, constant: 5),
-//            profilePic.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
-//            profilePic.widthAnchor.constraint(equalToConstant: 40),
-//            profilePic.heightAnchor.constraint(equalToConstant: 40),
-//
-//            usernameLabel.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 5),
-//            usernameLabel.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
-//            usernameLabel.widthAnchor.constraint(equalToConstant: 55),
-//            usernameLabel.heightAnchor.constraint(equalToConstant: 40),
-//
-//        ])
-//    }
+
 }
 
-
+extension NewChatVC {
+    @objc private func dismissKeyboard() {
+        inputTextField.resignFirstResponder()
+    }
+}

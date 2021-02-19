@@ -7,7 +7,7 @@
 
 import UIKit
 import FirebaseAuth
-import IQKeyboardManagerSwift
+//import IQKeyboardManagerSwift
 
 
 class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdaptivePresentationControllerDelegate {
@@ -54,8 +54,8 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        IQKeyboardManager.shared.enableAutoToolbar = true
-        IQKeyboardManager.shared.enable = true
+//        IQKeyboardManager.shared.enableAutoToolbar = true
+//        IQKeyboardManager.shared.enable = true
     }
     private func configureNavigationBar() {
         let cancelBtn = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(backToMainVC))
@@ -77,8 +77,8 @@ class CreateNewPostViewController: UIViewController, UITextFieldDelegate, UIAdap
     }
     
     private func configureUI() {
-        IQKeyboardManager.shared.enableAutoToolbar = false
-        IQKeyboardManager.shared.enable = false
+//        IQKeyboardManager.shared.enableAutoToolbar = false
+//        IQKeyboardManager.shared.enable = false
         self.view.addBottomBorderWithColor(color: CustomColors.CustomGreen, width: 1, alpha: 0.7)
         view.addSubview(userProfileImageView)
         mainImageViewArea.translatesAutoresizingMaskIntoConstraints = false

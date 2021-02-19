@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
-import IQKeyboardManagerSwift
+//import IQKeyboardManagerSwift
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     //MARK:- NOTIFICATION CENTER PROPERTIES
@@ -89,15 +89,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        IQKeyboardManager.shared.enableAutoToolbar = true
-        IQKeyboardManager.shared.enable = true
+//        IQKeyboardManager.shared.enableAutoToolbar = true
+//        IQKeyboardManager.shared.enable = true
     }
     
     //MARK:- UI ELEMENTS
     //MARK:- CONFIGURE UI ELEMENTS
     private func configure() {
-        IQKeyboardManager.shared.enableAutoToolbar = false
-        IQKeyboardManager.shared.enable = false
+//        IQKeyboardManager.shared.enableAutoToolbar = false
+//        IQKeyboardManager.shared.enable = false
         configureBackgroundImages()
         configureLabels()
         configureButtons()
