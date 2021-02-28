@@ -195,3 +195,19 @@ extension Date {
     
 }
 
+extension UIImageView {
+    func getImage(from urlString: String) {
+        let url = URL(string: urlString)
+        self.sd_setImage(with: url) { (data, error, _, _) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+            guard let image = data else { return }
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        }
+    }
+}
+

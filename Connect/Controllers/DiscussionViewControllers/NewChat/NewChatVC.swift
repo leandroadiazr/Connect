@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import IQKeyboardManagerSwift
 
 class NewChatVC: UIViewController, UITextFieldDelegate {
     var isNewConversation = false
@@ -18,6 +19,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     var bottom: NSLayoutConstraint!
     var messageManager = MessagesManager.shared
     var usersManager    = UserManager.shared
+    var inputViewContainerBottomConstraint: NSLayoutConstraint?
     
     var recipientUser: UserProfile?
     var recipientID: String!
@@ -31,14 +33,14 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     
     lazy var textFieldContainerView: UIView = {
         let containerView = UIView()
-        containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 105)
-        containerView.backgroundColor = .systemBackground
+        containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 55)
+        containerView.backgroundColor = .blue
         containerView.addSubview(inputTextField)
         inputTextField.returnKeyType = .send
         containerView.addSubview(cameraBtn)
         return containerView
     }()
-    
+
     override var inputAccessoryView: UIView? {
         get {
             return textFieldContainerView
@@ -71,6 +73,8 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         }
         configureCollectionView()
         inputTextField.delegate = self
+        manageInputEventsForTheSubViews()
+    
         
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -82,7 +86,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self)
     }
     
-  
+    
     private func configureNavigationBar() {
         guard let recipient = self.recipientUser else { return }
         let profileView = CustomProfileView(frame: .zero, profilePic: recipient.profileImage, userName: recipient.name)
@@ -91,6 +95,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         containerView.addSubview(profileView)
         profileView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant:  -50).isActive = true
         self.navigationItem.titleView = containerView
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     
@@ -108,26 +113,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
-//    private func setupInputComponents() {
-//        containerView.backgroundColor = .systemGray6
-//        containerView.layer.borderWidth = 0.3
-//        containerView.translatesAutoresizingMaskIntoConstraints = false
-//        containerView.addSubview(cameraBtn)
-//
-//        containerView.addSubview(inputTextField)
-//        containerView.bringSubviewToFront(inputTextField)
-//        containerView.addSubview(sendBtn)
-//        sendBtn.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
-//        containerView.addSubview(separator)
-//        separator.backgroundColor = .blue
-//        separator.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        view.addSubview(containerView)
-//        view.bringSubviewToFront(containerView)
-//        setupConstraints()
-//    }
-    
+
     private func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         collectionView?.keyboardDismissMode = .interactive
@@ -136,8 +122,9 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         collectionView?.backgroundColor = .systemBackground
         collectionView?.delegate = self
         collectionView?.dataSource = self
-        collectionView?.register(ChatViewCell.self, forCellWithReuseIdentifier:ChatViewCell.reuseID)
-        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 88, right: 0)
+        collectionView?.register(CustomChatCell.self, forCellWithReuseIdentifier:CustomChatCell.reuseID)
+        
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 28, right: 0)
         collectionView?.alwaysBounceVertical = true
         collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
         
@@ -157,7 +144,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         guard let recipient = recipientUser else { return }
         self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: textMessage) { [weak self] result in
             guard let self = self else {return}
-         
+            
             switch result {
             case .success(_):
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.reloadTableView), userInfo: nil, repeats: false)
@@ -175,6 +162,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.inputTextField.text = ""
             self.collectionView?.reloadData()
+            
         }
     }
     
@@ -194,114 +182,98 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         return conversations.count
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomChatCell.reuseID, for: indexPath) as! CustomChatCell
         
-        let grid = collectionView.dequeueReusableCell(withReuseIdentifier: ChatViewCell.reuseID, for: indexPath) as! ChatViewCell
         let message = conversations[indexPath.item]
-        setupCell(grid: grid, message: message)
-        grid.configureGrid(with: message)
-        
-        
-        
-        grid.senderBubbleWidthAnchor?.constant = estimatedFrameSize(string: message.textMessage).width + 30
-        return grid
+        cell.configureGrid(with: message)
+        setupCell(cell: cell, message: message)
+//        self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        return cell
     }
     
-    private func setupCell(grid: ChatViewCell, message: Messages) {
+    private func setupCell(cell: CustomChatCell, message: Messages) {
+        let size = CGSize(width: 250, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        var estimatedFrame = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
+        estimatedFrame.size.height += 18
+        
+        let nameSize = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)], context: nil)
+        
+        let maxValue = max(estimatedFrame.width, nameSize.width)
+        estimatedFrame.size.width = maxValue
+        
         if message.senderID == usersManager.currentUserProfile?.userID {
-            grid.senderBubbleView.backgroundColor = .systemBlue
-            grid.senderTextArea.textColor = .white
-            grid.profileImage.isHidden = true
-        } else if message.senderID != usersManager.currentUserProfile?.userID {
-            grid.senderBubbleView.backgroundColor = CustomColors.CustomGreen
-            grid.senderRightTextAreaAligment?.isActive = false
-            grid.bubbleRightAligment?.isActive = false
-            grid.profileImage.isHidden = false
-            grid.senderTextArea.textColor = .white
-            
-            
-            grid.senderLeftTextAreaAligment?.isActive = true
-            grid.bubbleLeftAligment?.isActive = true
-            
+            cell.profileImage.frame = CGRect(x: self.collectionView!.bounds.width - 38, y: estimatedFrame.height - 8, width: 35, height: 35)
+            cell.profileImage.backgroundColor = .green
+            guard let collectionView = self.collectionView else { return }
+            cell.messageText.frame = CGRect(x: collectionView.bounds.width - estimatedFrame.width - 75, y: 5, width: estimatedFrame.width + 26, height: estimatedFrame.height + 20)
+            cell.textBubbleView.frame = CGRect(x: collectionView.frame.width - estimatedFrame.width - 90, y: -4, width: estimatedFrame.width + 45, height: estimatedFrame.height + 20)
+            cell.textBubbleView.backgroundColor = CustomColors.CustomGreen
+        }
+        else {
+            cell.profileImage.frame = CGRect(x: 8, y: estimatedFrame.height - 8, width: 35, height: 35)
+            cell.profileImage.backgroundColor = .red
+            cell.messageText.frame = CGRect(x: 56, y: 5, width: estimatedFrame.width + 26, height: estimatedFrame.height + 20)
+            cell.textBubbleView.frame = CGRect(x: 48, y: -4, width: estimatedFrame.width + 45, height: estimatedFrame.height + 20)
+            cell.textBubbleView.backgroundColor = .lightGray
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height = estimatedFrameSize(string: conversations[indexPath.item].textMessage).height
-       
-        return CGSize(width: view.frame.width, height: height + 35)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 8, left: 0, bottom: 28, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
+        let message = conversations[indexPath.item]
+        if let chatCell = cell as? CustomChatCell {
+            chatCell.profileImage.getImage(from: message.senderProfileImage)
+        }
     }
- 
-    private func estimatedFrameSize(string: String) -> CGRect{
-        let approximateWidth = view.frame.width / 1.8
-        let size = CGSize(width: approximateWidth, height: 600)
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
-        return NSString(string: string).boundingRect(with: size, options: .usesFontLeading, attributes: attributes, context: nil)
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        self.view.endEditing(true)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let message = conversations[indexPath.item]
+        let size = CGSize(width: 250, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        var estimatedFrame = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
+        estimatedFrame.size.height += 18
+        
+        return CGSize(width: collectionView.frame.width, height: estimatedFrame.height + 20)
+    }
+    
 }
 
 
 extension NewChatVC {
-//    func setupKeyboardObserver() {
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-//    }
-//
-//    @objc func keyboardWillShow(notification: Notification) {
-//        let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
-//        guard let frame = keyboardFrame?.cgRectValue else { return }
-//        let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSValue
-//
-//        bottom = containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-//        bottom.isActive = true
-//        bottom.constant = -frame.height + 78
-//
-//        UIView.animate(withDuration: keyboardDuration!.timeValue.seconds) {
-//            self.view.layoutIfNeeded()
-//        }
-//
-//    }
-//
-//    @objc func keyboardWillHide(notification: Notification) {
-////        bottom = containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-////        bottom.isActive = true
-//
-//
-//        let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSValue
-//        UIView.animate(withDuration: keyboardDuration!.timeValue.seconds) {
-//            self.view.layoutIfNeeded()
-//        }
-//        bottom?.constant = 0
-//    }
-//
+    
     private func setupConstraints() {
-        let padding: CGFloat = 5
-        //Button
-//        NSLayoutConstraint.activate([
-//            sendBtn.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
-//            sendBtn.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor, constant: -padding),
-//            sendBtn.widthAnchor.constraint(equalToConstant: 90),
-//            sendBtn.heightAnchor.constraint(equalToConstant: 35)
-//        ])
+        let padding: CGFloat = 8
 
         NSLayoutConstraint.activate([
             
             inputTextField.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor, constant: -8),
             inputTextField.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
             inputTextField.leadingAnchor.constraint(equalTo: cameraBtn.trailingAnchor, constant: padding),
-            inputTextField.heightAnchor.constraint(equalToConstant: 75)
+            inputTextField.heightAnchor.constraint(equalToConstant: 35)
         ])
-
+        
         NSLayoutConstraint.activate([
             cameraBtn.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
             cameraBtn.leadingAnchor.constraint(equalTo: textFieldContainerView.leadingAnchor, constant: padding),
-            cameraBtn.widthAnchor.constraint(equalToConstant: 70),
+            cameraBtn.widthAnchor.constraint(equalToConstant: 60),
             cameraBtn.heightAnchor.constraint(equalToConstant: 35)
         ])
-
+        
     }
-
+    
 }
 
 extension NewChatVC {
@@ -309,4 +281,35 @@ extension NewChatVC {
         textFieldContainerView.resignFirstResponder()
         inputTextField.resignFirstResponder()
     }
+    private func manageInputEventsForTheSubViews() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChangeNotfHandler(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChangeNotfHandler(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func keyboardFrameChangeNotfHandler(_ notification: Notification) {
+        
+        if let userInfo = notification.userInfo {
+            let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            let isKeyboardShowing = notification.name == UIResponder.keyboardWillShowNotification
+            inputViewContainerBottomConstraint?.constant = isKeyboardShowing ? keyboardFrame.height : 0
+            
+            DispatchQueue.main.async {
+                if isKeyboardShowing {
+                    let lastItem = self.conversations.count - 1
+                    let indexPath = IndexPath(item: lastItem, section: 0)
+                    self.collectionView!.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                    self.collectionView?.contentInset = UIEdgeInsets(top: 128, left: 0, bottom: 128, right: 0)
+                    self.view.layoutIfNeeded()
+                }
+            }
+            UIView.animate(withDuration: 0, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
+                self.collectionView?.contentInset = UIEdgeInsets(top: 128, left: 0, bottom: 128, right: 0)
+                self.view.layoutIfNeeded()
+            }, completion: nil
+            )}
+    }
+    
+    
 }
+

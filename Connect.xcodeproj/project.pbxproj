@@ -27,6 +27,8 @@
 		E8C0A1D125D33790004603B7 /* MessagesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0A1D025D33790004603B7 /* MessagesManager.swift */; };
 		E8C0A1D425D33F41004603B7 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C0A1D325D33F41004603B7 /* PersistenceManager.swift */; };
 		E8CA4B5325D8159B006C54A3 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CA4B5225D8159B006C54A3 /* Messages.swift */; };
+		E8D2DA4225EBDF82004A6C06 /* CustomChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D2DA4125EBDF82004A6C06 /* CustomChatCell.swift */; };
+		E8D2DA4625EBF07E004A6C06 /* UIView + Ext .swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D2DA4525EBF07E004A6C06 /* UIView + Ext .swift */; };
 		E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09525C4E8B400778209 /* AppDelegate.swift */; };
 		E8D6D09825C4E8B400778209 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09725C4E8B400778209 /* SceneDelegate.swift */; };
 		E8D6D09A25C4E8B400778209 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D6D09925C4E8B400778209 /* ViewController.swift */; };
@@ -119,6 +121,8 @@
 		E8C0A1D025D33790004603B7 /* MessagesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesManager.swift; sourceTree = "<group>"; };
 		E8C0A1D325D33F41004603B7 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		E8CA4B5225D8159B006C54A3 /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
+		E8D2DA4125EBDF82004A6C06 /* CustomChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomChatCell.swift; sourceTree = "<group>"; };
+		E8D2DA4525EBF07E004A6C06 /* UIView + Ext .swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView + Ext .swift"; sourceTree = "<group>"; };
 		E8D6D09225C4E8B400778209 /* Connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Connect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D6D09525C4E8B400778209 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8D6D09725C4E8B400778209 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -265,6 +269,7 @@
 			isa = PBXGroup;
 			children = (
 				E8C0A1CA25D331DC004603B7 /* NewChatVC.swift */,
+				E8D2DA4125EBDF82004A6C06 /* CustomChatCell.swift */,
 			);
 			path = NewChat;
 			sourceTree = "<group>";
@@ -310,6 +315,7 @@
 		E8D6D0AA25C4E94300778209 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E8D2DA4525EBF07E004A6C06 /* UIView + Ext .swift */,
 				E83AE8FA25DC8B35005A8B93 /* NOT USING */,
 				E8D6D0AB25C4E94300778209 /* Constants.swift */,
 				E8D6D0AC25C4E94300778209 /* GlobalViewController + EXT.swift */,
@@ -822,6 +828,7 @@
 				E8B93B4725DA944A0084AA75 /* ChatViewCell.swift in Sources */,
 				E8D6D11625C4E95800778209 /* CustomTitleLabel.swift in Sources */,
 				E87B10A125DC143200ABB7C2 /* CustomProfileView.swift in Sources */,
+				E8D2DA4225EBDF82004A6C06 /* CustomChatCell.swift in Sources */,
 				E8D6D15425C4E96200778209 /* PostViewController.swift in Sources */,
 				E86B341E25D079D4004FD2E9 /* CreateChatViewController.swift in Sources */,
 				E8E55CA225C901EB0029D7BC /* ImageCacheManager.swift in Sources */,
@@ -874,6 +881,7 @@
 				E8FBC09025CB4C9000AB9F90 /* DetailsViewCell.swift in Sources */,
 				E8D6D11525C4E95800778209 /* CustomSecondaryTitleLabel.swift in Sources */,
 				E8D6D0FD25C4E95800778209 /* TweetsViewCell.swift in Sources */,
+				E8D2DA4625EBF07E004A6C06 /* UIView + Ext .swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

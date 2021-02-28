@@ -60,6 +60,11 @@ enum Images {
     static let buttonDisable        = UIImage(named: "ButtonDisabled")
     static let loginWithFB          = UIImage(named: "loginFB")
     static let loginWGoogle         = UIImage(named: "loginGoogle")
+    
+    //MARK:- CHAT IMAGES
+    static let bubbleRight          = UIImage(named: "bubbleRight")
+    static let bubbleLeft           = UIImage(named: "bubbleLeft")
+    
 }
 
 enum Status {
