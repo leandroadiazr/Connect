@@ -17,8 +17,9 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     var conversations = [Messages]()
     let containerView = UIView()
     var bottom: NSLayoutConstraint!
-    var messageManager = MessagesManager.shared
+    var messageManager  = MessagesManager.shared
     var usersManager    = UserManager.shared
+    var storage         = FireStorageManager.shared
     var inputViewContainerBottomConstraint: NSLayoutConstraint?
     
     var recipientUser: UserProfile?
@@ -34,7 +35,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
     lazy var textFieldContainerView: UIView = {
         let containerView = UIView()
         containerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 55)
-        containerView.backgroundColor = .blue
+        containerView.backgroundColor = .systemBackground
         containerView.addSubview(inputTextField)
         inputTextField.returnKeyType = .send
         containerView.addSubview(cameraBtn)
@@ -74,7 +75,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         configureCollectionView()
         inputTextField.delegate = self
         manageInputEventsForTheSubViews()
-    
+        uploadImage()
         
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -82,8 +83,14 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         setupConstraints()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
+        
     }
     
     
@@ -142,7 +149,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         guard let sender = sender else { return}
         
         guard let recipient = recipientUser else { return }
-        self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: textMessage) { [weak self] result in
+        self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: textMessage, media: nil) { [weak self] result in
             guard let self = self else {return}
             
             switch result {
@@ -185,7 +192,7 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomChatCell.reuseID, for: indexPath) as! CustomChatCell
-        
+        cell.layer.borderWidth = 1
         let message = conversations[indexPath.item]
         cell.configureGrid(with: message)
         setupCell(cell: cell, message: message)
@@ -199,30 +206,47 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         var estimatedFrame = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
         estimatedFrame.size.height += 18
         
-        let nameSize = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)], context: nil)
-        
-        let maxValue = max(estimatedFrame.width, nameSize.width)
-        estimatedFrame.size.width = maxValue
-        
-        if message.senderID == usersManager.currentUserProfile?.userID {
-            cell.profileImage.frame = CGRect(x: self.collectionView!.bounds.width - 38, y: estimatedFrame.height - 8, width: 35, height: 35)
-            cell.profileImage.backgroundColor = .green
-            guard let collectionView = self.collectionView else { return }
-            cell.messageText.frame = CGRect(x: collectionView.bounds.width - estimatedFrame.width - 75, y: 5, width: estimatedFrame.width + 26, height: estimatedFrame.height + 20)
-            cell.textBubbleView.frame = CGRect(x: collectionView.frame.width - estimatedFrame.width - 90, y: -4, width: estimatedFrame.width + 45, height: estimatedFrame.height + 20)
-            cell.textBubbleView.backgroundColor = CustomColors.CustomGreen
-        }
-        else {
+        if message.textMessage != "" {
+            
+            
+            let nameSize = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)], context: nil)
+            
+            let maxValue = max(estimatedFrame.width, nameSize.width)
+            estimatedFrame.size.width = maxValue
+            
+            if message.senderID == usersManager.currentUserProfile?.userID {
+                cell.profileImage.frame = CGRect(x: self.collectionView!.bounds.width - 38, y: estimatedFrame.height - 18, width: 35, height: 35)
+                cell.profileImage.backgroundColor = .green
+                guard let collectionView = self.collectionView else { return }
+                cell.messageText.frame = CGRect(x: collectionView.bounds.width - estimatedFrame.width - 75, y: 5, width: estimatedFrame.width + 26, height: estimatedFrame.height + 20)
+                cell.textBubbleView.frame = CGRect(x: collectionView.frame.width - estimatedFrame.width - 90, y: 0, width: estimatedFrame.width + 45, height: estimatedFrame.height + 20)
+                cell.textBubbleView.backgroundColor = CustomColors.CustomGreen
+            }
+            else {
+                cell.profileImage.frame = CGRect(x: 8, y: estimatedFrame.height - 18, width: 35, height: 35)
+                cell.profileImage.backgroundColor = .red
+                cell.messageText.frame = CGRect(x: 56, y: 5, width: estimatedFrame.width + 26, height: estimatedFrame.height + 20)
+                cell.textBubbleView.frame = CGRect(x: 48, y: 0, width: estimatedFrame.width + 45, height: estimatedFrame.height + 20)
+                cell.textBubbleView.backgroundColor = .lightGray
+            }
+        } else if message.media != nil {
+            if message.senderID == usersManager.currentUserProfile?.userID {
+                cell.profileImage.frame = CGRect(x: self.collectionView!.bounds.width - 38, y: estimatedFrame.height + 68, width: 35, height: 35)
+                cell.profileImage.backgroundColor = .green
+                guard let collectionView = self.collectionView else { return }
+                cell.textBubbleView.frame = CGRect(x: collectionView.frame.width - estimatedFrame.width - 190, y: 0, width: 150, height: 150)
+            }
+        } else {
             cell.profileImage.frame = CGRect(x: 8, y: estimatedFrame.height - 8, width: 35, height: 35)
             cell.profileImage.backgroundColor = .red
-            cell.messageText.frame = CGRect(x: 56, y: 5, width: estimatedFrame.width + 26, height: estimatedFrame.height + 20)
-            cell.textBubbleView.frame = CGRect(x: 48, y: -4, width: estimatedFrame.width + 45, height: estimatedFrame.height + 20)
-            cell.textBubbleView.backgroundColor = .lightGray
+            cell.textBubbleView.frame = CGRect(x: 48, y: 0, width: 150, height: 150)
+            cell.textBubbleView.backgroundColor = .red
         }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 8, left: 0, bottom: 28, right: 0)
+        return UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -239,14 +263,36 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         let message = conversations[indexPath.item]
-        let size = CGSize(width: 250, height: 1000)
-        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        var estimatedFrame = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
-        estimatedFrame.size.height += 18
+        var estimatedFrame: CGRect?
         
-        return CGSize(width: collectionView.frame.width, height: estimatedFrame.height + 20)
+        if message.textMessage != "" {
+            let size = CGSize(width: 250, height: 1000)
+            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+            estimatedFrame = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], context: nil)
+            estimatedFrame?.size.height += 18
+            return CGSize(width: collectionView.frame.width, height: estimatedFrame!.height + 20)
+            
+        } else if message.media != nil {
+            let size = CGSize(width: 250, height: 600)
+            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+            estimatedFrame = NSString(string: message.media!).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)], context: nil)
+            estimatedFrame?.size.height += 18
+            
+            return CGSize(width: collectionView.frame.width, height: estimatedFrame!.height + 20)
+        }
+        
+        return CGSize(width: collectionView.frame.width, height: 80)
+    }
+    
+    private func uploadImage() {
+        cameraBtn.addTarget(self, action: #selector(includeImage), for: .touchUpInside)
+    }
+    
+    @objc private func includeImage() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
     }
     
 }
@@ -299,17 +345,70 @@ extension NewChatVC {
                     let lastItem = self.conversations.count - 1
                     let indexPath = IndexPath(item: lastItem, section: 0)
                     self.collectionView!.scrollToItem(at: indexPath, at: .bottom, animated: true)
-                    self.collectionView?.contentInset = UIEdgeInsets(top: 128, left: 0, bottom: 128, right: 0)
+                    self.collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 128, right: 0)
                     self.view.layoutIfNeeded()
                 }
             }
             UIView.animate(withDuration: 0, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
-                self.collectionView?.contentInset = UIEdgeInsets(top: 128, left: 0, bottom: 128, right: 0)
+                self.collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 128, right: 0)
                 self.view.layoutIfNeeded()
             }, completion: nil
             )}
     }
     
+    
+}
+
+extension NewChatVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismissVC()
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+      
+        var image: UIImage?
+        if let editedImage = info[.editedImage] as? UIImage {
+           image = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            image = originalImage
+        }
+        
+        if let selectedImage = image {
+            saveImage(image: selectedImage)
+        }
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    private func saveImage(image: UIImage) {
+        self.storage.uploadMessageImage(image) { [weak self] (uploadedImage) in
+            guard let self = self else { return }
+            self.sendImageMessage(imageURL: uploadedImage)
+        }
+    }
+    
+    private func sendImageMessage(imageURL: String) {
+//        guard imageURL.isEmpty else {
+//            showAlert(title: "Empty Field", message: "Please check your input...", buttonTitle: "Ok")
+//            return
+//        }
+        guard let sender = sender else { return}
+        guard let recipient = recipientUser else { return }
+        self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: "", media: imageURL) { [weak self] result in
+            guard let self = self else {return}
+            print(result)
+            switch result {
+            case .success(_):
+                
+                Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.reloadTableView), userInfo: nil, repeats: false)
+            case .failure(let error):
+                self.showAlert(title: "Unable send Image", message: "Ups.. Check your network connection", buttonTitle: "Ok")
+                print(error.localizedDescription)
+            }
+        }
+        
+    }
     
 }
 

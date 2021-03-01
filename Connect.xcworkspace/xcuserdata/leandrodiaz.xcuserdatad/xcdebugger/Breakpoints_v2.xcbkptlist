@@ -7,81 +7,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C953CD31-1AA1-48D2-8772-3B48B8BF9F6F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Connect/Controllers/DiscussionViewControllers/NewChat/NewChatVC.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "224"
-            endingLineNumber = "224"
-            landmarkName = "collectionView(_:layout:insetForSectionAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E5F117D4-9490-4CB3-8D60-AFBF7B08415C"
+            uuid = "0CB2D614-2124-49FF-B714-7A0A8E820CE1"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Connect/Controllers/DiscussionViewControllers/NewChat/NewChatVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "295"
-            endingLineNumber = "295"
-            landmarkName = "keyboardFrameChangeNotfHandler(_:)"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "setupCell(cell:message:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EA913671-D377-43F5-9160-1D3B16C76484"
+            uuid = "BA5947EC-6B09-4D99-8368-765736DC8FE1"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Connect/Controllers/DiscussionViewControllers/NewChat/NewChatVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "306"
-            endingLineNumber = "306"
-            landmarkName = "keyboardFrameChangeNotfHandler(_:)"
+            startingLineNumber = "256"
+            endingLineNumber = "256"
+            landmarkName = "collectionView(_:willDisplay:forItemAt:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "EA913671-D377-43F5-9160-1D3B16C76484 - 69928e056c4d1b2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Connect.NewChatVC.(keyboardFrameChangeNotfHandler in _17A2DC89D0D83CA328AF03B2425C6034)(Foundation.Notification) -&gt; ()"
-                  moduleName = "Connect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/leandrodiaz/Desktop/3%20Production/Connect/Connect/Controllers/DiscussionViewControllers/NewChat/NewChatVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "305"
-                  endingLineNumber = "305"
-                  offsetFromSymbolStart = "2118">
-               </Location>
-               <Location
-                  uuid = "EA913671-D377-43F5-9160-1D3B16C76484 - db48fc857b08db34"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; () in Connect.NewChatVC.(keyboardFrameChangeNotfHandler in _17A2DC89D0D83CA328AF03B2425C6034)(Foundation.Notification) -&gt; ()"
-                  moduleName = "Connect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/leandrodiaz/Desktop/3%20Production/Connect/Connect/Controllers/DiscussionViewControllers/NewChat/NewChatVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "306"
-                  endingLineNumber = "306"
-                  offsetFromSymbolStart = "55">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

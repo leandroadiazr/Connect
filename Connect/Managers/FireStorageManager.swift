@@ -75,4 +75,26 @@ class FireStorageManager {
             }
         }
     }
+    
+    func uploadMessageImage(_ image: UIImage, completion: @escaping (String) -> Void) {
+        let imageRef = imagesReferences.child("messageImages/\(UUID().uuidString).jpg")
+    
+        //convert image to data
+        guard let imageData = image.jpegData(compressionQuality: 0.1) else { return }
+        
+        imageRef.putData(imageData, metadata: nil) { (_, error) in
+            if let unwrappedError = error {
+                print("unwrappedError :", unwrappedError)
+            } else {
+                imageRef.downloadURL { (url, downloadError) in
+                    if let unwrappedDownloadError = downloadError {
+                        print(unwrappedDownloadError)
+                    } else if let unwrappedUrl = url {
+                        completion(unwrappedUrl.absoluteString)
+                        print(unwrappedUrl.absoluteString)
+                    }
+                }
+            }
+        }
+    }
 }

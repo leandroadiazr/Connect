@@ -11,6 +11,8 @@ class CustomChatCell: UICollectionViewCell {
     static let reuseID = "CustomChatCell"
     
     var usersManager    = UserManager.shared
+    let mediaView       = GenericImageView(frame: .zero)
+    
     let profileImage    : UIImageView = {
        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -21,6 +23,7 @@ class CustomChatCell: UICollectionViewCell {
         
         return imageView
     }()
+    
     
     
     let senderBubble : UIImageView = {
@@ -68,6 +71,11 @@ class CustomChatCell: UICollectionViewCell {
     
     func configureGrid(with chat: Messages) {
         messageText.text = chat.textMessage
+        
+        if let imageURL = chat.media {
+            mediaView.cacheImage(from: imageURL)
+            textBubbleView.backgroundColor = .clear
+        }
     }
     
  
@@ -77,17 +85,18 @@ class CustomChatCell: UICollectionViewCell {
         addSubview(textBubbleView)
         messageText.backgroundColor = .clear
         addSubview(messageText)
-        
-//        setupConstraints()
+        textBubbleView.addSubview(mediaView)
+        setupConstraints()
     }
     
     private func setupConstraints() {
-        
+
         NSLayoutConstraint.activate([
-            profileImage.widthAnchor.constraint(equalToConstant: 30),
-            profileImage.heightAnchor.constraint(equalToConstant: 30)
+            mediaView.topAnchor.constraint(equalTo: textBubbleView.topAnchor, constant: 2),
+            mediaView.leadingAnchor.constraint(equalTo: textBubbleView.leadingAnchor, constant: 2),
+            mediaView.trailingAnchor.constraint(equalTo: textBubbleView.trailingAnchor, constant: -2),
+            mediaView.bottomAnchor.constraint(equalTo: textBubbleView.bottomAnchor, constant: -2)
         ])
-        
     }
     
     override func prepareForReuse() {

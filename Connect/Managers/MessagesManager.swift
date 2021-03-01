@@ -54,12 +54,13 @@ class MessagesManager {
     
     //MARK:-  1.0- NEW CHAT VC
     //MARK:-  1.0-   CREATE NEW MESSAGE FROM NEW CHAT VIEW CONTROLLER WORKING PERFECTLY
-    func createNewMessage(sender: UserProfile?, recipient: UserProfile?, textMessage: String, completion: @escaping (Result<Messages, ErrorMessages>) -> Void) {
+    func createNewMessage(sender: UserProfile?, recipient: UserProfile?, textMessage: String, media: String?, completion: @escaping (Result<Messages, ErrorMessages>) -> Void) {
         guard let sender = sender else { return }
         guard let recipient = recipient else { return }
         let ref = database.child("messages").childByAutoId()
         let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
         let isRead = false
+       
         let newMessage: [String: Any] = [
             "senderID": sender.userID,
             "senderName": sender.name,
@@ -68,6 +69,7 @@ class MessagesManager {
             "recipientName": recipient.name,
             "recipientProfileImage": recipient.profileImage,
             "textMessage": textMessage,
+            "media": media ?? "",
             "timeStamp": timeStamp,
             "isRead": isRead.description,
             "messageID": ref.key?.description ?? ""
@@ -92,8 +94,47 @@ class MessagesManager {
     }
     
     
-    //MARK:- 2.0 NEW CHAT VC
-    //MARK:- 2.0- OBSERVE SINGLE USER CONVERSATION INSIDE CHAT VIEW WORKING
+    //MARK:-  2.0-   CREATE NEW MESSAGE FROM NEW CHAT VIEW CONTROLLER WORKING PERFECTLY WITH IMAGE
+    func createMediaMessage(sender: UserProfile?, recipient: UserProfile?, media: String, completion: @escaping (Result<Messages, ErrorMessages>) -> Void) {
+        guard let sender = sender else { return }
+        guard let recipient = recipient else { return }
+        let ref = database.child("messages").childByAutoId()
+        let timeStamp: NSNumber = NSNumber(value: Int(NSDate().timeIntervalSince1970))
+        let isRead = false
+        let newMessage: [String: Any] = [
+            "senderID": sender.userID,
+            "senderName": sender.name,
+            "senderProfileImage": sender.profileImage,
+            "recipientID": recipient.userID,
+            "recipientName": recipient.name,
+            "recipientProfileImage": recipient.profileImage,
+            "media": media,
+            "timeStamp": timeStamp,
+            "isRead": isRead.description,
+            "messageID": ref.key?.description ?? ""
+        ]
+
+        ref.updateChildValues(newMessage) { error, reference in
+            if let error = error {
+                completion(.failure(.unableToSave))
+                print(error.localizedDescription)
+                return
+            }
+            guard let sentMessage = Messages(dictionary: newMessage) else { return }
+            completion(.success(sentMessage))
+        }
+        
+        guard let messageID = ref.key else { return }
+        let senderMessagesRef = self.database.child("userMessages").child(sender.userID).child(recipient.userID)
+        senderMessagesRef.updateChildValues([messageID: 1])
+        
+        let recipientMessagesRef = self.database.child("userMessages").child(recipient.userID).child(sender.userID)
+        recipientMessagesRef.updateChildValues([messageID: 1])
+    }
+    
+    
+    //MARK:- 3.0 NEW CHAT VC
+    //MARK:- 3.0- OBSERVE SINGLE USER CONVERSATION INSIDE CHAT VIEW WORKING
     /*THIS WILL LOAD A SINGLE CONVERSATION BETWEEN THE CURRENT USE AND THE CURRENT RECIPIENT*/
     func observeSingleSenderRecipientConversation(for recipient: String, completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
         guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
@@ -120,12 +161,13 @@ class MessagesManager {
                       let recipientName         = dictionary["recipientName"] as? String,
                       let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
                       let textMessage           = dictionary["textMessage"] as? String,
+                      let media                 = dictionary["media"] as? String,
                       let timeStamp             = dictionary["timeStamp"] as? NSNumber,
                       let isRead                = dictionary["isRead"] as? String,
                       let messageID             = dictionary["messageID"] as? String else { return }
                 
                 let readed: Bool = isRead == "false" ? false : true
-                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed, messageID: messageID)
+                let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, media: media, timeStamp: timeStamp, isRead: readed, messageID: messageID)
                 conversation.append(newMessage)
                 completion(.success(conversation))
             }
@@ -133,10 +175,10 @@ class MessagesManager {
         completion(.success([]))
     }
     
-    //MARK:- 3.0- DISCUSSIONS VIEW CONTROLLER
-    //MARK:- 3.0- OBSERVE SINGLE USER MESSAGES ON DISCUSSION CONTROLLER WORKING  1.- DISCUSSION VIEW CONTROLLER
+    //MARK:- 4.0- DISCUSSIONS VIEW CONTROLLER
+    //MARK:- 4.0- OBSERVE SINGLE USER MESSAGES ON DISCUSSION CONTROLLER WORKING  1.- DISCUSSION VIEW CONTROLLER
     /*THIS WILL LOAD ALL THE CONVERSATIONS THAT THE CURRENT USER IS HAVING WITH EVERY USER*/
-    func observeDiscussions(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
+    func sobserveDiscussions(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
         guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
         var conversations = [Messages]()
         self.database.child("userMessages").child(currentUserID).observe( .childAdded) { keySnap in
@@ -159,11 +201,12 @@ class MessagesManager {
                           let recipientName         = dictionary["recipientName"] as? String,
                           let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
                           let textMessage           = dictionary["textMessage"] as? String,
+                          let media                 = dictionary["media"] as? String,
                           let timeStamp             = dictionary["timeStamp"] as? NSNumber,
                           let isRead                = dictionary["isRead"] as? String,
                           let messageID             = dictionary["messageID"] as? String else { return }
                     let readed: Bool = isRead == "false" ? false : true
-                    let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed, messageID: messageID)
+                    let newMessage = Messages(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, media: media, timeStamp: timeStamp, isRead: readed, messageID: messageID)
                     conversations.append(newMessage)
                     completion(.success(conversations))
                 }

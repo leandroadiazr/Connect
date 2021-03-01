@@ -22,6 +22,7 @@ struct Messages {
     
     //message
     var textMessage: String
+    var media: String?
     var timeStamp: NSNumber
     var isRead: Bool
     
@@ -40,11 +41,12 @@ extension Messages: MessagesSerializable {
               let recipientName         = dictionary["recipientName"] as? String,
               let recipientProfileImage = dictionary["recipientProfileImage"] as? String,
               let textMessage           = dictionary["textMessage"] as? String,
+              let media                 = dictionary["media"] as? String,
               let timeStamp             = dictionary["timeStamp"] as? NSNumber,
               let isRead                = dictionary["isRead"] as? String,
               let messageID             = dictionary["messageID"] as? String else { return nil }
               let readed: Bool = isRead == "false" ? false : true
-        self.init(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, timeStamp: timeStamp, isRead: readed, messageID: messageID)
+        self.init(senderID: senderID, senderName: senderName, senderProfileImage: senderProfileImage, recipientID: recipientID, recipientName: recipientName, recipientProfileImage: recipientProfileImage, textMessage: textMessage, media: media, timeStamp: timeStamp, isRead: readed, messageID: messageID)
     }
     
     
