@@ -120,7 +120,7 @@ class DiscussionViewController: UIViewController {
             case .success(let messages):
                 for newMessage in messages {
                     let recipient = newMessage
-                    if recipient.recipientID == newMessage.recipientID {
+                    if recipient.recipientID == newMessage.recipientID && recipient.recipientID != self.usersManager.currentUserProfile?.userID {
                         self.conversationsDictionary[recipient.recipientID] = newMessage
                         self.conversations = Array(self.conversationsDictionary.values)
                     }
@@ -134,7 +134,8 @@ class DiscussionViewController: UIViewController {
                             print(error.localizedDescription)
                         }
                     }
-                    self.handleReloadTableView()
+                    Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.reloadTableView), userInfo: nil, repeats: false)
+//                    self.reloadTableView()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -142,7 +143,8 @@ class DiscussionViewController: UIViewController {
         }
     }
     
-    private func handleReloadTableView() {
+   @objc private func reloadTableView() {
+        
         self.conversations.sort { (message1, message2) -> Bool in
             return message1.timeStamp.intValue > message2.timeStamp.intValue
         }
@@ -161,7 +163,7 @@ extension DiscussionViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DiscussionsViewCell.reuseID, for: indexPath) as! DiscussionsViewCell
-        let conversation =    conversations[indexPath.row]
+        let conversation = conversations[indexPath.row]
         cell.accessoryType = .disclosureIndicator
         cell.configureCell(with: conversation)
         return cell

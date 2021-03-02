@@ -41,7 +41,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         containerView.addSubview(cameraBtn)
         return containerView
     }()
-
+    
     override var inputAccessoryView: UIView? {
         get {
             return textFieldContainerView
@@ -74,7 +74,9 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         }
         configureCollectionView()
         inputTextField.delegate = self
+        
         manageInputEventsForTheSubViews()
+        keyboardObserver()
         uploadImage()
         
     }
@@ -120,7 +122,7 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
             }
         }
     }
-
+    
     private func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         collectionView?.keyboardDismissMode = .interactive
@@ -130,10 +132,10 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.register(CustomChatCell.self, forCellWithReuseIdentifier:CustomChatCell.reuseID)
-        
+//        collectionView?.isUserInteractionEnabled = true
         collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 28, right: 0)
         collectionView?.alwaysBounceVertical = true
-        collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+//        collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
         
         guard let collectionView = collectionView else { return }
         view.addSubview(collectionView)
@@ -169,6 +171,9 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.inputTextField.text = ""
             self.collectionView?.reloadData()
+            let lastItem = self.conversations.count - 1
+            let indexPath = IndexPath(item: lastItem, section: 0)
+            self.collectionView!.scrollToItem(at: indexPath, at: .bottom, animated: true)
             
         }
     }
@@ -192,11 +197,10 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomChatCell.reuseID, for: indexPath) as! CustomChatCell
-        cell.layer.borderWidth = 1
         let message = conversations[indexPath.item]
         cell.configureGrid(with: message)
+        cell.zoomDelegate = self
         setupCell(cell: cell, message: message)
-//        self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
         return cell
     }
     
@@ -232,21 +236,18 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         } else if message.media != nil {
             if message.senderID == usersManager.currentUserProfile?.userID {
                 cell.profileImage.frame = CGRect(x: self.collectionView!.bounds.width - 38, y: estimatedFrame.height + 68, width: 35, height: 35)
-                cell.profileImage.backgroundColor = .green
                 guard let collectionView = self.collectionView else { return }
                 cell.textBubbleView.frame = CGRect(x: collectionView.frame.width - estimatedFrame.width - 190, y: 0, width: 150, height: 150)
+            } else {
+                cell.profileImage.frame = CGRect(x: 8, y: estimatedFrame.height + 68, width: 35, height: 35)
+                cell.textBubbleView.frame = CGRect(x: 48, y: 0, width: 150, height: 150)
             }
-        } else {
-            cell.profileImage.frame = CGRect(x: 8, y: estimatedFrame.height - 8, width: 35, height: 35)
-            cell.profileImage.backgroundColor = .red
-            cell.textBubbleView.frame = CGRect(x: 48, y: 0, width: 150, height: 150)
-            cell.textBubbleView.backgroundColor = .red
         }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        return UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -257,9 +258,19 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         }
     }
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        let message = conversations[indexPath.item]
+      
+        if message.textMessage != "" {
         self.view.endEditing(true)
+        } else if message.media != nil {
+            print("tapped here")
+            let vc = UIViewController()
+            vc.view.backgroundColor = .blue
+            self.present(vc, animated: true, completion: nil)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -277,12 +288,10 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
             let size = CGSize(width: 250, height: 600)
             let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
             estimatedFrame = NSString(string: message.media!).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)], context: nil)
-            estimatedFrame?.size.height += 18
-            
             return CGSize(width: collectionView.frame.width, height: estimatedFrame!.height + 20)
         }
         
-        return CGSize(width: collectionView.frame.width, height: 80)
+        return CGSize(width: collectionView.frame.width, height: 60)
     }
     
     private func uploadImage() {
@@ -302,9 +311,8 @@ extension NewChatVC {
     
     private func setupConstraints() {
         let padding: CGFloat = 8
-
+        
         NSLayoutConstraint.activate([
-            
             inputTextField.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor, constant: -8),
             inputTextField.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor, constant: padding),
             inputTextField.leadingAnchor.constraint(equalTo: cameraBtn.trailingAnchor, constant: padding),
@@ -319,8 +327,8 @@ extension NewChatVC {
         ])
         
     }
-    
 }
+
 
 extension NewChatVC {
     @objc private func dismissKeyboard() {
@@ -328,9 +336,20 @@ extension NewChatVC {
         inputTextField.resignFirstResponder()
     }
     private func manageInputEventsForTheSubViews() {
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChangeNotfHandler(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameChangeNotfHandler(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func keyboardObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+    }
+    
+    @objc private func keyboardDidShow() {
+        if self.conversations.count > 0 {
+            let lastItem = self.conversations.count - 1
+            let indexPath = IndexPath(item: lastItem, section: 0)
+            self.collectionView!.scrollToItem(at: indexPath, at: .top, animated: true)
+        }
     }
     
     @objc private func keyboardFrameChangeNotfHandler(_ notification: Notification) {
@@ -352,24 +371,49 @@ extension NewChatVC {
             UIView.animate(withDuration: 0, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
                 self.collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 128, right: 0)
                 self.view.layoutIfNeeded()
-            }, completion: nil
-            )}
+            }, completion: nil)}
     }
-    
-    
 }
 
-extension NewChatVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension NewChatVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate, ZoomFunction {
+  
+    func implementZoomIn(image: UIImageView) {
+        print("protocol received in controller")
+        var zommeed = false
+        
+        
+        if !zommeed {
+        UIView.animate(withDuration: 1.0) {
+            image.transform = CGAffineTransform(scaleX: 2, y: 2)
+            zommeed = false
+        }
+        } else {
+        UIView.animate(withDuration: 1.0) {
+            image.transform = CGAffineTransform(scaleX: 1, y: 1)
+          
+        }
+        }
+        
+        
+        
+        
+    }
+    
+ 
+    
+    
+    
+    
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismissVC()
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-      
+        
         var image: UIImage?
         if let editedImage = info[.editedImage] as? UIImage {
-           image = editedImage
+            image = editedImage
         } else if let originalImage = info[.originalImage] as? UIImage {
             image = originalImage
         }
@@ -389,18 +433,12 @@ extension NewChatVC: UIImagePickerControllerDelegate, UINavigationControllerDele
     }
     
     private func sendImageMessage(imageURL: String) {
-//        guard imageURL.isEmpty else {
-//            showAlert(title: "Empty Field", message: "Please check your input...", buttonTitle: "Ok")
-//            return
-//        }
         guard let sender = sender else { return}
         guard let recipient = recipientUser else { return }
         self.messageManager.createNewMessage(sender: sender, recipient: recipient, textMessage: "", media: imageURL) { [weak self] result in
             guard let self = self else {return}
-            print(result)
             switch result {
             case .success(_):
-                
                 Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.reloadTableView), userInfo: nil, repeats: false)
             case .failure(let error):
                 self.showAlert(title: "Unable send Image", message: "Ups.. Check your network connection", buttonTitle: "Ok")

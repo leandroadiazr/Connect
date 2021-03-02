@@ -178,13 +178,14 @@ class MessagesManager {
     //MARK:- 4.0- DISCUSSIONS VIEW CONTROLLER
     //MARK:- 4.0- OBSERVE SINGLE USER MESSAGES ON DISCUSSION CONTROLLER WORKING  1.- DISCUSSION VIEW CONTROLLER
     /*THIS WILL LOAD ALL THE CONVERSATIONS THAT THE CURRENT USER IS HAVING WITH EVERY USER*/
-    func sobserveDiscussions(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
+    func observeDiscussions(completion: @escaping (Result<[Messages], ErrorMessages>)-> Void) {
         guard let currentUserID = self.userManager.currentUserProfile?.userID else { return }
         var conversations = [Messages]()
         self.database.child("userMessages").child(currentUserID).observe( .childAdded) { keySnap in
             guard let _ = keySnap.value else {
                 completion(.failure(.unableToFindUser))
-                return }
+                return
+            }
             let childId = keySnap.key
             self.database.child("userMessages").child(currentUserID).child(childId).observe( .childAdded) { childSnap in
                 let nodeID = childSnap.key

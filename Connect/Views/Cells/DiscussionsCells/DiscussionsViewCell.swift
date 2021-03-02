@@ -28,22 +28,23 @@ class DiscussionsViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureCell(with: Messages) {
+    func configureCell(with message: Messages) {
         //ONLY NEED THE RECIPIENT HERE
-        if !with.recipientProfileImage.isEmpty {
-            profileImage.cacheImage(from: with.recipientProfileImage)     //downloadImage(from: with.userProfileImage)
+        print(message.recipientName)
+        if !message.recipientProfileImage.isEmpty {
+            profileImage.cacheImage(from: message.recipientProfileImage)     //downloadImage(from: with.userProfileImage)
         } else {
             profileImage.image = UIImage(named: Images.Avatar)
         }
         
-        let seconds = with.timeStamp.doubleValue
+        let seconds = message.timeStamp.doubleValue
         let timeStampDate = NSDate(timeIntervalSince1970: seconds)
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "hh:mm:ss a"
-            
-        userNameLabel.text = with.recipientName
+
+        userNameLabel.text = message.recipientName
         receivedLabel.text =  dateformatter.string(from: timeStampDate as Date)
-        messagesLabel.text = with.textMessage
+        messagesLabel.text = message.textMessage
 
     }
     

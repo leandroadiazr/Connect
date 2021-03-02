@@ -7,11 +7,16 @@
 
 import UIKit
 
+protocol ZoomFunction: class {
+    func implementZoomIn(image: UIImageView)
+}
+
 class CustomChatCell: UICollectionViewCell {
     static let reuseID = "CustomChatCell"
     
     var usersManager    = UserManager.shared
     let mediaView       = GenericImageView(frame: .zero)
+    weak var zoomDelegate: ZoomFunction?
     
     let profileImage    : UIImageView = {
        let imageView = UIImageView()
@@ -23,8 +28,6 @@ class CustomChatCell: UICollectionViewCell {
         
         return imageView
     }()
-    
-    
     
     let senderBubble : UIImageView = {
         let imageView = UIImageView()
@@ -77,14 +80,16 @@ class CustomChatCell: UICollectionViewCell {
             textBubbleView.backgroundColor = .clear
         }
     }
-    
- 
-    
+
     private func configure() {
         addSubview(profileImage)
         addSubview(textBubbleView)
         messageText.backgroundColor = .clear
         addSubview(messageText)
+        messageText.layer.borderWidth = 0
+        mediaView.layer.borderWidth = 0
+        mediaView.isUserInteractionEnabled = false
+//        mediaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoom(tapGesture:))))
         textBubbleView.addSubview(mediaView)
         setupConstraints()
     }
@@ -106,5 +111,11 @@ class CustomChatCell: UICollectionViewCell {
         self.messageText.text = nil
     }
     
+    
+    @objc private func handleZoom(tapGesture: UITapGestureRecognizer) {
+        print("image tapped")
+//        guard let imageView = tapGesture.view as? UIImageView else { return }
+//        self.zoomDelegate?.implementZoomIn(image: imageView)
+    }
     
 }
