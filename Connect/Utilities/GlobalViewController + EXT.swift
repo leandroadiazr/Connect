@@ -36,6 +36,16 @@ extension UIViewController {
         }
     }
     
+    //Present Alert View Controller
+    func zoomImage(image: String){
+        DispatchQueue.main.async {
+            let zoomedImageVC = ImageViewController(zoomedImage: image)
+            zoomedImageVC.modalPresentationStyle   = .overFullScreen
+            zoomedImageVC.modalTransitionStyle     = .crossDissolve
+            self.present(zoomedImageVC, animated: true)
+        }
+    }
+    
     //Present Success View Controller
     func showSuccess(title: String, message: String, buttonTitle: String){
         DispatchQueue.main.async {

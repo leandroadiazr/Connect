@@ -15,6 +15,8 @@
 		E86B341B25D07357004FD2E9 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341A25D07357004FD2E9 /* ChatViewController.swift */; };
 		E86B341E25D079D4004FD2E9 /* CreateChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */; };
 		E87B10A125DC143200ABB7C2 /* CustomProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B10A025DC143200ABB7C2 /* CustomProfileView.swift */; };
+		E88FEFD9262CF8A500BAA928 /* ConnectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88FEFD8262CF8A500BAA928 /* ConnectTests.swift */; };
+		E88FEFE5262D0C0500BAA928 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88FEFE4262D0C0500BAA928 /* ImageViewController.swift */; };
 		E8967E5725C89B4D00AB571B /* LoginConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */; };
 		E8967E5A25C89B5E00AB571B /* SignUpConstraintExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */; };
 		E8AE047925CC6C49005383A8 /* CreateViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AE047825CC6C49005383A8 /* CreateViewCell.swift */; };
@@ -98,6 +100,16 @@
 		E8FBC09025CB4C9000AB9F90 /* DetailsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FBC08F25CB4C9000AB9F90 /* DetailsViewCell.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E88FEFDB262CF8A500BAA928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E8D6D08A25C4E8B400778209 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E8D6D09125C4E8B400778209;
+			remoteInfo = Connect;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		142EE698AB92ED587A8202ED /* Pods-Connect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Connect.release.xcconfig"; path = "Target Support Files/Pods-Connect/Pods-Connect.release.xcconfig"; sourceTree = "<group>"; };
 		6E977434C066A7F37975EAFD /* Pods-Connect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Connect.debug.xcconfig"; path = "Target Support Files/Pods-Connect/Pods-Connect.debug.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +121,10 @@
 		E86B341A25D07357004FD2E9 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		E86B341D25D079D4004FD2E9 /* CreateChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatViewController.swift; sourceTree = "<group>"; };
 		E87B10A025DC143200ABB7C2 /* CustomProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProfileView.swift; sourceTree = "<group>"; };
+		E88FEFD6262CF8A500BAA928 /* ConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E88FEFD8262CF8A500BAA928 /* ConnectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTests.swift; sourceTree = "<group>"; };
+		E88FEFDA262CF8A500BAA928 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E88FEFE4262D0C0500BAA928 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		E8967E5625C89B4D00AB571B /* LoginConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConstraintExtension.swift; sourceTree = "<group>"; };
 		E8967E5925C89B5E00AB571B /* SignUpConstraintExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpConstraintExtension.swift; sourceTree = "<group>"; };
 		E8AE047825CC6C49005383A8 /* CreateViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewCell.swift; sourceTree = "<group>"; };
@@ -195,6 +211,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E88FEFD3262CF8A500BAA928 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E8D6D08F25C4E8B400778209 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -240,6 +263,15 @@
 			path = DiscussionsCells;
 			sourceTree = "<group>";
 		};
+		E88FEFD7262CF8A500BAA928 /* ConnectTests */ = {
+			isa = PBXGroup;
+			children = (
+				E88FEFD8262CF8A500BAA928 /* ConnectTests.swift */,
+				E88FEFDA262CF8A500BAA928 /* Info.plist */,
+			);
+			path = ConnectTests;
+			sourceTree = "<group>";
+		};
 		E8967E5525C89B1800AB571B /* Login Signup Constraints */ = {
 			isa = PBXGroup;
 			children = (
@@ -278,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				E8D6D09425C4E8B400778209 /* Connect */,
+				E88FEFD7262CF8A500BAA928 /* ConnectTests */,
 				E8D6D09325C4E8B400778209 /* Products */,
 				9C6F9D3466A09FA75CA30553 /* Pods */,
 				4421BA397458409B4AC3BAB0 /* Frameworks */,
@@ -288,6 +321,7 @@
 			isa = PBXGroup;
 			children = (
 				E8D6D09225C4E8B400778209 /* Connect.app */,
+				E88FEFD6262CF8A500BAA928 /* ConnectTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -563,6 +597,7 @@
 				E8D6D13425C4E96200778209 /* AlertViewController.swift */,
 				E8BECE4025CAC97D00BF989F /* CommentsViewController.swift */,
 				E8BECE4325CAEE6200BF989F /* MenuOptionsViewController.swift */,
+				E88FEFE4262D0C0500BAA928 /* ImageViewController.swift */,
 			);
 			path = AlertViewControllers;
 			sourceTree = "<group>";
@@ -668,6 +703,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		E88FEFD5262CF8A500BAA928 /* ConnectTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E88FEFDF262CF8A500BAA928 /* Build configuration list for PBXNativeTarget "ConnectTests" */;
+			buildPhases = (
+				E88FEFD2262CF8A500BAA928 /* Sources */,
+				E88FEFD3262CF8A500BAA928 /* Frameworks */,
+				E88FEFD4262CF8A500BAA928 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E88FEFDC262CF8A500BAA928 /* PBXTargetDependency */,
+			);
+			name = ConnectTests;
+			productName = ConnectTests;
+			productReference = E88FEFD6262CF8A500BAA928 /* ConnectTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E8D6D09125C4E8B400778209 /* Connect */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E8D6D0A625C4E8B500778209 /* Build configuration list for PBXNativeTarget "Connect" */;
@@ -694,9 +747,13 @@
 		E8D6D08A25C4E8B400778209 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1230;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1230;
 				TargetAttributes = {
+					E88FEFD5262CF8A500BAA928 = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = E8D6D09125C4E8B400778209;
+					};
 					E8D6D09125C4E8B400778209 = {
 						CreatedOnToolsVersion = 12.3;
 					};
@@ -716,11 +773,19 @@
 			projectRoot = "";
 			targets = (
 				E8D6D09125C4E8B400778209 /* Connect */,
+				E88FEFD5262CF8A500BAA928 /* ConnectTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E88FEFD4262CF8A500BAA928 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E8D6D09025C4E8B400778209 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -794,6 +859,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E88FEFD2262CF8A500BAA928 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E88FEFD9262CF8A500BAA928 /* ConnectTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E8D6D08E25C4E8B400778209 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -835,6 +908,7 @@
 				E8D6D16425C4E96200778209 /* CreateNewPostViewController.swift in Sources */,
 				E8D6D09625C4E8B400778209 /* AppDelegate.swift in Sources */,
 				E8D6D0B225C4E94300778209 /* BackupCells.swift in Sources */,
+				E88FEFE5262D0C0500BAA928 /* ImageViewController.swift in Sources */,
 				E8D6D0F825C4E95800778209 /* SavedPostViewCell.swift in Sources */,
 				E8D6D11D25C4E95800778209 /* CustomAvatarImage.swift in Sources */,
 				E840557F25D57D4200EFD9B8 /* DiscussionsViewCell.swift in Sources */,
@@ -887,6 +961,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		E88FEFDC262CF8A500BAA928 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E8D6D09125C4E8B400778209 /* Connect */;
+			targetProxy = E88FEFDB262CF8A500BAA928 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		E8D6D09B25C4E8B400778209 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -907,6 +989,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		E88FEFDD262CF8A500BAA928 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WCYKWTBZ5Q;
+				INFOPLIST_FILE = ConnectTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.leandrodiaz.ConnectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Connect.app/Connect";
+			};
+			name = Debug;
+		};
+		E88FEFDE262CF8A500BAA928 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WCYKWTBZ5Q;
+				INFOPLIST_FILE = ConnectTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.leandrodiaz.ConnectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Connect.app/Connect";
+			};
+			name = Release;
+		};
 		E8D6D0A425C4E8B500778209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1068,6 +1192,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E88FEFDF262CF8A500BAA928 /* Build configuration list for PBXNativeTarget "ConnectTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E88FEFDD262CF8A500BAA928 /* Debug */,
+				E88FEFDE262CF8A500BAA928 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E8D6D08D25C4E8B400778209 /* Build configuration list for PBXProject "Connect" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

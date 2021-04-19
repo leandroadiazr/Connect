@@ -132,10 +132,10 @@ class NewChatVC: UIViewController, UITextFieldDelegate {
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.register(CustomChatCell.self, forCellWithReuseIdentifier:CustomChatCell.reuseID)
-//        collectionView?.isUserInteractionEnabled = true
+        //        collectionView?.isUserInteractionEnabled = true
         collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 28, right: 0)
         collectionView?.alwaysBounceVertical = true
-//        collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
+        //        collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
         
         guard let collectionView = collectionView else { return }
         view.addSubview(collectionView)
@@ -199,7 +199,6 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomChatCell.reuseID, for: indexPath) as! CustomChatCell
         let message = conversations[indexPath.item]
         cell.configureGrid(with: message)
-        cell.zoomDelegate = self
         setupCell(cell: cell, message: message)
         return cell
     }
@@ -211,8 +210,6 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         estimatedFrame.size.height += 18
         
         if message.textMessage != "" {
-            
-            
             let nameSize = NSString(string: message.textMessage).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)], context: nil)
             
             let maxValue = max(estimatedFrame.width, nameSize.width)
@@ -243,7 +240,6 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
                 cell.textBubbleView.frame = CGRect(x: 48, y: 0, width: 150, height: 150)
             }
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -258,19 +254,20 @@ extension NewChatVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
         }
     }
     
-    
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let message = conversations[indexPath.item]
-      
         if message.textMessage != "" {
-        self.view.endEditing(true)
+            self.view.endEditing(true)
         } else if message.media != nil {
-            print("tapped here")
-            let vc = UIViewController()
-            vc.view.backgroundColor = .blue
-            self.present(vc, animated: true, completion: nil)
+            guard let image = message.media else { return }
+            imageZoomInOut(image: image)
         }
+    }
+    
+    private func imageZoomInOut(image: String) {
+        UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseIn) {
+            self.zoomImage(image: image)
+        } completion: { (_) in}
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -375,42 +372,13 @@ extension NewChatVC {
     }
 }
 
-extension NewChatVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate, ZoomFunction {
-  
-    func implementZoomIn(image: UIImageView) {
-        print("protocol received in controller")
-        var zommeed = false
-        
-        
-        if !zommeed {
-        UIView.animate(withDuration: 1.0) {
-            image.transform = CGAffineTransform(scaleX: 2, y: 2)
-            zommeed = false
-        }
-        } else {
-        UIView.animate(withDuration: 1.0) {
-            image.transform = CGAffineTransform(scaleX: 1, y: 1)
-          
-        }
-        }
-        
-        
-        
-        
-    }
-    
- 
-    
-    
-    
-    
+extension NewChatVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismissVC()
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
         var image: UIImage?
         if let editedImage = info[.editedImage] as? UIImage {
             image = editedImage
@@ -447,6 +415,5 @@ extension NewChatVC: UIImagePickerControllerDelegate, UINavigationControllerDele
         }
         
     }
-    
 }
 

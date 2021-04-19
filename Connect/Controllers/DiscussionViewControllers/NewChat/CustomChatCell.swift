@@ -89,7 +89,7 @@ class CustomChatCell: UICollectionViewCell {
         messageText.layer.borderWidth = 0
         mediaView.layer.borderWidth = 0
         mediaView.isUserInteractionEnabled = false
-//        mediaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoom(tapGesture:))))
+        mediaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoom(tapGesture:))))
         textBubbleView.addSubview(mediaView)
         setupConstraints()
     }
@@ -114,8 +114,8 @@ class CustomChatCell: UICollectionViewCell {
     
     @objc private func handleZoom(tapGesture: UITapGestureRecognizer) {
         print("image tapped")
-//        guard let imageView = tapGesture.view as? UIImageView else { return }
-//        self.zoomDelegate?.implementZoomIn(image: imageView)
+        guard let imageView = tapGesture.view as? UIImageView else { return }
+        self.zoomDelegate?.implementZoomIn(image: imageView)
     }
     
 }

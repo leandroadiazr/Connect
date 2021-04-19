@@ -7,16 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0CB2D614-2124-49FF-B714-7A0A8E820CE1"
-            shouldBeEnabled = "No"
+            uuid = "93AD0C2F-9D29-4080-B3D5-6B4E616C8F8D"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Connect/Controllers/DiscussionViewControllers/NewChat/NewChatVC.swift"
+            filePath = "Connect/Controllers/DiscussionViewControllers/NewChat/CustomChatCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "238"
-            endingLineNumber = "238"
-            landmarkName = "setupCell(cell:message:)"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "handleZoom(tapGesture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "58BA0258-D5D3-4DB9-B19D-338ACC45D56C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Connect/Controllers/DiscussionViewControllers/NewChat/CustomChatCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
+            landmarkName = "handleZoom(tapGesture:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
