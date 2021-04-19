@@ -44,6 +44,7 @@ class ImageViewController: UIViewController {
     
     func configureImageView(){
         zoomedImageView.downloadImage(from: zoomedImage ?? "")
+        zoomedImageView.layer.cornerRadius = 16
         containerview.addSubview(zoomedImageView)
     }
     
@@ -52,7 +53,7 @@ class ImageViewController: UIViewController {
     }
      
     private func setupConstraints(){
-
+        let padding: CGFloat = 1
         //Container View Constraints
         NSLayoutConstraint.activate([
             containerview.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -70,10 +71,10 @@ class ImageViewController: UIViewController {
         
         //ImageView
         NSLayoutConstraint.activate([
-            zoomedImageView.topAnchor.constraint(equalTo: containerview.topAnchor),
-            zoomedImageView.leadingAnchor.constraint(equalTo: containerview.leadingAnchor),
-            zoomedImageView.trailingAnchor.constraint(equalTo: containerview.trailingAnchor),
-            zoomedImageView.bottomAnchor.constraint(equalTo: containerview.bottomAnchor)
+            zoomedImageView.topAnchor.constraint(equalTo: containerview.topAnchor, constant: padding),
+            zoomedImageView.leadingAnchor.constraint(equalTo: containerview.leadingAnchor, constant: padding),
+            zoomedImageView.trailingAnchor.constraint(equalTo: containerview.trailingAnchor, constant: -padding),
+            zoomedImageView.bottomAnchor.constraint(equalTo: containerview.bottomAnchor, constant: -padding)
         ])
     }
 }
